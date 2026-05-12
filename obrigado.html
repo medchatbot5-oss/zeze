@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pedido Confirmado - Zé Delivery</title>
+  <!-- Meta Pixel Code -->
+  <script>
+  !function(f,b,e,v,n,t,s)
+  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+  n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];
+  s.parentNode.insertBefore(t,s)}(window, document,'script',
+  'https://connect.facebook.net/en_US/fbevents.js');
+  fbq('init', '1982160662414201');
+  fbq('track', 'PageView');
+  </script>
+  <noscript><img height="1" width="1" style="display:none"
+  src="https://www.facebook.com/tr?id=1982160662414201&ev=PageView&noscript=1"
+  /></noscript>
+  <!-- End Meta Pixel Code -->
+  <!-- UTMify UTMs -->
+  <script src="https://cdn.utmify.com.br/scripts/utms/latest.js" data-utmify-prevent-xcod-sck data-utmify-prevent-subids async defer></script>
+  <!-- UTMify Pixel -->
+  <script>
+    window.pixelId = "69f2f1c293857094144d9ac5";
+    var a = document.createElement("script");
+    a.setAttribute("async", "");
+    a.setAttribute("defer", "");
+    a.setAttribute("src", "https://cdn.utmify.com.br/scripts/pixel/pixel.js");
+    document.head.appendChild(a);
+  </script>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #ffcc01;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 16px;
+    }
+    .card {
+      background: #fff;
+      border-radius: 24px;
+      padding: 36px 24px 32px;
+      max-width: 420px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 8px 32px rgba(0,0,0,.13);
+      animation: slideUp .38s cubic-bezier(.25,.46,.45,.94) both;
+    }
+    @keyframes slideUp {
+      from { transform: translateY(28px); opacity: 0; }
+      to   { transform: translateY(0);    opacity: 1; }
+    }
+    .logo {
+      width: 52px; height: 52px;
+      border-radius: 50%; object-fit: cover;
+      border: 2px solid #ffcc01;
+      margin-bottom: 20px;
+    }
+    .check-wrap {
+      width: 84px; height: 84px; border-radius: 50%;
+      background: #e8f5e9;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 22px;
+      animation: popIn .5s .15s cubic-bezier(.34,1.56,.64,1) both;
+    }
+    @keyframes popIn {
+      from { transform: scale(0); opacity: 0; }
+      to   { transform: scale(1); opacity: 1; }
+    }
+    .check-wrap i { font-size: 40px; color: #2e7d32; }
+    h1 { font-size: 22px; font-weight: 700; color: #1a1a1a; margin-bottom: 8px; }
+    .subtitle { font-size: 14px; color: #666; line-height: 1.55; margin-bottom: 24px; }
+    .valor-box {
+      background: #f7f7f7; border-radius: 14px;
+      padding: 14px 20px; margin-bottom: 16px;
+    }
+    .valor-label { font-size: 11px; color: #999; font-weight: 600; text-transform: uppercase; letter-spacing: .5px; margin-bottom: 4px; }
+    .valor-num   { font-size: 28px; font-weight: 700; color: #2e7d32; }
+    .info-row {
+      display: flex; align-items: center; gap: 10px;
+      background: #fffde7; border: 1px solid #ffe082;
+      border-radius: 12px; padding: 12px 14px;
+      margin-bottom: 24px; text-align: left;
+    }
+    .info-row i { font-size: 17px; color: #f9a825; flex-shrink: 0; }
+    .info-row span { font-size: 13px; color: #6d4c00; font-weight: 600; line-height: 1.4; }
+    .btn-novo {
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      background: #ffcc01; color: #1a1a1a;
+      border: none; border-radius: 24px;
+      padding: 15px 20px; width: 100%;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700; font-size: 15px;
+      cursor: pointer; text-decoration: none;
+      transition: background .2s;
+    }
+    .btn-novo:hover { background: #f0c000; }
+    .footer-note { font-size: 11px; color: #ccc; margin-top: 18px; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <img class="logo" src="images/ze-delivery-logo.jpg" alt="Zé Delivery">
+    <div class="check-wrap"><i class="fa fa-check"></i></div>
+    <h1>Pagamento confirmado!</h1>
+    <p class="subtitle">Seu pedido foi aprovado e já está sendo<br>preparado para entrega.</p>
+    <div class="valor-box">
+      <div class="valor-label">Valor pago</div>
+      <div class="valor-num" id="valor-display">—</div>
+    </div>
+    <div class="info-row">
+      <i class="fa fa-motorcycle"></i>
+      <span>Entrega em <b>30–40 minutos</b>. Fique atento ao seu WhatsApp ou telefone.</span>
+    </div>
+    <a class="btn-novo" id="btn-novo" href="index.html">
+      <i class="fa fa-plus" style="font-size:12px"></i> Fazer novo pedido
+    </a>
+    <p class="footer-note">Zé Delivery — Obrigado pela preferência! 🍺</p>
+  </div>
+
+  <script>
+    /* ══ Lê parâmetros da URL ══ */
+    var qs    = new URLSearchParams(location.search);
+    var txId  = qs.get('txid')  || '';
+    var valor = parseFloat(qs.get('valor') || '0');
+
+    /* ══ Exibe valor ══ */
+    document.getElementById('valor-display').textContent =
+      valor > 0 ? 'R$ ' + valor.toFixed(2).replace('.', ',') : '—';
+
+    /* ══ Persiste UTMs que vieram na URL ══ */
+    var utmKeys = ['utm_source','utm_medium','utm_campaign','utm_content','utm_term','fbclid'];
+    utmKeys.forEach(function(k) {
+      var v = qs.get(k);
+      if (v) localStorage.setItem('ze_' + k, v);
+    });
+
+    /* ══ Botão "novo pedido" preserva UTMs ══ */
+    (function() {
+      var sep = '?', q = '';
+      utmKeys.forEach(function(k) {
+        var v = localStorage.getItem('ze_' + k);
+        if (v) { q += sep + k + '=' + encodeURIComponent(v); sep = '&'; }
+      });
+      if (q) document.getElementById('btn-novo').href = 'index.html' + q;
+    })();
+
+    /* ══ Evento Purchase — 1x por txId (deduplicação via localStorage) ══ */
+    (function() {
+      if (!txId) return; /* Acesso direto sem txId = não veio de pagamento */
+
+      var dedupKey = 'ze_purchase_done_' + txId;
+      if (localStorage.getItem(dedupKey)) return; /* Já disparou para este txId */
+      localStorage.setItem(dedupKey, '1');
+
+      /* Lê dados da compra salvos pelo carrinho */
+      var purchase = {};
+      try { purchase = JSON.parse(localStorage.getItem('ze_last_purchase') || '{}'); } catch(e) {}
+
+      var contentIds = (purchase.items || []).map(function(i) { return String(i.id); });
+      var numItems   = (purchase.items || []).reduce(function(s, i) { return s + (i.quantidade || 1); }, 0);
+      var eventId    = 'purchase_' + txId;
+
+      /* Advanced Matching + disparo do Purchase */
+      (async function() {
+        try {
+          var ct = purchase.ct || {};
+
+          async function sha256(str) {
+            var buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+            return Array.from(new Uint8Array(buf))
+              .map(function(b) { return b.toString(16).padStart(2, '0'); }).join('');
+          }
+
+          var userData = {};
+          if (ct.tel) {
+            var ph = ct.tel.replace(/\D/g, '');
+            if (!ph.startsWith('55')) ph = '55' + ph;
+            userData.ph = await sha256(ph);
+          }
+          if (ct.nome) {
+            var parts = ct.nome.toLowerCase().trim().split(/\s+/);
+            if (parts[0])         userData.fn = await sha256(parts[0]);
+            if (parts.length > 1) userData.ln = await sha256(parts[parts.length - 1]);
+          }
+
+          if (typeof fbq !== 'undefined') {
+            if (Object.keys(userData).length) fbq('init', '1982160662414201', userData);
+            fbq('track', 'Purchase', {
+              value:        valor,
+              currency:     'BRL',
+              content_ids:  contentIds.length ? contentIds : ['pedido'],
+              content_type: 'product',
+              num_items:    numItems || 1
+            }, { eventID: eventId });
+          }
+        } catch(ex) {
+          /* Fallback sem advanced matching */
+          if (typeof fbq !== 'undefined') {
+            fbq('track', 'Purchase', {
+              value:        valor,
+              currency:     'BRL',
+              content_ids:  contentIds.length ? contentIds : ['pedido'],
+              content_type: 'product',
+              num_items:    numItems || 1
+            }, { eventID: eventId });
+          }
+        }
+      })();
+    })();
+  </script>
+</body>
+</html>
