@@ -1,6 +1,5 @@
-const PUBLIC_KEY = process.env.ENKI_PUBLIC_KEY || 'pk_zu4GGDmXN2xYTDghhxSZ926mzwl3wWPMDoYiC9U14EA';
-const SECRET_KEY = process.env.ENKI_SECRET_KEY || 'sk_leaIrR6j-tHy4WcozizYIGM1V_rthbAGW_5uLGfVE1c';
-const ENKI_AUTH  = 'Basic ' + Buffer.from(`${PUBLIC_KEY}:${SECRET_KEY}`).toString('base64');
+const PARADISE_API_KEY = process.env.PARADISE_API_KEY;
+const PARADISE_BASE_URL = 'https://multi.paradisepags.com';
 
 exports.handler = async (event) => {
   const headers = { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' };
@@ -14,15 +13,19 @@ exports.handler = async (event) => {
   }
 
   try {
-    const response = await fetch(`https://api.enki-bank.com/v1/transactions/${encodeURIComponent(id)}`, {
+    const url = `${PARADISE_BASE_URL}/api/v1/query.php?action=get_transaction&id=${encodeURIComponent(id)}`;
+
+    const response = await fetch(url, {
       method:  'GET',
-      headers: { 'Authorization': ENKI_AUTH }
+      headers: { 'X-API-Key': PARADISE_API_KEY }
     });
 
     const text = await response.text();
     let data;
     try { data = JSON.parse(text); } catch { data = { raw: text }; }
 
+    /* Paradise retorna { status: 'approved' | 'pending' | 'failed' | 'refunded' }
+       O frontend já checa 'approved' nativamente — retorna direto.           */
     return { statusCode: response.status, headers, body: JSON.stringify(data) };
 
   } catch (err) {

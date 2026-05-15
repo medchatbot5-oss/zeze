@@ -260,7 +260,7 @@
         <!-- Jack Daniel's -->
         <p class="combo-sub-title">Jack Daniel's</p>
         <div class="whisky-scroll-row">
-          <a class="ze-card-link whisky-card" href="produto.html?id=2">
+          <a class="ze-card-link whisky-card" href="produto.html?id=2&whisky=jack">
             <div class="ze-card-text">
               <span class="ze-card-desc">1x Jack Daniel's Nº7 1L<br>6x Red Bull 250ml</span>
               <span style="font-size:12px;color:#ff4d4d;text-decoration:line-through;line-height:1.4;display:block">R$ 189,90</span>
@@ -268,7 +268,7 @@
             </div>
             <div class="ze-card-img"><figure><img alt="Combo Jack Daniel's" loading="lazy" decoding="async" src="images/img3.jpg" width="110" height="110" onload="this.classList.add('loaded')"></figure></div>
           </a>
-          <a class="ze-card-link whisky-card" href="produto.html?id=11">
+          <a class="ze-card-link whisky-card" href="produto.html?id=11&whisky=jack">
             <div class="ze-card-text">
               <span class="ze-card-desc">1x Jack Daniel's Nº7 1L<br>12x Red Bull 250ml</span>
               <span style="font-size:12px;color:#ff4d4d;text-decoration:line-through;line-height:1.4;display:block">R$ 239,90</span>
@@ -350,7 +350,7 @@
             </div>
             <div class="ze-card-img"><figure><img alt="Black Label 1L" loading="lazy" decoding="async" src="images/garrafa-black-label.jpg" width="110" height="110" onerror="this.src='images/img2.jpg'" onload="this.classList.add('loaded')"></figure></div>
           </a>
-          <a class="ze-card-link whisky-card" href="produto.html?id=27">
+          <a class="ze-card-link whisky-card" href="produto.html?id=27&whisky=jack">
             <div class="ze-card-text">
               <h3 class="ze-card-title">Jack Daniel's 1L</h3>
               <span class="ze-card-desc">Jack Daniel's Old No.7 Tennessee Whiskey</span>
@@ -568,21 +568,6 @@
       return 'carrinho.html' + q;
     }
 
-    /* Clica no produto -> adiciona ao carrinho -> vai pro carrinho com UTMs */
-    document.addEventListener('click', function(e) {
-      var link = e.target.closest('a.ze-card-link');
-      if (!link) return;
-      e.preventDefault();
-      var href = link.getAttribute('href') || '';
-      var match = href.match(/id=(\d+)/);
-      if (!match) { window.location.href = carrinhoUrl(); return; }
-      var prodId = parseInt(match[1]);
-      if (typeof PRODUTOS !== 'undefined' && typeof CarrinhoData !== 'undefined') {
-        var p = PRODUTOS.find(function(x) { return x.id === prodId; });
-        if (p) CarrinhoData.adicionar(p, 1, '');
-      }
-      window.location.href = carrinhoUrl();
-    });
   </script>
 
   <script>

@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Produto - Zé Delivery</title>
+  <script src="js/config.js"></script>
   <!-- Meta Pixel Code -->
   <script>
   !function(f,b,e,v,n,t,s)
@@ -21,9 +22,8 @@
   src="https://www.facebook.com/tr?id=1982160662414201&ev=PageView&noscript=1"
   /></noscript>
   <!-- End Meta Pixel Code -->
-  <!-- Utmify -->
   <script src="https://cdn.utmify.com.br/scripts/utms/latest.js" data-utmify-prevent-xcod-sck data-utmify-prevent-subids async defer></script>
-  <!-- UTMify Pixel -->
+  <!-- UTMify Pixel — envia conversões com UTMs para a plataforma -->
   <script>
     window.pixelId = "69f2f1c293857094144d9ac5";
     var a = document.createElement("script");
@@ -32,290 +32,507 @@
     a.setAttribute("src", "https://cdn.utmify.com.br/scripts/pixel/pixel.js");
     document.head.appendChild(a);
   </script>
+  <!-- Captura e persiste UTMs (da URL atual ou do localStorage herdado do index) -->
+  <script>
+  (function() {
+    var keys = ['utm_source','utm_medium','utm_campaign','utm_content','utm_term','fbclid'];
+    var qs = new URLSearchParams(location.search);
+    keys.forEach(function(k) {
+      var fromUrl = qs.get(k);
+      if (fromUrl) localStorage.setItem('ze_' + k, fromUrl);
+    });
+  })();
+  </script>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'Poppins', sans-serif; background: #fff; color: #1A1A1A;
-           animation: slideInRight .28s cubic-bezier(.25,.46,.45,.94) both; }
-
-    @keyframes slideInRight {
-      from { transform: translateX(100%); opacity: .6; }
-      to   { transform: translateX(0);    opacity: 1; }
-    }
+    body { font-family: 'Poppins', sans-serif; background: #f4f4f4; }
 
     /* ── Header ── */
-    .p-header {
-      position: sticky; top: 0; z-index: 100;
+    .pd-header {
       background: #ffcc01;
-      display: flex; align-items: center; justify-content: space-between;
       padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
     }
-    .p-header-btn {
-      background: none; border: none; cursor: pointer;
-      width: 38px; height: 38px; border-radius: 50%;
+    .pd-back {
+      width: 34px; height: 34px; border-radius: 50%;
+      background: rgba(0,0,0,.12); border: none; cursor: pointer;
       display: flex; align-items: center; justify-content: center;
-      font-size: 18px; color: #1A1A1A; transition: background .2s;
+      font-size: 16px; color: #1a1a1a; flex-shrink: 0;
     }
-    .p-header-btn:hover { background: rgba(0,0,0,.1); }
-    .p-header-title { font-weight: 700; font-size: 16px; }
-    .p-cart-wrap { position: relative; }
-    .p-cart-badge {
-      position: absolute; top: -4px; right: -4px;
-      background: #1A1A1A; color: #ffcc01;
-      border-radius: 50%; width: 18px; height: 18px;
-      font-size: 10px; font-weight: 700;
-      display: none; align-items: center; justify-content: center;
-    }
+    .pd-header-title { font-size: 15px; font-weight: 700; color: #1a1a1a; }
 
-    /* ── Imagem ── */
-    .p-img-wrap {
-      width: 100%; height: 300px; background: #f8f8f8;
-      position: relative; overflow: hidden;
+    /* ── Card produto ── */
+    .pd-card {
+      background: #fff;
+      border-radius: 16px;
+      margin: 12px;
+      border: 0.5px solid #eee;
+      overflow: hidden;
     }
-    .p-img {
-      width: 100%; height: 100%; object-fit: contain;
-      object-position: center; display: block; padding: 16px;
+    .pd-img-wrap {
+      background: #fff8e1;
+      padding: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
-    /* Gradiente suave na base da imagem */
-    .p-img-wrap::after {
-      content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 60px;
-      background: linear-gradient(to bottom, transparent, #fff);
-      pointer-events: none;
-    }
-    /* Badge de desconto */
-    .p-discount-badge {
-      display: none;
-      position: absolute; top: 14px; left: 14px;
-      background: #e53935; color: #fff;
-      font-size: 13px; font-weight: 700;
-      border-radius: 8px; padding: 5px 10px;
-      box-shadow: 0 2px 6px rgba(229,57,53,.35);
-      z-index: 2;
-    }
+    .pd-img-wrap img { max-height: 200px; object-fit: contain; display: block; }
+    .pd-info { padding: 16px; }
+    .pd-nome { font-size: 17px; font-weight: 700; }
+    .pd-desc { font-size: 13px; color: #888; margin-top: 4px; margin-bottom: 10px; }
+    .pd-preco-antigo { font-size: 13px; color: #ff4d4d; text-decoration: line-through; }
+    .pd-preco { font-size: 22px; font-weight: 700; color: #077c22; }
 
-    /* ── Corpo ── */
-    .p-body { padding: 12px 16px 120px; }
-    .p-nome { display: none; }
-
-    /* Chip urgência */
-    .p-urgency {
-      display: inline-flex; align-items: center; gap: 5px;
-      background: #fff8e1; border: 1px solid #ffe082;
-      border-radius: 20px; padding: 4px 10px;
-      font-size: 11px; font-weight: 700; color: #7a5f00;
-      margin-bottom: 10px;
+    /* ── Seções de opção ── */
+    .pd-section {
+      background: #fff;
+      border-radius: 16px;
+      margin: 8px 12px;
+      border: 0.5px solid #eee;
+      overflow: hidden;
     }
-
-    .p-desc { font-size: 15px; color: #1A1A1A; line-height: 1.5; margin-bottom: 14px; font-weight: 600; }
-
-    /* ── Preço ── */
-    .p-preco-box { margin-bottom: 14px; }
-    .p-preco-antigo { font-size: 13px; color: #bbb; text-decoration: line-through; margin-bottom: 2px; }
-    .p-preco-novo { font-size: 30px; font-weight: 700; color: #077c22; line-height: 1.1; margin-bottom: 8px; }
-    .p-economia {
-      display: inline-flex; align-items: center; gap: 5px;
-      background: #e8f5e9; border-radius: 20px; padding: 5px 12px;
-      font-size: 12px; font-weight: 700; color: #2e7d32;
+    .sec-header {
+      padding: 14px 16px;
+      border-bottom: 0.5px solid #eee;
     }
-    .p-economia i { font-size: 11px; }
-
-    /* Divider */
-    .p-divider { border: none; border-top: 1px solid #f0f0f0; margin: 16px 0; }
-
-    /* ── Observação colapsável ── */
-    .p-obs-toggle {
-      display: flex; align-items: center; gap: 6px;
-      background: none; border: none; cursor: pointer;
-      font-family: 'Poppins', sans-serif; font-size: 13px; font-weight: 600;
-      color: #888; padding: 0; transition: color .2s;
+    .sec-header-flex {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
     }
-    .p-obs-toggle:hover { color: #555; }
-    .p-obs-toggle i { font-size: 12px; transition: transform .2s; }
-    .p-obs-toggle.open i { transform: rotate(45deg); }
-    .p-obs-wrap {
-      max-height: 0; overflow: hidden;
-      transition: max-height .25s ease, opacity .2s ease, margin-top .2s;
-      opacity: 0;
-    }
-    .p-obs-wrap.open { max-height: 120px; opacity: 1; margin-top: 10px; }
-    .p-obs {
-      width: 100%; border: 1.5px solid #e8e8e8; border-radius: 10px;
-      padding: 10px 12px; font-family: 'Poppins', sans-serif;
-      font-size: 13px; color: #555; resize: none; outline: none;
-      transition: border-color .2s; background: #fafafa;
-    }
-    .p-obs:focus { border-color: #ffcc01; background: #fff; }
-
-    /* ── Barra inferior fixa ── */
-    .p-bottom {
-      position: fixed; bottom: 0; left: 0; right: 0;
-      background: #fff; border-top: 1px solid #eee;
-      padding: 12px 16px 16px; z-index: 200;
-    }
-    .p-bottom-inner { display: flex; align-items: center; gap: 12px; }
-    .p-qty {
-      display: flex; align-items: center; gap: 10px;
-      background: #f5f5f5; border-radius: 24px; padding: 7px 14px;
+    .sec-header-left { display: flex; align-items: center; }
+    .sec-title { font-size: 14px; font-weight: 700; }
+    .sec-sub { font-size: 12px; color: #888; margin-top: 2px; }
+    .sec-badge-opt {
+      background: #e8e8e8; color: #666;
+      font-size: 11px; font-weight: 600; padding: 3px 8px;
+      border-radius: 20px; white-space: nowrap;
       flex-shrink: 0;
     }
-    .p-qty-btn {
-      background: none; border: none; cursor: pointer;
-      font-size: 20px; font-weight: 700; color: #1A1A1A;
-      width: 28px; height: 28px; display: flex; align-items: center; justify-content: center;
-      border-radius: 50%; transition: background .15s;
+    .sec-badge-req {
+      background: #fff8cc; color: #b8860b;
+      border: 1px solid #ffe066;
+      font-size: 11px; font-weight: 700; padding: 3px 8px;
+      border-radius: 20px; margin-left: 8px; white-space: nowrap;
     }
-    .p-qty-btn:hover:not(:disabled) { background: #e0e0e0; }
-    .p-qty-btn:disabled { opacity: .35; cursor: default; }
-    .p-qty-num { font-size: 16px; font-weight: 700; min-width: 22px; text-align: center; }
-    .p-add-btn {
-      flex: 1; background: #ffcc01; color: #1A1A1A; border: none;
-      border-radius: 24px; padding: 14px 18px;
-      font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 15px;
-      cursor: pointer; display: flex; align-items: center; justify-content: space-between;
-      transition: background .2s;
+
+    /* ── Chips ── */
+    .chips-wrap { padding: 12px; }
+    .chip-opt {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      border: 1.5px solid #eee;
+      background: #fff;
+      margin-bottom: 8px;
+      cursor: pointer;
+      transition: border-color .15s, background .15s;
     }
-    .p-add-btn:hover { background: #f0c000; }
-    .p-add-btn.success { background: #077c22; color: #fff; justify-content: center; gap: 8px; }
-    /* Preço total no botão */
-    .p-add-btn-price { font-size: 14px; font-weight: 700; opacity: .85; }
+    .chip-opt:last-child { margin-bottom: 0; }
+    .chip-opt.selecionado { border-color: #ffcc01; background: #fffbe6; }
+    .chip-img { width: 44px; height: 44px; object-fit: contain; flex-shrink: 0; }
+    .chip-label { font-size: 14px; font-weight: 600; color: #1a1a1a; flex: 1; }
+    .chip-check {
+      width: 22px; height: 22px; border-radius: 50%;
+      border: 2px solid #ddd;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      transition: background .15s, border-color .15s;
+    }
+    .chip-check i { display: none; }
+    .chip-opt.selecionado .chip-check { background: #ffcc01; border-color: #ffcc01; }
+    .chip-opt.selecionado .chip-check i { display: block; }
+
+    /* ── Gelo quantidade ── */
+    .gelo-qty-wrap {
+      background: #f9f9f9;
+      border-radius: 12px;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 16px 12px 0;
+    }
+    .gelo-qty-btn {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: #ffcc01; border: none;
+      font-size: 20px; font-weight: 700; line-height: 1;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .gelo-qty-center { flex: 1; text-align: center; }
+    .gelo-qty-num { font-size: 18px; font-weight: 700; }
+    .gelo-qty-preco { font-size: 12px; color: #888; }
+
+    /* ── Gelo badges de quantidade ── */
+    .gelo-badges { display: flex; gap: 8px; margin: 12px 12px 14px; }
+    .gelo-badge-btn {
+      flex: 1;
+      background: #f5f5f5;
+      border: 1.5px solid #ddd;
+      border-radius: 10px;
+      padding: 8px 4px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 12px; font-weight: 700;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color .15s, background .15s;
+    }
+    .gelo-badge-btn.active { border-color: #ffcc01; background: #fffbe6; }
+    .gelo-badge-price { color: #077c22; font-size: 11px; font-weight: 600; display: block; }
+
+    /* ── Spacer e footer ── */
+    .pd-spacer { height: 120px; }
+    .pd-footer {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 390px;
+      background: #fff;
+      border-top: 1px solid #eee;
+      padding: 12px 16px;
+      box-sizing: border-box;
+    }
+    .pd-total-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    .pd-total-label { font-size: 13px; color: #888; }
+    .pd-total-val { font-size: 16px; font-weight: 700; }
+    .pd-add-btn {
+      width: 100%;
+      background: #ffcc01;
+      color: #1a1a1a;
+      border: none;
+      border-radius: 24px;
+      padding: 15px;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      font-size: 16px;
+      cursor: pointer;
+      transition: opacity .2s;
+    }
+    .pd-add-btn:disabled { opacity: .5; cursor: default; }
   </style>
 </head>
 <body>
 
-  <div class="p-header">
-    <button class="p-header-btn" onclick="goBack()"><i class="fa fa-chevron-left"></i></button>
-    <span class="p-header-title">Zé Delivery</span>
-    <button class="p-header-btn p-cart-wrap" onclick="window.location.href='carrinho.html'">
-      <i class="fa fa-shopping-cart"></i>
-      <span id="badge" class="p-cart-badge">0</span>
-    </button>
+  <div class="pd-header">
+    <button class="pd-back" onclick="window.history.back()"><i class="fa fa-arrow-left"></i></button>
+    <span class="pd-header-title">Detalhes do produto</span>
   </div>
 
-  <div class="p-img-wrap">
-    <div class="p-discount-badge" id="p-discount-badge"></div>
-    <img id="p-img" class="p-img" src="" alt="" decoding="async" fetchpriority="high">
+  <!-- Card do produto -->
+  <div class="pd-card">
+    <div class="pd-img-wrap">
+      <img id="pd-img" src="" alt="">
+    </div>
+    <div class="pd-info">
+      <div class="pd-nome" id="pd-nome"></div>
+      <div class="pd-desc" id="pd-desc"></div>
+      <div class="pd-preco-antigo" id="pd-preco-antigo"></div>
+      <div class="pd-preco" id="pd-preco"></div>
+    </div>
   </div>
 
-  <div class="p-body">
-    <h1 id="p-nome" class="p-nome"></h1>
-
-    <div class="p-urgency"><i class="fa fa-fire" style="color:#e53935"></i> Oferta por tempo limitado</div>
-
-    <p id="p-desc" class="p-desc"></p>
-
-    <div class="p-preco-box">
-      <div id="p-antigo" class="p-preco-antigo"></div>
-      <div id="p-novo"   class="p-preco-novo"></div>
-      <div id="p-economia" class="p-economia" style="display:none">
-        <i class="fa fa-tag"></i>
-        <span id="p-economia-txt"></span>
+  <!-- Seção Red Bull — sempre visível -->
+  <div class="pd-section">
+    <div class="sec-header">
+      <div class="sec-title">Escolha seu Red Bull<span class="sec-badge-req">obrigatório</span></div>
+      <div class="sec-sub">Escolha 1 sabor</div>
+    </div>
+    <div class="chips-wrap">
+      <div class="chip-opt" data-group="redbull" data-value="Tradicional" onclick="selecionarChip(this)">
+        <img class="chip-img" src="images/rb-tradicional.png" alt="Tradicional">
+        <span class="chip-label">Tradicional</span>
+        <div class="chip-check"><i class="fa fa-check" style="font-size:11px;color:#1a1a1a"></i></div>
+      </div>
+      <div class="chip-opt" data-group="redbull" data-value="Zero" onclick="selecionarChip(this)">
+        <img class="chip-img" src="images/rb-zero.png" alt="Zero">
+        <span class="chip-label">Zero</span>
+        <div class="chip-check"><i class="fa fa-check" style="font-size:11px;color:#1a1a1a"></i></div>
+      </div>
+      <div class="chip-opt" data-group="redbull" data-value="Tropical" onclick="selecionarChip(this)">
+        <img class="chip-img" src="images/rb-tropical.png" alt="Tropical">
+        <span class="chip-label">Tropical</span>
+        <div class="chip-check"><i class="fa fa-check" style="font-size:11px;color:#1a1a1a"></i></div>
+      </div>
+      <div class="chip-opt" data-group="redbull" data-value="Melancia" onclick="selecionarChip(this)">
+        <img class="chip-img" src="images/rb-melancia.png" alt="Melancia">
+        <span class="chip-label">Melancia</span>
+        <div class="chip-check"><i class="fa fa-check" style="font-size:11px;color:#1a1a1a"></i></div>
       </div>
     </div>
+  </div>
 
-    <hr class="p-divider">
-
-    <button class="p-obs-toggle" id="obs-toggle" onclick="toggleObs()">
-      <i class="fa fa-plus"></i> Adicionar observação
-    </button>
-    <div class="p-obs-wrap" id="obs-wrap">
-      <textarea id="p-obs" class="p-obs" rows="3" placeholder="Ex: sem gelo, embalagem especial..."></textarea>
+  <!-- Seção Jack Daniel's — visível apenas se whisky=jack -->
+  <div class="pd-section" id="sec-jack" style="display:none">
+    <div class="sec-header">
+      <div class="sec-title">Escolha seu Jack Daniel's<span class="sec-badge-req">obrigatório</span></div>
+      <div class="sec-sub">Escolha 1 opção</div>
+    </div>
+    <div class="chips-wrap">
+      <div class="chip-opt" data-group="whisky-var" data-value="Original Nº7" onclick="selecionarChip(this)">
+        <img class="chip-img" src="images/jack-original.png" alt="Original Nº7">
+        <span class="chip-label">Original Nº7</span>
+        <div class="chip-check"><i class="fa fa-check" style="font-size:11px;color:#1a1a1a"></i></div>
+      </div>
+      <div class="chip-opt" data-group="whisky-var" data-value="Maçã Verde" onclick="selecionarChip(this)">
+        <img class="chip-img" src="images/jack-maca.png" alt="Maçã Verde">
+        <span class="chip-label">Maçã Verde</span>
+        <div class="chip-check"><i class="fa fa-check" style="font-size:11px;color:#1a1a1a"></i></div>
+      </div>
+      <div class="chip-opt" data-group="whisky-var" data-value="Mel (Honey)" onclick="selecionarChip(this)">
+        <img class="chip-img" src="images/jack-mel.png" alt="Mel (Honey)">
+        <span class="chip-label">Mel (Honey)</span>
+        <div class="chip-check"><i class="fa fa-check" style="font-size:11px;color:#1a1a1a"></i></div>
+      </div>
     </div>
   </div>
 
-  <div class="p-bottom">
-    <div class="p-bottom-inner">
-      <div class="p-qty">
-        <button class="p-qty-btn" id="btn-m" onclick="changeQty(-1)" disabled>−</button>
-        <span class="p-qty-num" id="qty">1</span>
-        <button class="p-qty-btn" id="btn-p" onclick="changeQty(1)">+</button>
+  <!-- Seção Gelo de Coco — sempre visível, opcional -->
+  <div class="pd-section" id="sec-gelo">
+    <div class="sec-header sec-header-flex">
+      <div class="sec-header-left">
+        <div>
+          <div class="sec-title">Gelo de Coco - Coco Leve</div>
+          <div class="sec-sub">R$ 4,99/un · desconto por quantidade</div>
+        </div>
       </div>
-      <button class="p-add-btn" id="btn-add" onclick="addToCart()">
-        <span>Adicionar</span>
-        <span class="p-add-btn-price" id="btn-price">R$ 0,00</span>
-      </button>
+      <span class="sec-badge-opt">opcional</span>
     </div>
+    <div class="chips-wrap" style="padding-bottom:0">
+      <div class="chip-opt" data-group="gelo-sabor" data-value="Coco padrão" onclick="selecionarChip(this)">
+        <img class="chip-img" src="images/gelo-coco-padrao.png" alt="Coco padrão">
+        <span class="chip-label">Sabor Coco</span>
+        <div class="chip-check"><i class="fa fa-check" style="font-size:11px;color:#1a1a1a"></i></div>
+      </div>
+      <div class="chip-opt" data-group="gelo-sabor" data-value="Maçã Verde" onclick="selecionarChip(this)">
+        <img class="chip-img" src="images/gelo-maca.jpg" alt="Maçã Verde">
+        <span class="chip-label">Sabor Maçã Verde</span>
+        <div class="chip-check"><i class="fa fa-check" style="font-size:11px;color:#1a1a1a"></i></div>
+      </div>
+      <div class="chip-opt" data-group="gelo-sabor" data-value="Melancia" onclick="selecionarChip(this)">
+        <img class="chip-img" src="images/gelo-melancia.jpg" alt="Melancia">
+        <span class="chip-label">Sabor Melancia</span>
+        <div class="chip-check"><i class="fa fa-check" style="font-size:11px;color:#1a1a1a"></i></div>
+      </div>
+      <div class="chip-opt" data-group="gelo-sabor" data-value="Morango" onclick="selecionarChip(this)">
+        <img class="chip-img" src="images/gelo-morango.jpg" alt="Morango">
+        <span class="chip-label">Sabor Morango</span>
+        <div class="chip-check"><i class="fa fa-check" style="font-size:11px;color:#1a1a1a"></i></div>
+      </div>
+      <div class="chip-opt" data-group="gelo-sabor" data-value="Maracujá" onclick="selecionarChip(this)">
+        <img class="chip-img" src="images/gelo-maracuja.jpg" alt="Maracujá">
+        <span class="chip-label">Sabor Maracujá</span>
+        <div class="chip-check"><i class="fa fa-check" style="font-size:11px;color:#1a1a1a"></i></div>
+      </div>
+    </div>
+    <!-- Quantidade — aparece ao selecionar um sabor -->
+    <div id="gelo-qty-section" style="display:none">
+      <div class="gelo-qty-wrap">
+        <button class="gelo-qty-btn" onclick="changeGeloQty(-1)">−</button>
+        <div class="gelo-qty-center">
+          <div class="gelo-qty-num" id="gelo-qty-num">1</div>
+          <div class="gelo-qty-preco" id="gelo-qty-preco">R$ 4,99</div>
+        </div>
+        <button class="gelo-qty-btn" onclick="changeGeloQty(1)">+</button>
+      </div>
+      <div class="gelo-badges">
+        <button class="gelo-badge-btn" data-qty="3" onclick="setGeloQty(3)">3 un.<span class="gelo-badge-price">R$ 12,99</span></button>
+        <button class="gelo-badge-btn" data-qty="5" onclick="setGeloQty(5)">5 un.<span class="gelo-badge-price">R$ 19,99</span></button>
+        <button class="gelo-badge-btn" data-qty="10" onclick="setGeloQty(10)">10 un.<span class="gelo-badge-price">R$ 34,99</span></button>
+      </div>
+    </div>
+  </div>
+
+  <div class="pd-spacer"></div>
+
+  <!-- Botão fixo no rodapé -->
+  <div class="pd-footer">
+    <div class="pd-total-row">
+      <span class="pd-total-label">Total do pedido</span>
+      <span class="pd-total-val" id="total-display">R$ 0,00</span>
+    </div>
+    <button class="pd-add-btn" id="btn-adicionar" onclick="adicionarCarrinho()" disabled>
+      Selecione o sabor do Red Bull
+    </button>
   </div>
 
   <script src="js/produtos.js"></script>
   <script src="js/carrinho-data.js"></script>
   <script>
-    var prod = null, qty = 1;
+    var urlParams = new URLSearchParams(location.search);
+    var produtoId = parseInt(urlParams.get('id'));
+    var isJack    = urlParams.get('whisky') === 'jack';
+    var produto   = (typeof PRODUTOS !== 'undefined')
+      ? PRODUTOS.find(function(p) { return p.id === produtoId; })
+      : null;
 
-    function fmt(v) { return 'R$ ' + v.toFixed(2).replace('.', ','); }
+    if (!produto) {
+      window.location.replace('index.html');
+    } else {
+      /* ── Preenche card do produto ── */
+      document.title = produto.nome + ' - Zé Delivery';
+      document.getElementById('pd-img').src = produto.img;
+      document.getElementById('pd-img').alt = produto.nome;
+      document.getElementById('pd-nome').textContent = produto.nome;
+      document.getElementById('pd-desc').textContent = produto.desc;
+      document.getElementById('pd-preco-antigo').textContent =
+        'R$ ' + produto.precoAntigo.toFixed(2).replace('.', ',');
+      document.getElementById('pd-preco').textContent =
+        'R$ ' + produto.preco.toFixed(2).replace('.', ',');
 
-    function goBack() {
-      if (document.referrer && document.referrer.includes(location.hostname)) history.back();
-      else window.location.href = 'index.html';
-    }
+      /* Exibe seção Jack se for produto Jack */
+      if (isJack) document.getElementById('sec-jack').style.display = '';
 
-    function updatePrice() {
-      document.getElementById('btn-price').textContent = fmt(prod.preco * qty);
-    }
+      /* ── Estado das seleções ── */
+      var rbSabor     = null;
+      var whiskySabor = null;
+      var geloSabor   = 'none';
+      var geloQty     = 1;
 
-    function changeQty(d) {
-      qty = Math.max(1, Math.min(99, qty + d));
-      document.getElementById('qty').textContent = qty;
-      document.getElementById('btn-m').disabled = qty <= 1;
-      updatePrice();
-    }
+      function fmt(v) { return 'R$ ' + v.toFixed(2).replace('.', ','); }
 
-    function toggleObs() {
-      var wrap   = document.getElementById('obs-wrap');
-      var toggle = document.getElementById('obs-toggle');
-      var open   = wrap.classList.toggle('open');
-      toggle.classList.toggle('open', open);
-      toggle.querySelector('i').className = open ? 'fa fa-minus' : 'fa fa-plus';
-      toggle.childNodes[1].textContent = open ? ' Remover observação' : ' Adicionar observação';
-      if (open) setTimeout(function() { document.getElementById('p-obs').focus(); }, 260);
-    }
-
-    function addToCart() {
-      if (!prod) return;
-      var obs = document.getElementById('p-obs').value.trim();
-      CarrinhoData.adicionar(prod, qty, obs);
-
-      var btn = document.getElementById('btn-add');
-      btn.classList.add('success');
-      btn.innerHTML = '<i class="fa fa-check"></i><span>Adicionado!</span>';
-      setTimeout(function() { window.location.href = 'carrinho.html'; }, 700);
-    }
-
-    (function init() {
-      var id = parseInt(new URLSearchParams(location.search).get('id'));
-      prod = PRODUTOS.find(function(p) { return p.id === id; });
-      if (!prod) { location.href = 'index.html'; return; }
-
-      document.title = prod.nome + ' - Zé Delivery';
-      document.getElementById('p-img').src  = prod.img;
-      document.getElementById('p-img').alt  = prod.nome;
-      document.getElementById('p-nome').textContent  = prod.nome;
-      document.getElementById('p-desc').textContent  = prod.desc;
-      document.getElementById('p-novo').textContent  = fmt(prod.preco);
-
-      if (prod.precoAntigo && prod.precoAntigo > prod.preco) {
-        document.getElementById('p-antigo').textContent = 'De: ' + fmt(prod.precoAntigo);
-
-        /* Badge % de desconto na imagem */
-        var pct = Math.round((1 - prod.preco / prod.precoAntigo) * 100);
-        var badge = document.getElementById('p-discount-badge');
-        badge.textContent = '-' + pct + '%';
-        badge.style.display = 'block';
-
-        /* Linha de economia */
-        var economia = prod.precoAntigo - prod.preco;
-        var econEl = document.getElementById('p-economia');
-        document.getElementById('p-economia-txt').textContent =
-          'Você economiza ' + fmt(economia) + ' nessa oferta';
-        econEl.style.display = 'inline-flex';
+      function getGeloTotal(qty) {
+        if (qty >= 10) return 34.99 + (qty - 10) * 3.50;
+        if (qty >= 5)  return 19.99 + (qty - 5)  * 4.00;
+        if (qty >= 3)  return 12.99 + (qty - 3)  * 4.33;
+        return qty * 4.99;
       }
 
-      updatePrice();
+      function calcTotal() {
+        var total = produto.preco;
+        if (geloSabor && geloSabor !== 'none') total += getGeloTotal(geloQty);
+        return total;
+      }
 
-      var n = CarrinhoData.totalItens();
-      var b = document.getElementById('badge');
-      if (n > 0) { b.style.display = 'flex'; b.textContent = n; }
-    })();
+      function updateGeloQtyDisplay() {
+        document.getElementById('gelo-qty-num').textContent = geloQty;
+        document.getElementById('gelo-qty-preco').textContent = fmt(getGeloTotal(geloQty));
+        document.querySelectorAll('.gelo-badge-btn').forEach(function(btn) {
+          btn.classList.toggle('active', parseInt(btn.dataset.qty) === geloQty);
+        });
+      }
+
+      function updateTotal() {
+        document.getElementById('total-display').textContent = fmt(calcTotal());
+      }
+
+      function updateBtn() {
+        var btn  = document.getElementById('btn-adicionar');
+        var jack = isJack ? whiskySabor : 'ok';
+        if (!rbSabor) {
+          btn.disabled = true;
+          btn.textContent = 'Selecione o sabor do Red Bull';
+          return;
+        }
+        if (!jack) {
+          btn.disabled = true;
+          btn.textContent = "Escolha seu Jack Daniel's";
+          return;
+        }
+        btn.disabled = false;
+        btn.textContent = 'Adicionar ao carrinho — ' + fmt(calcTotal());
+      }
+
+      function selecionarChip(el) {
+        var group = el.dataset.group;
+        if (el.classList.contains('selecionado')) {
+          el.classList.remove('selecionado');
+          if (group === 'redbull') {
+            rbSabor = null;
+          } else if (group === 'whisky-var') {
+            whiskySabor = null;
+          } else if (group === 'gelo-sabor') {
+            geloSabor = 'none';
+            document.getElementById('gelo-qty-section').style.display = 'none';
+          }
+          updateTotal();
+          updateBtn();
+          return;
+        }
+        document.querySelectorAll('.chip-opt[data-group="' + group + '"]').forEach(function(c) {
+          c.classList.remove('selecionado');
+        });
+        el.classList.add('selecionado');
+        var value = el.dataset.value;
+        if (group === 'redbull') {
+          rbSabor = value;
+        } else if (group === 'whisky-var') {
+          whiskySabor = value;
+        } else if (group === 'gelo-sabor') {
+          geloSabor = value;
+          document.getElementById('gelo-qty-section').style.display = '';
+          updateGeloQtyDisplay();
+        }
+        updateTotal();
+        updateBtn();
+        setTimeout(function() {
+          var targetId = null;
+          if (group === 'redbull') {
+            var secJack = document.getElementById('sec-jack');
+            targetId = (secJack && secJack.style.display !== 'none') ? 'sec-jack' : 'sec-gelo';
+          } else if (group === 'whisky-var') {
+            targetId = 'sec-gelo';
+          } else if (group === 'gelo-sabor') {
+            targetId = 'gelo-qty-section';
+          }
+          if (targetId) {
+            var target = document.getElementById(targetId);
+            if (target) target.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          }
+        }, 150);
+      }
+
+      function changeGeloQty(delta) {
+        geloQty = Math.max(1, geloQty + delta);
+        updateGeloQtyDisplay();
+        updateTotal();
+        updateBtn();
+      }
+
+      function setGeloQty(qty) {
+        geloQty = qty;
+        updateGeloQtyDisplay();
+        updateTotal();
+        updateBtn();
+      }
+
+      /* ── Adicionar ao carrinho ── */
+      function adicionarCarrinho() {
+        var obs = 'Red Bull: ' + rbSabor;
+        if (whiskySabor)                          obs += ' | Jack: ' + whiskySabor;
+        if (geloSabor && geloSabor !== 'none') obs += ' | Gelo Coco Leve ' + geloSabor + ' x' + geloQty;
+
+        CarrinhoData.adicionar(produto, 1, obs);
+
+        if (geloSabor && geloSabor !== 'none') {
+          CarrinhoData.adicionar({
+            id:    999,
+            nome:  'Gelo de Coco - Coco Leve (' + geloSabor + ')',
+            preco: getGeloTotal(geloQty),
+            img:   'images/gelo-coco.png'
+          }, 1, geloQty + ' unidades');
+        }
+
+        window.location.href = 'carrinho.html';
+      }
+
+      /* Init */
+      updateTotal();
+    }
   </script>
 </body>
 </html>
