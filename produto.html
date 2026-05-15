@@ -77,7 +77,7 @@
       overflow: hidden;
     }
     .pd-img-wrap {
-      background: #fff8e1;
+      background: #ffffff;
       padding: 24px;
       display: flex;
       align-items: center;
@@ -265,7 +265,7 @@
       <div class="sec-header-left">
         <div>
           <div class="sec-title">Escolha seu Red Bull</div>
-          <div class="sec-sub">Escolha 1 sabor para as 6 latas — ou 2 sabores (3 de cada)</div>
+          <div class="sec-sub">Escolha 1 sabor para as 6 latas, ou 2 sabores (3 de cada)</div>
         </div>
       </div>
       <span class="sec-badge-req">obrigatório</span>
@@ -335,7 +335,7 @@
       </div>
       <span class="sec-badge-opt">opcional</span>
     </div>
-    <div class="chips-wrap" style="padding-bottom:0">
+    <div class="chips-wrap" style="padding-bottom:12px">
       <div class="chip-opt" data-group="gelo-sabor" data-value="Coco padrão" onclick="selecionarChip(this)">
         <img class="chip-img" src="images/gelo-coco-padrao.png" alt="Coco padrão">
         <span class="chip-label">Sabor Coco</span>
@@ -402,36 +402,6 @@
       </div>
     </div>
   </div>
-
-  <footer style="background:#f7f7f7;border-top:3px solid #ffcc01;padding:32px 20px 20px;margin-top:8px;font-family:'Poppins',sans-serif;">
-    <div style="max-width:600px;margin:0 auto;">
-      <div style="text-align:center;margin-bottom:24px;">
-        <h3 style="font-size:14px;font-weight:700;color:#1a1a1a;letter-spacing:0.5px;margin:0 0 10px;">CENTRAL DE ATENDIMENTO</h3>
-        <p style="font-size:13px;color:#666;margin:0 0 4px;">SAC (Serviço de Atendimento ao Consumidor)</p>
-        <p style="font-size:13px;color:#666;margin:0 0 14px;">
-          <a href="mailto:suporte@zedelivery24h.com.br" style="color:#666;text-decoration:none;">📧 suporte@zedelivery24h.com.br</a>
-        </p>
-        <a href="https://wa.me/5511917254664" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;background:#25d366;color:#fff;text-decoration:none;padding:10px 18px;border-radius:24px;font-size:13px;font-weight:600;">
-          <i class="fa fa-whatsapp"></i> Falar no WhatsApp
-        </a>
-      </div>
-      <div style="height:1px;background:#e0e0e0;margin:0 0 24px;"></div>
-      <div style="text-align:center;margin-bottom:24px;">
-        <h3 style="font-size:14px;font-weight:700;color:#1a1a1a;letter-spacing:0.5px;margin:0 0 14px;">INFORMAÇÕES</h3>
-        <div style="display:flex;flex-direction:column;gap:10px;">
-          <a href="privacidade.html" style="font-size:13px;color:#666;text-decoration:none;">Política de Privacidade</a>
-          <a href="reembolso.html" style="font-size:13px;color:#666;text-decoration:none;">Política de Reembolso</a>
-          <a href="termos.html" style="font-size:13px;color:#666;text-decoration:none;">Termos e Condições de Uso</a>
-        </div>
-      </div>
-      <div style="height:1px;background:#e0e0e0;margin:0 0 18px;"></div>
-      <p style="font-size:11px;color:#999;text-align:center;margin:0;line-height:1.5;">
-        Zé Delivery © · CNPJ 91.152.566/0001-94 · 2026<br>
-        Todos os direitos reservados.<br>
-        <span style="font-size:10px;color:#bbb;">Bebida alcoólica · Venda e consumo proibidos para menores de 18 anos.</span>
-      </p>
-    </div>
-  </footer>
 
   <div class="pd-spacer"></div>
 
@@ -513,8 +483,10 @@
           el.style.display = 'none';
           return;
         }
+        var chipSelecionado = document.querySelector('.chip-opt[data-group="gelo-sabor"].selecionado');
+        var labelTexto = chipSelecionado ? chipSelecionado.querySelector('.chip-label').textContent : geloSabor;
         document.getElementById('addon-detail-label').textContent =
-          'Gelo de Coco - ' + geloSabor + ' x' + geloQty;
+          'Gelo de Coco Leve - ' + labelTexto + ' x' + geloQty;
         document.getElementById('addon-detail-val').textContent =
           '+' + fmt(getGeloTotal(geloQty));
         el.style.display = 'flex';
@@ -578,17 +550,23 @@
             updateBtn();
           } else {
             if (rbSabores.length >= 2) return;
-            var eraVazio = rbSabores.length === 0;
             el.classList.add('selecionado');
             rbSabores.push(value);
             atualizarLabelsRedBull();
             updateTotal();
             updateBtn();
-            if (eraVazio) {
+            if (rbSabores.length === 2) {
               setTimeout(function() {
                 var secJack = document.getElementById('sec-jack');
                 var targetId = (secJack && secJack.style.display !== 'none') ? 'sec-jack' : 'sec-gelo';
-                scrollParaSecao(targetId);
+                var target = document.getElementById(targetId);
+                if (!target) return;
+                var rect = target.getBoundingClientRect();
+                var windowHeight = window.innerHeight;
+                if (rect.bottom > windowHeight - 80) {
+                  var scrollAmount = rect.bottom - windowHeight + 100;
+                  window.scrollBy({ top: scrollAmount, behavior: 'smooth' });
+                }
               }, 150);
             }
           }
@@ -620,15 +598,22 @@
         }
         updateTotal();
         updateBtn();
-        setTimeout(function() {
-          var targetId = null;
-          if (group === 'whisky-var') {
-            targetId = 'sec-gelo';
-          } else if (group === 'gelo-sabor') {
-            targetId = 'gelo-qty-section';
-          }
-          if (targetId) scrollParaSecao(targetId);
-        }, 150);
+        if (group === 'whisky-var') {
+          setTimeout(function() {
+            scrollParaSecao('sec-gelo');
+          }, 150);
+        } else if (group === 'gelo-sabor') {
+          setTimeout(function() {
+            var target = document.getElementById('gelo-qty-section');
+            if (!target) return;
+            var rect = target.getBoundingClientRect();
+            var windowHeight = window.innerHeight;
+            if (rect.bottom > windowHeight - 80) {
+              var scrollAmount = rect.bottom - windowHeight + 180;
+              window.scrollBy({ top: scrollAmount, behavior: 'smooth' });
+            }
+          }, 150);
+        }
       }
 
       function changeGeloQty(delta) {
@@ -651,19 +636,26 @@
           ? 'Red Bull: 3x ' + rbSabores[0] + ' + 3x ' + rbSabores[1]
           : 'Red Bull: 6x ' + rbSabores[0];
         var obs = rbDesc;
-        if (whiskySabor)                          obs += ' | Jack: ' + whiskySabor;
-        if (geloSabor && geloSabor !== 'none') obs += ' | Gelo Coco Leve ' + geloSabor + ' x' + geloQty;
+        if (whiskySabor) obs += '\nJack: ' + whiskySabor;
         var obsCliente = document.getElementById('pd-obs').value.trim();
-        if (obsCliente) obs += ' | Obs: ' + obsCliente;
+        if (obsCliente) obs += '\nObs: ' + obsCliente;
 
         CarrinhoData.adicionar(produto, 1, obs);
 
         if (geloSabor && geloSabor !== 'none') {
+          var geloImgMap = {
+            'Coco padrão': 'images/gelo-coco-padrao.png',
+            'Maçã Verde':  'images/gelo-maca.jpg',
+            'Melancia':    'images/gelo-melancia.jpg',
+            'Morango':     'images/gelo-morango.jpg',
+            'Maracujá':    'images/gelo-maracuja.jpg'
+          };
+          var geloImg = geloImgMap[geloSabor] || 'images/gelo-coco-padrao.png';
           CarrinhoData.adicionar({
             id:    999,
             nome:  'Gelo de Coco - Coco Leve (' + geloSabor + ')',
             preco: getGeloTotal(geloQty),
-            img:   'images/gelo-coco.png'
+            img:   geloImg
           }, 1, geloQty + ' unidades');
         }
 
