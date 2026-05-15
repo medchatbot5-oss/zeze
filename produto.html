@@ -51,7 +51,7 @@
 
     /* ── Header ── */
     .pd-header {
-      background: #ffcc01;
+      background: #f5f5f5;
       padding: 14px 16px;
       display: flex;
       align-items: center;
@@ -59,11 +59,14 @@
     }
     .pd-back {
       width: 34px; height: 34px; border-radius: 50%;
-      background: rgba(0,0,0,.12); border: none; cursor: pointer;
+      background: rgba(0,0,0,.07); border: 1px solid #ddd; cursor: pointer;
       display: flex; align-items: center; justify-content: center;
       font-size: 16px; color: #1a1a1a; flex-shrink: 0;
     }
-    .pd-header-title { font-size: 15px; font-weight: 700; color: #1a1a1a; }
+    .pd-header-title {
+      font-size: 15px; font-weight: 700; color: #1a1a1a;
+      overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
+    }
 
     /* ── Card produto ── */
     .pd-card {
@@ -117,7 +120,7 @@
       background: #fff8cc; color: #b8860b;
       border: 1px solid #ffe066;
       font-size: 11px; font-weight: 700; padding: 3px 8px;
-      border-radius: 20px; margin-left: 8px; white-space: nowrap;
+      border-radius: 20px; white-space: nowrap; flex-shrink: 0;
     }
 
     /* ── Chips ── */
@@ -189,7 +192,17 @@
     .gelo-badge-price { color: #077c22; font-size: 11px; font-weight: 600; display: block; }
 
     /* ── Spacer e footer ── */
-    .pd-spacer { height: 120px; }
+    .pd-spacer { height: 155px; }
+    .pd-addon-detail {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      color: #888;
+      padding-bottom: 8px;
+      margin-bottom: 8px;
+      border-bottom: 1px solid #eee;
+    }
     .pd-footer {
       position: fixed;
       bottom: 0;
@@ -230,7 +243,7 @@
 
   <div class="pd-header">
     <button class="pd-back" onclick="window.history.back()"><i class="fa fa-arrow-left"></i></button>
-    <span class="pd-header-title">Detalhes do produto</span>
+    <span class="pd-header-title" id="pd-header-title">Detalhes do produto</span>
   </div>
 
   <!-- Card do produto -->
@@ -248,9 +261,14 @@
 
   <!-- Seção Red Bull — sempre visível -->
   <div class="pd-section">
-    <div class="sec-header">
-      <div class="sec-title">Escolha seu Red Bull<span class="sec-badge-req">obrigatório</span></div>
-      <div class="sec-sub">Escolha 1 sabor</div>
+    <div class="sec-header sec-header-flex">
+      <div class="sec-header-left">
+        <div>
+          <div class="sec-title">Escolha seu Red Bull</div>
+          <div class="sec-sub">Escolha 1 sabor para as 6 latas — ou 2 sabores (3 de cada)</div>
+        </div>
+      </div>
+      <span class="sec-badge-req">obrigatório</span>
     </div>
     <div class="chips-wrap">
       <div class="chip-opt" data-group="redbull" data-value="Tradicional" onclick="selecionarChip(this)">
@@ -278,9 +296,14 @@
 
   <!-- Seção Jack Daniel's — visível apenas se whisky=jack -->
   <div class="pd-section" id="sec-jack" style="display:none">
-    <div class="sec-header">
-      <div class="sec-title">Escolha seu Jack Daniel's<span class="sec-badge-req">obrigatório</span></div>
-      <div class="sec-sub">Escolha 1 opção</div>
+    <div class="sec-header sec-header-flex">
+      <div class="sec-header-left">
+        <div>
+          <div class="sec-title">Escolha seu Jack Daniel's</div>
+          <div class="sec-sub">Escolha 1 opção</div>
+        </div>
+      </div>
+      <span class="sec-badge-req">obrigatório</span>
     </div>
     <div class="chips-wrap">
       <div class="chip-opt" data-group="whisky-var" data-value="Original Nº7" onclick="selecionarChip(this)">
@@ -357,10 +380,67 @@
     </div>
   </div>
 
+  <!-- Seção Observações -->
+  <div class="pd-section">
+    <div class="sec-header sec-header-flex">
+      <div class="sec-header-left">
+        <div>
+          <div class="sec-title">Observações do pedido</div>
+          <div class="sec-sub">Algum detalhe pra entrega? Conta pra gente.</div>
+        </div>
+      </div>
+      <span class="sec-badge-opt">opcional</span>
+    </div>
+    <div style="padding: 12px;">
+      <textarea id="pd-obs" placeholder="Ex: deixar na portaria, sem gelo, tocar a campainha..."
+        style="width:100%;box-sizing:border-box;padding:12px 14px;font-family:'Poppins',sans-serif;
+        font-size:14px;border:1.5px solid #eee;border-radius:12px;background:#fff;color:#1a1a1a;
+        outline:none;resize:vertical;min-height:80px;max-height:160px;"
+        maxlength="200"></textarea>
+      <div style="font-size:11px;color:#aaa;margin-top:4px;text-align:right;">
+        <span id="pd-obs-count">0</span>/200
+      </div>
+    </div>
+  </div>
+
+  <footer style="background:#f7f7f7;border-top:3px solid #ffcc01;padding:32px 20px 20px;margin-top:8px;font-family:'Poppins',sans-serif;">
+    <div style="max-width:600px;margin:0 auto;">
+      <div style="text-align:center;margin-bottom:24px;">
+        <h3 style="font-size:14px;font-weight:700;color:#1a1a1a;letter-spacing:0.5px;margin:0 0 10px;">CENTRAL DE ATENDIMENTO</h3>
+        <p style="font-size:13px;color:#666;margin:0 0 4px;">SAC (Serviço de Atendimento ao Consumidor)</p>
+        <p style="font-size:13px;color:#666;margin:0 0 14px;">
+          <a href="mailto:suporte@zedelivery24h.com.br" style="color:#666;text-decoration:none;">📧 suporte@zedelivery24h.com.br</a>
+        </p>
+        <a href="https://wa.me/5511917254664" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;background:#25d366;color:#fff;text-decoration:none;padding:10px 18px;border-radius:24px;font-size:13px;font-weight:600;">
+          <i class="fa fa-whatsapp"></i> Falar no WhatsApp
+        </a>
+      </div>
+      <div style="height:1px;background:#e0e0e0;margin:0 0 24px;"></div>
+      <div style="text-align:center;margin-bottom:24px;">
+        <h3 style="font-size:14px;font-weight:700;color:#1a1a1a;letter-spacing:0.5px;margin:0 0 14px;">INFORMAÇÕES</h3>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <a href="privacidade.html" style="font-size:13px;color:#666;text-decoration:none;">Política de Privacidade</a>
+          <a href="reembolso.html" style="font-size:13px;color:#666;text-decoration:none;">Política de Reembolso</a>
+          <a href="termos.html" style="font-size:13px;color:#666;text-decoration:none;">Termos e Condições de Uso</a>
+        </div>
+      </div>
+      <div style="height:1px;background:#e0e0e0;margin:0 0 18px;"></div>
+      <p style="font-size:11px;color:#999;text-align:center;margin:0;line-height:1.5;">
+        Zé Delivery © · CNPJ 91.152.566/0001-94 · 2026<br>
+        Todos os direitos reservados.<br>
+        <span style="font-size:10px;color:#bbb;">Bebida alcoólica · Venda e consumo proibidos para menores de 18 anos.</span>
+      </p>
+    </div>
+  </footer>
+
   <div class="pd-spacer"></div>
 
   <!-- Botão fixo no rodapé -->
   <div class="pd-footer">
+    <div class="pd-addon-detail" id="addon-detail" style="display:none">
+      <span id="addon-detail-label"></span>
+      <span id="addon-detail-val"></span>
+    </div>
     <div class="pd-total-row">
       <span class="pd-total-label">Total do pedido</span>
       <span class="pd-total-val" id="total-display">R$ 0,00</span>
@@ -388,6 +468,7 @@
       document.getElementById('pd-img').src = produto.img;
       document.getElementById('pd-img').alt = produto.nome;
       document.getElementById('pd-nome').textContent = produto.nome;
+      document.getElementById('pd-header-title').textContent = produto.nome;
       document.getElementById('pd-desc').textContent = produto.desc;
       document.getElementById('pd-preco-antigo').textContent =
         'R$ ' + produto.precoAntigo.toFixed(2).replace('.', ',');
@@ -398,7 +479,7 @@
       if (isJack) document.getElementById('sec-jack').style.display = '';
 
       /* ── Estado das seleções ── */
-      var rbSabor     = null;
+      var rbSabores   = [];
       var whiskySabor = null;
       var geloSabor   = 'none';
       var geloQty     = 1;
@@ -426,14 +507,28 @@
         });
       }
 
+      function atualizarDetalheAddon() {
+        var el = document.getElementById('addon-detail');
+        if (!geloSabor || geloSabor === 'none') {
+          el.style.display = 'none';
+          return;
+        }
+        document.getElementById('addon-detail-label').textContent =
+          'Gelo de Coco - ' + geloSabor + ' x' + geloQty;
+        document.getElementById('addon-detail-val').textContent =
+          '+' + fmt(getGeloTotal(geloQty));
+        el.style.display = 'flex';
+      }
+
       function updateTotal() {
         document.getElementById('total-display').textContent = fmt(calcTotal());
+        atualizarDetalheAddon();
       }
 
       function updateBtn() {
         var btn  = document.getElementById('btn-adicionar');
         var jack = isJack ? whiskySabor : 'ok';
-        if (!rbSabor) {
+        if (rbSabores.length === 0) {
           btn.disabled = true;
           btn.textContent = 'Selecione o sabor do Red Bull';
           return;
@@ -447,13 +542,62 @@
         btn.textContent = 'Adicionar ao carrinho — ' + fmt(calcTotal());
       }
 
+      function scrollParaSecao(targetId) {
+        var target = document.getElementById(targetId);
+        if (!target) return;
+        var rect = target.getBoundingClientRect();
+        var topo = rect.top + window.pageYOffset - 16;
+        window.scrollTo({ top: topo, behavior: 'smooth' });
+      }
+
+      function atualizarLabelsRedBull() {
+        document.querySelectorAll('.chip-opt[data-group="redbull"]').forEach(function(c) {
+          var label = c.querySelector('.chip-label');
+          if (!label) return;
+          var original = c.dataset.value;
+          if (rbSabores.length === 1 && c.classList.contains('selecionado')) {
+            label.textContent = '6x ' + original;
+          } else if (rbSabores.length === 2 && c.classList.contains('selecionado')) {
+            label.textContent = '3x ' + original;
+          } else {
+            label.textContent = original;
+          }
+        });
+      }
+
       function selecionarChip(el) {
         var group = el.dataset.group;
+        var value = el.dataset.value;
+
+        if (group === 'redbull') {
+          if (el.classList.contains('selecionado')) {
+            el.classList.remove('selecionado');
+            rbSabores = rbSabores.filter(function(s) { return s !== value; });
+            atualizarLabelsRedBull();
+            updateTotal();
+            updateBtn();
+          } else {
+            if (rbSabores.length >= 2) return;
+            var eraVazio = rbSabores.length === 0;
+            el.classList.add('selecionado');
+            rbSabores.push(value);
+            atualizarLabelsRedBull();
+            updateTotal();
+            updateBtn();
+            if (eraVazio) {
+              setTimeout(function() {
+                var secJack = document.getElementById('sec-jack');
+                var targetId = (secJack && secJack.style.display !== 'none') ? 'sec-jack' : 'sec-gelo';
+                scrollParaSecao(targetId);
+              }, 150);
+            }
+          }
+          return;
+        }
+
         if (el.classList.contains('selecionado')) {
           el.classList.remove('selecionado');
-          if (group === 'redbull') {
-            rbSabor = null;
-          } else if (group === 'whisky-var') {
+          if (group === 'whisky-var') {
             whiskySabor = null;
           } else if (group === 'gelo-sabor') {
             geloSabor = 'none';
@@ -467,10 +611,7 @@
           c.classList.remove('selecionado');
         });
         el.classList.add('selecionado');
-        var value = el.dataset.value;
-        if (group === 'redbull') {
-          rbSabor = value;
-        } else if (group === 'whisky-var') {
+        if (group === 'whisky-var') {
           whiskySabor = value;
         } else if (group === 'gelo-sabor') {
           geloSabor = value;
@@ -481,18 +622,12 @@
         updateBtn();
         setTimeout(function() {
           var targetId = null;
-          if (group === 'redbull') {
-            var secJack = document.getElementById('sec-jack');
-            targetId = (secJack && secJack.style.display !== 'none') ? 'sec-jack' : 'sec-gelo';
-          } else if (group === 'whisky-var') {
+          if (group === 'whisky-var') {
             targetId = 'sec-gelo';
           } else if (group === 'gelo-sabor') {
             targetId = 'gelo-qty-section';
           }
-          if (targetId) {
-            var target = document.getElementById(targetId);
-            if (target) target.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-          }
+          if (targetId) scrollParaSecao(targetId);
         }, 150);
       }
 
@@ -512,9 +647,14 @@
 
       /* ── Adicionar ao carrinho ── */
       function adicionarCarrinho() {
-        var obs = 'Red Bull: ' + rbSabor;
+        var rbDesc = rbSabores.length === 2
+          ? 'Red Bull: 3x ' + rbSabores[0] + ' + 3x ' + rbSabores[1]
+          : 'Red Bull: 6x ' + rbSabores[0];
+        var obs = rbDesc;
         if (whiskySabor)                          obs += ' | Jack: ' + whiskySabor;
         if (geloSabor && geloSabor !== 'none') obs += ' | Gelo Coco Leve ' + geloSabor + ' x' + geloQty;
+        var obsCliente = document.getElementById('pd-obs').value.trim();
+        if (obsCliente) obs += ' | Obs: ' + obsCliente;
 
         CarrinhoData.adicionar(produto, 1, obs);
 
@@ -532,6 +672,9 @@
 
       /* Init */
       updateTotal();
+      document.getElementById('pd-obs').addEventListener('input', function() {
+        document.getElementById('pd-obs-count').textContent = this.value.length;
+      });
     }
   </script>
 </body>
