@@ -480,6 +480,10 @@
       var geloSabor   = 'none';
       var geloQty     = 1;
 
+      /* ── Init: exibe total e habilita botão para não-combo ── */
+      updateTotal();
+      updateBtn();
+
       function fmt(v) { return 'R$ ' + v.toFixed(2).replace('.', ','); }
 
       function getGeloTotal(qty) {
