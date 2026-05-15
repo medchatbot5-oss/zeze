@@ -1,4 +1,4 @@
 var ZE_CONFIG = {
-  nomeRecebedor: 'PAGUEBAN LTDA',
-  instituicao: 'OWEM PAY'
+  nomeRecebedor: 'MARKETPLACE PAGO',
+  instituicao: 'KIKAI SCD S.A.'
 };
