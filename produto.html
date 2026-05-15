@@ -78,12 +78,9 @@
     }
     .pd-img-wrap {
       background: #ffffff;
-      padding: 24px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      padding: 20px;
     }
-    .pd-img-wrap img { max-height: 200px; object-fit: contain; display: block; }
+    .pd-img-wrap img { width: 100%; height: auto; max-height: 200px; object-fit: contain; display: block; }
     .pd-info { padding: 16px; }
     .pd-nome { font-size: 17px; font-weight: 700; }
     .pd-desc { font-size: 13px; color: #888; margin-top: 4px; margin-bottom: 10px; }
@@ -259,8 +256,8 @@
     </div>
   </div>
 
-  <!-- Seção Red Bull — sempre visível -->
-  <div class="pd-section">
+  <!-- Seção Red Bull — visível só para combos -->
+  <div class="pd-section" id="sec-redbull">
     <div class="sec-header sec-header-flex">
       <div class="sec-header-left">
         <div>
@@ -423,6 +420,16 @@
   <script src="js/produtos.js"></script>
   <script src="js/carrinho-data.js"></script>
   <script>
+    (function() {
+      var params = new URLSearchParams(window.location.search);
+      var utmKeys = ['utm_source','utm_medium','utm_campaign','utm_content','utm_term','fbclid'];
+      var utms = {}, found = false;
+      utmKeys.forEach(function(k) {
+        if (params.get(k)) { utms[k] = params.get(k); found = true; }
+      });
+      if (found) sessionStorage.setItem('ze_utms', JSON.stringify(utms));
+    })();
+
     var urlParams = new URLSearchParams(location.search);
     var produtoId = parseInt(urlParams.get('id'));
     var isJack    = urlParams.get('whisky') === 'jack';
@@ -447,6 +454,25 @@
 
       /* Exibe seção Jack se for produto Jack */
       if (isJack) document.getElementById('sec-jack').style.display = '';
+
+      /* ── Visibilidade por categoria ── */
+      var isCombo   = produto.categoria === 'combo';
+      var isGarrafa = produto.categoria === 'garrafa';
+      var isFardo   = produto.categoria === 'fardo';
+
+      if (!isCombo) {
+        document.getElementById('sec-redbull').style.display = 'none';
+        document.getElementById('sec-gelo').style.display = 'none';
+      }
+
+      var rbQty    = produto.rbQty || 6;
+      var rbMetade = rbQty / 2;
+
+      if (isCombo) {
+        var secSub = document.querySelector('#sec-redbull .sec-sub');
+        if (secSub) secSub.textContent =
+          'Escolha 1 sabor para as ' + rbQty + ' latas, ou 2 sabores (' + rbMetade + ' de cada)';
+      }
 
       /* ── Estado das seleções ── */
       var rbSabores   = [];
@@ -500,7 +526,7 @@
       function updateBtn() {
         var btn  = document.getElementById('btn-adicionar');
         var jack = isJack ? whiskySabor : 'ok';
-        if (rbSabores.length === 0) {
+        if (isCombo && rbSabores.length === 0) {
           btn.disabled = true;
           btn.textContent = 'Selecione o sabor do Red Bull';
           return;
@@ -528,9 +554,9 @@
           if (!label) return;
           var original = c.dataset.value;
           if (rbSabores.length === 1 && c.classList.contains('selecionado')) {
-            label.textContent = '6x ' + original;
+            label.textContent = rbQty + 'x ' + original;
           } else if (rbSabores.length === 2 && c.classList.contains('selecionado')) {
-            label.textContent = '3x ' + original;
+            label.textContent = rbMetade + 'x ' + original;
           } else {
             label.textContent = original;
           }
@@ -632,17 +658,22 @@
 
       /* ── Adicionar ao carrinho ── */
       function adicionarCarrinho() {
-        var rbDesc = rbSabores.length === 2
-          ? 'Red Bull: 3x ' + rbSabores[0] + ' + 3x ' + rbSabores[1]
-          : 'Red Bull: 6x ' + rbSabores[0];
-        var obs = rbDesc;
-        if (whiskySabor) obs += '\nJack: ' + whiskySabor;
         var obsCliente = document.getElementById('pd-obs').value.trim();
-        if (obsCliente) obs += '\nObs: ' + obsCliente;
+        var obs = '';
+        if (isCombo) {
+          var rbDesc = rbSabores.length === 2
+            ? 'Red Bull: ' + rbMetade + 'x ' + rbSabores[0] + ' + ' + rbMetade + 'x ' + rbSabores[1]
+            : 'Red Bull: ' + rbQty + 'x ' + rbSabores[0];
+          obs = rbDesc;
+          if (whiskySabor) obs += '\nJack: ' + whiskySabor;
+          if (obsCliente) obs += '\nObs: ' + obsCliente;
+        } else {
+          obs = obsCliente;
+        }
 
         CarrinhoData.adicionar(produto, 1, obs);
 
-        if (geloSabor && geloSabor !== 'none') {
+        if (isCombo && geloSabor && geloSabor !== 'none') {
           var geloImgMap = {
             'Coco padrão': 'images/gelo-coco-padrao.png',
             'Maçã Verde':  'images/gelo-maca.jpg',

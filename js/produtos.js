@@ -11,21 +11,21 @@
   { id: 33, categoria:'garrafa', nome:'Jameson 1L',              desc:'Jameson Triple Distilled Irish Whiskey 1L',                  precoAntigo:119.90, preco: 69.90, img:'images/garrafa-jameson.jpg'       },
   { id: 34, categoria:'garrafa', nome:'White Horse 1L',          desc:'White Horse Blended Scotch Whisky 1L',                      precoAntigo: 64.90, preco: 36.90, img:'images/garrafa-white-horse.jpg'   },
   /* ── Red Label ── trocar img por arquivo próprio quando tiver */
-  { id: 1,  categoria:'combo', nome:'Combo Red Label',     desc:'1x Red Label 1L e 6x Red Bull 250ml',           precoAntigo:139.90, preco:60.90,  img:'images/img2.jpg' },
-  { id: 9,  categoria:'combo', nome:'Red Label Plus',      desc:'1x Red Label 1L e 12x Red Bull 250ml',          precoAntigo:199.90, preco:80.90,  img:'images/combo2-red.jpg' },
-  { id: 10, categoria:'combo', nome:'Duplo Red Label',     desc:'2x Red Label 1L e 12x Red Bull 250ml',          precoAntigo:279.90, preco:89.90,  img:'images/img2.jpg' },
+  { id: 1,  categoria:'combo', rbQty:6,  nome:'Combo Red Label',     desc:'1x Red Label 1L e 6x Red Bull 250ml',           precoAntigo:139.90, preco:60.90,  img:'images/img2.jpg' },
+  { id: 9,  categoria:'combo', rbQty:12, nome:'Combo Red Label',     desc:'1x Red Label 1L e 12x Red Bull 250ml',          precoAntigo:199.90, preco:80.90,  img:'images/combo2-red.jpg' },
+  { id: 10, categoria:'combo', rbQty:12, nome:'Combo Red Label',     desc:'2x Red Label 1L e 12x Red Bull 250ml',          precoAntigo:279.90, preco:89.90,  img:'images/img2.jpg' },
   /* ── Jack Daniel's ── trocar img por arquivo próprio quando tiver */
-  { id: 2,  categoria:'combo', nome:"Combo Jack Daniel's", desc:"1x Jack Daniel's Nº7 1L e 6x Red Bull 250ml",   precoAntigo:189.90, preco:80.90,  img:'images/img3.jpg' },
-  { id: 11, categoria:'combo', nome:"Jack Daniel's Plus",  desc:"1x Jack Daniel's Nº7 1L e 12x Red Bull 250ml",  precoAntigo:239.90, preco:100.90, img:'images/combo2-jack.jpg' },
-  { id: 12, categoria:'combo', nome:"Duplo Jack Daniel's", desc:"2x Jack Daniel's Nº7 1L e 12x Red Bull 250ml",  precoAntigo:379.90, preco:109.90, img:'images/img3.jpg' },
+  { id: 2,  categoria:'combo', rbQty:6,  nome:"Combo Jack Daniel's", desc:"1x Jack Daniel's Nº7 1L e 6x Red Bull 250ml",   precoAntigo:189.90, preco:80.90,  img:'images/img3.jpg' },
+  { id: 11, categoria:'combo', rbQty:12, nome:"Combo Jack Daniel's", desc:"1x Jack Daniel's Nº7 1L e 12x Red Bull 250ml",  precoAntigo:239.90, preco:100.90, img:'images/combo2-jack.jpg' },
+  { id: 12, categoria:'combo', rbQty:12, nome:"Combo Jack Daniel's", desc:"2x Jack Daniel's Nº7 1L e 12x Red Bull 250ml",  precoAntigo:379.90, preco:109.90, img:'images/img3.jpg' },
   /* ── Buchanan's ── trocar img por arquivo próprio quando tiver */
-  { id: 3,  categoria:'combo', nome:"Combo Buchanan's",    desc:"1x Buchanan's 12 anos 1L e 6x Red Bull 250ml",  precoAntigo:229.90, preco:100.90, img:'images/img4.jpg' },
-  { id: 13, categoria:'combo', nome:"Buchanan's Plus",     desc:"1x Buchanan's 12 anos 1L e 12x Red Bull 250ml", precoAntigo:289.90, preco:120.90, img:'images/combo2-buc.jpg' },
-  { id: 14, categoria:'combo', nome:"Duplo Buchanan's",    desc:"2x Buchanan's 12 anos 1L e 12x Red Bull 250ml", precoAntigo:399.90, preco:149.90, img:'images/img4.jpg' },
+  { id: 3,  categoria:'combo', rbQty:6,  nome:"Combo Buchanan's",   desc:"1x Buchanan's 12 anos 1L e 6x Red Bull 250ml",  precoAntigo:229.90, preco:100.90, img:'images/img4.jpg' },
+  { id: 13, categoria:'combo', rbQty:12, nome:"Combo Buchanan's",   desc:"1x Buchanan's 12 anos 1L e 12x Red Bull 250ml", precoAntigo:289.90, preco:120.90, img:'images/combo2-buc.jpg' },
+  { id: 14, categoria:'combo', rbQty:12, nome:"Combo Buchanan's",   desc:"2x Buchanan's 12 anos 1L e 12x Red Bull 250ml", precoAntigo:399.90, preco:149.90, img:'images/img4.jpg' },
   /* ── Ballantine's ── trocar img por arquivo próprio quando tiver */
-  { id: 4,  categoria:'combo', nome:"Combo Ballantine's",  desc:"1x Ballantine's 1L e 6x Red Bull 250ml",        precoAntigo:129.90, preco:50.90,  img:'images/img5.jpg' },
-  { id: 15, categoria:'combo', nome:"Ballantine's Plus",   desc:"1x Ballantine's 1L e 12x Red Bull 250ml",       precoAntigo:179.90, preco:70.90,  img:'images/combo2-balla.jpg' },
-  { id: 16, categoria:'combo', nome:"Duplo Ballantine's",  desc:"2x Ballantine's 1L e 12x Red Bull 250ml",       precoAntigo:264.90, preco:79.90,  img:'images/img5.jpg' },
+  { id: 4,  categoria:'combo', rbQty:6,  nome:"Combo Ballantine's", desc:"1x Ballantine's 1L e 6x Red Bull 250ml",        precoAntigo:129.90, preco:50.90,  img:'images/img5.jpg' },
+  { id: 15, categoria:'combo', rbQty:12, nome:"Combo Ballantine's", desc:"1x Ballantine's 1L e 12x Red Bull 250ml",       precoAntigo:179.90, preco:70.90,  img:'images/combo2-balla.jpg' },
+  { id: 16, categoria:'combo', rbQty:12, nome:"Combo Ballantine's", desc:"2x Ballantine's 1L e 12x Red Bull 250ml",       precoAntigo:264.90, preco:79.90,  img:'images/img5.jpg' },
   /* ── Budweiser ── */
   { id: 5,  categoria:'fardo', nome:'Fardo Budweiser',   desc:'Fardo com 12 latas de Budweiser 473ml',   precoAntigo: 74.90, preco: 20.90, img:'images/img8.jpg'  },
   { id: 17, categoria:'fardo', nome:'Duplo Budweiser',   desc:'2 fardos com 24 latas de Budweiser 473ml', precoAntigo:144.90, preco: 38.90, img:'images/img8.jpg'  },

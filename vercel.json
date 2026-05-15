@@ -1,0 +1,5 @@
+{
+  "rewrites": [
+    { "source": "/api/status-pix/:id", "destination": "/api/status-pix?id=:id" }
+  ]
+}

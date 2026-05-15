@@ -517,6 +517,15 @@
   <!-- Propaga UTMs e fbclid nos links internos -->
   <script>
   (function() {
+    var params = new URLSearchParams(window.location.search);
+    var utmKeys = ['utm_source','utm_medium','utm_campaign','utm_content','utm_term','fbclid'];
+    var utms = {}, found = false;
+    utmKeys.forEach(function(k) {
+      if (params.get(k)) { utms[k] = params.get(k); found = true; }
+    });
+    if (found) sessionStorage.setItem('ze_utms', JSON.stringify(utms));
+  })();
+  (function() {
     var TRACK_PARAMS = ['utm_source','utm_medium','utm_campaign','utm_content','utm_term','fbclid'];
     var stored = {};
     var qs = new URLSearchParams(location.search);
