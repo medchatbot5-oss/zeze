@@ -1,4 +1,4 @@
 var ZE_CONFIG = {
-  nomeRecebedor: 'NEXACORE SERVICOS LTDA',
+  nomeRecebedor: 'NERVA INTERMEDIACAO LTDA',
   instituicao: 'OWEM PAY'
 };
