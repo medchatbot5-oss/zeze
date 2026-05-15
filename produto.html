@@ -524,14 +524,18 @@
       }
 
       function updateBtn() {
-        var btn  = document.getElementById('btn-adicionar');
-        var jack = isJack ? whiskySabor : 'ok';
-        if (isCombo && rbSabores.length === 0) {
+        var btn = document.getElementById('btn-adicionar');
+        if (!isCombo) {
+          btn.disabled = false;
+          btn.textContent = 'Adicionar ao carrinho — ' + fmt(calcTotal());
+          return;
+        }
+        if (rbSabores.length === 0) {
           btn.disabled = true;
           btn.textContent = 'Selecione o sabor do Red Bull';
           return;
         }
-        if (!jack) {
+        if (isJack && !whiskySabor) {
           btn.disabled = true;
           btn.textContent = "Escolha seu Jack Daniel's";
           return;
