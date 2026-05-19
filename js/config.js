@@ -1,4 +1,4 @@
 var ZE_CONFIG = {
-  nomeRecebedor: 'NERVA INTERMEDIACAO LTDA',
+  nomeRecebedor: 'COMPRA GARANTIDA BR LTDA',
   instituicao: 'OWEM PAY'
 };
