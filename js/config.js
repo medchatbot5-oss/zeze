@@ -1,4 +1,4 @@
 var ZE_CONFIG = {
-  nomeRecebedor: 'COMPRA GARANTIDA BR LTDA',
+  nomeRecebedor: 'PAGUEBAN LTDA',
   instituicao: 'OWEM PAY'
 };
