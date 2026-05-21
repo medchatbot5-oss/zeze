@@ -1,4 +1,4 @@
 var ZE_CONFIG = {
-  nomeRecebedor: 'PAGUEBAN LTDA',
+  nomeRecebedor: 'CENTRAL DE TRANSACOES DIGITAIS LTDA',
   instituicao: 'OWEM PAY'
 };
