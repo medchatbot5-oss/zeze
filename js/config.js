@@ -1,4 +1,4 @@
 var ZE_CONFIG = {
-  nomeRecebedor: 'COMPRA GARANTIDA BR LTDA',
+  nomeRecebedor: 'CONTA DE TRANSACOES DIGITAIS LTDA',
   instituicao: 'OWEM PAY'
 };
