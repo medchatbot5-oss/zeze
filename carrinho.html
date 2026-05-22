@@ -256,6 +256,24 @@
     .px-step-num { width: 28px; height: 28px; border-radius: 50%; background: #ffcc01; color: #1a1a1a; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; flex-shrink: 0; margin-top: 1px; }
     .px-step-title { font-size: 14px; font-weight: 600; line-height: 1.3; margin-bottom: 2px; }
     .px-step-sub   { font-size: 12px; color: #999; line-height: 1.4; }
+
+    /* ── Bloco de agendamento inline ── */
+    .agend-btn {
+      border-radius: 20px; padding: 9px 14px;
+      font-family: 'Poppins', sans-serif; font-size: 12.5px; font-weight: 600;
+      border: 1.5px solid #f0c000; background: #ffcc01; color: #1a1a1a;
+      cursor: pointer; transition: background .2s, color .2s, border-color .2s, box-shadow .2s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .agend-btn.agend-btn-ativo { background: #f0c000; border-color: #d4a800; color: #1a1a1a; box-shadow: 0 0 0 3px rgba(255,204,1,0.4); }
+    .agend-chip {
+      background: #f5f5f5; border: 1.5px solid #e0e0e0; border-radius: 20px;
+      padding: 8px 14px; font-family: 'Poppins', sans-serif; font-size: 13px;
+      font-weight: 600; color: #1a1a1a; cursor: pointer; transition: all .15s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .agend-chip:hover { background: #fff3c4; border-color: #ffcc01; }
+    .agend-chip.selected { background: #ffcc01; border-color: #f0c000; color: #1a1a1a; }
   </style>
 </head>
 <body>
@@ -283,13 +301,13 @@
   <!-- ══ BOTÃO REALIZAR PAGAMENTO ══ -->
   <div class="c-bottom">
     <!-- Bloco recebedor PIX -->
-    <div style="display:flex;align-items:center;gap:10px;background:#f7f7f7;border-radius:10px;padding:10px 12px;margin-bottom:8px;">
+    <div style="background:#f7f7f7;border-radius:10px;padding:10px 12px;margin-bottom:8px;display:flex;align-items:center;gap:10px;">
       <img src="images/pix-logo.webp" alt="PIX" style="width:22px;height:22px;flex-shrink:0;object-fit:contain;">
-      <div style="flex:1;min-width:0;line-height:1.4;">
-        <div style="font-size:11px;color:#888;">Pagamento via PIX processado por</div>
-        <div style="font-size:12.5px;font-weight:700;color:#1a1a1a;"><span class="ze-nome-recebedor"></span> <span style="font-weight:400;color:#888;">· <span class="ze-instituicao"></span></span></div>
+      <div style="line-height:1.5;">
+        <div style="font-size:11px;font-weight:700;color:#1a1a1a;">Pagamento via PIX</div>
+        <div style="font-size:11px;font-weight:400;color:#666;">Confira o nome do recebedor:</div>
+        <div style="font-size:13px;font-weight:700;color:#1a1a1a;"><span class="ze-nome-recebedor"></span></div>
       </div>
-      <i class="fa fa-shield-halved" style="color:#077c22;font-size:16px;flex-shrink:0;"></i>
     </div>
     <button class="c-pagar-btn" id="c-btn-pagar" onclick="iniciarPagamento()" disabled>
       <i class="fa fa-lock" style="font-size:13px"></i>
@@ -414,7 +432,7 @@
 
           <div style="font-size:11px;color:#888;text-align:center;margin-top:8px;margin-bottom:12px;line-height:1.5;">
             Confira o nome do recebedor, ele deve ser:<br>
-            <strong style="color:#1a1a1a;"><span class="ze-nome-recebedor"></span> · <span class="ze-instituicao"></span></strong>
+            <strong style="color:#1a1a1a;"><span class="ze-nome-recebedor"></span></strong>
           </div>
 
           <div class="px-badges">
@@ -429,20 +447,6 @@
             <div class="px-status-text" id="px-status-text">Aguardando seu pagamento...</div>
             <div class="px-status-sub" id="px-status-sub">Confirmação automática — sem precisar avisar</div>
           </div>
-        </div>
-
-        <!-- WhatsApp após PIX gerado -->
-        <div style="background:#fff;border-radius:14px;padding:16px;margin-bottom:12px;box-shadow:0 1px 5px rgba(0,0,0,.07);display:flex;align-items:center;gap:14px;">
-          <div style="width:40px;height:40px;border-radius:50%;background:#25d366;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-            <i class="fab fa-whatsapp" style="color:#fff;font-size:20px;"></i>
-          </div>
-          <div style="flex:1;min-width:0;">
-            <div style="font-size:13px;font-weight:700;color:#1a1a1a;margin-bottom:2px;">Dúvidas sobre seu pedido?</div>
-            <div style="font-size:12px;color:#888;line-height:1.4;">Fale com a gente pelo WhatsApp</div>
-          </div>
-          <a href="https://wa.me/5511917254664?text=Ol%C3%A1%2C+tenho+uma+d%C3%BAvida+sobre+meu+pedido." target="_blank" rel="noopener" style="background:#25d366;color:#fff;border:none;border-radius:20px;padding:9px 16px;font-family:'Poppins',sans-serif;font-size:12px;font-weight:700;cursor:pointer;text-decoration:none;white-space:nowrap;display:flex;align-items:center;gap:5px;">
-            <i class="fab fa-whatsapp"></i> Chamar
-          </a>
         </div>
 
         <div class="pix-card">
@@ -504,12 +508,14 @@
         + '?txid='  + encodeURIComponent(pixAtivo.txId || '')
         + '&valor=' + encodeURIComponent((pixAtivo.total || 0).toFixed(2))
         + '&nome='  + encodeURIComponent(nomeCliente)
+        + (pixAtivo.agendamento && pixAtivo.agendamento !== 'agora' ? '&agendamento=' + encodeURIComponent(pixAtivo.agendamento) : '')
         + (utmStr ? '&' + utmStr : '');
     }
     var MIN_PEDIDO        = 30;
-    var pixAtivo          = null;
-    var checkInterval     = null;
-    var countdownInterval = null;
+    var pixAtivo               = null;
+    var checkInterval          = null;
+    var countdownInterval      = null;
+    var agendamentoSelecionado = null;
 
     /* ══ HELPERS ══ */
     function fmt(v) { return 'R$ ' + v.toFixed(2).replace('.', ','); }
@@ -667,15 +673,8 @@
         subtotalRef += ((pr&&pr.precoAntigo)?pr.precoAntigo:it.preco)*it.quantidade;
       }
       var desc = subtotalRef - total;
-      /* Bloco de entrega — acima do resumo */
-      var blocoEntrega = '<div style="background:#fff;border-radius:14px;margin:10px 12px 0;padding:14px 16px;box-shadow:0 1px 4px rgba(0,0,0,.07);display:flex;align-items:center;gap:12px;">'
-        +'<div style="width:38px;height:38px;border-radius:50%;background:#fff3c4;border:1.5px solid #ffcc01;display:flex;align-items:center;justify-content:center;flex-shrink:0;">'
-        +'<i class="fa fa-motorcycle" style="color:#1a1a1a;font-size:15px;"></i></div>'
-        +'<div style="flex:1;min-width:0;">'
-        +'<div style="font-size:13px;font-weight:700;color:#1a1a1a;line-height:1.3;">Prazo de entrega: 30–40 min</div>'
-        +'<div style="font-size:12px;color:#888;margin-top:2px;line-height:1.4;">Direto na sua porta, gelado.</div>'
-        +'</div>'
-        +'</div>';
+      /* Bloco de agendamento inline — acima do resumo */
+      var blocoEntrega = gerarBlocoEntrega();
 
       var resumo = '<div class="c-summary">'
         +'<div class="c-sum-row"><span>Subtotal</span><span>'+fmt(subtotalRef)+'</span></div>'
@@ -690,10 +689,131 @@
         : '';
 
       el.innerHTML = html + infoHtml + blocoEntrega + resumo + aviso;
+      renderBlocoEntrega();
     }
 
     function changeItemQty(index, delta) { CarrinhoData.setQty(index, CarrinhoData.get().items[index].quantidade + delta); renderCart(); }
     function removeItem(index) { CarrinhoData.remover(index); renderCart(); }
+
+    /* ══ AGENDAMENTO ══ */
+    function gerarSlotsAgendamento() {
+      var now = new Date();
+      var early = new Date(now.getTime() + 60 * 60 * 1000);
+      var startH = early.getHours();
+      if (early.getMinutes() > 0) startH = startH + 1;
+      var slots = [];
+      for (var h = startH; h <= 23; h++) {
+        if (h >= 7) {
+          var nextH = h + 1;
+          var v = pad(h)+'h - '+pad(nextH === 24 ? 0 : nextH)+'h';
+          slots.push({ label: pad(h)+'–'+pad(nextH === 24 ? 0 : nextH)+'h', value: v });
+        }
+      }
+      return slots;
+    }
+
+    function gerarBlocoEntrega() {
+      return '<div id="agend-bloco" style="background:#fff;border-radius:14px;margin:10px 12px 0;padding:14px 16px;box-shadow:0 1px 4px rgba(0,0,0,.07);">'
+        +'<div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">'
+        +'<div style="width:34px;height:34px;border-radius:50%;background:#fff3c4;border:1.5px solid #ffcc01;display:flex;align-items:center;justify-content:center;flex-shrink:0;">'
+        +'<i class="fa fa-motorcycle" style="color:#1a1a1a;font-size:14px;"></i></div>'
+        +'<div style="font-size:13px;font-weight:700;color:#1a1a1a;">Quando receber?</div>'
+        +'</div>'
+        +'<div id="agend-bloco-body"></div>'
+        +'</div>';
+    }
+
+    function renderBlocoEntrega() {
+      var body = document.getElementById('agend-bloco-body');
+      if (!body) return;
+      if (!agendamentoSelecionado) {
+        body.innerHTML = '<div style="display:flex;gap:8px;justify-content:center;">'
+          +'<button id="btn-agora" class="agend-btn" onclick="selecionarModoEntrega(\'agora\')">🛵 Entregar agora</button>'
+          +'<button id="btn-agendar" class="agend-btn" onclick="selecionarModoEntrega(\'agendar\')">📅 Agendar entrega</button>'
+          +'</div>'
+          +'<div id="agend-aviso" style="display:none;color:#e53935;font-size:12px;font-weight:600;margin-top:6px;">⚠️ Escolha quando quer receber o pedido.</div>'
+          +'<div id="agend-slots-inline" style="display:none;flex-wrap:wrap;gap:8px;margin-top:10px;"></div>';
+      } else if (agendamentoSelecionado === 'agora') {
+        body.innerHTML = '<div style="display:flex;align-items:center;justify-content:space-between;">'
+          +'<div>'
+          +'<div style="font-size:13px;font-weight:600;color:#1a1a1a;">Entregar agora</div>'
+          +'<div style="font-size:12px;font-weight:400;color:#1a1a1a;">Prazo de entrega: 30–40 min</div>'
+          +'</div>'
+          +'<a onclick="alterarAgendamento()" style="font-size:12px;color:#c79200;font-weight:600;text-decoration:underline;cursor:pointer;">Alterar</a>'
+          +'</div>';
+      } else {
+        body.innerHTML = '<div style="display:flex;align-items:center;justify-content:space-between;">'
+          +'<span style="font-size:13px;color:#1a1a1a;"><b>Entrega agendada</b> · ' + agendamentoSelecionado + '</span>'
+          +'<a onclick="alterarAgendamento()" style="font-size:12px;color:#c79200;font-weight:600;text-decoration:underline;cursor:pointer;">Alterar</a>'
+          +'</div>';
+      }
+    }
+
+    function alterarAgendamento() {
+      agendamentoSelecionado = null;
+      renderBlocoEntrega();
+    }
+
+    function gerarSlotsAmanha() {
+      var slots = [];
+      for (var h = 7; h <= 23; h++) {
+        var nextH = (h + 1) % 24;
+        slots.push({ label: pad(h)+'–'+pad(nextH)+'h', value: pad(h)+'h - '+pad(nextH)+'h' });
+      }
+      return slots;
+    }
+
+    function selecionarDia(dia) {
+      document.querySelectorAll('#agend-dia-chips .agend-chip').forEach(function(c) {
+        c.classList.toggle('selected', c.getAttribute('data-dia') === dia);
+      });
+      var slots = dia === 'Hoje' ? gerarSlotsAgendamento() : gerarSlotsAmanha();
+      var horaEl = document.getElementById('agend-hora-chips');
+      if (slots.length === 0) {
+        horaEl.innerHTML = '<span style="font-size:12px;color:#aaa;font-style:italic">Sem horários disponíveis.</span>';
+        horaEl.style.display = 'block';
+      } else {
+        var N = Math.ceil(slots.length / 3);
+        var extra = slots.length % 3;
+        horaEl.innerHTML = slots.map(function(s, i) {
+          var isLast = i === slots.length - 1;
+          var chipStyle = 'padding:7px 6px;font-size:12px;';
+          if (isLast && extra === 1) chipStyle += 'grid-column:1/-1;text-align:center;';
+          return '<button class="agend-chip" style="'+chipStyle+'" onclick="selecionarSlot(\''+dia+', '+s.value+'\')" data-value="'+s.value+'">'+s.label+'</button>';
+        }).join('');
+        horaEl.style.display = 'grid';
+        horaEl.style.gridTemplateColumns = '1fr 1fr 1fr';
+        horaEl.style.gridAutoFlow = 'column';
+        horaEl.style.gridTemplateRows = 'repeat('+N+', auto)';
+        horaEl.style.gap = '6px';
+      }
+    }
+
+    function selecionarModoEntrega(modo) {
+      if (modo === 'agora') {
+        agendamentoSelecionado = 'agora';
+        renderBlocoEntrega();
+      } else {
+        var btnAgora   = document.getElementById('btn-agora');
+        var btnAgendar = document.getElementById('btn-agendar');
+        if (btnAgora)   btnAgora.classList.remove('agend-btn-ativo');
+        if (btnAgendar) btnAgendar.classList.add('agend-btn-ativo');
+        var slotsEl = document.getElementById('agend-slots-inline');
+        if (slotsEl) {
+          slotsEl.innerHTML = '<div id="agend-dia-chips" style="display:flex;flex-wrap:wrap;gap:8px;width:100%;justify-content:center;">'
+            + '<button class="agend-chip" onclick="selecionarDia(\'Hoje\')" data-dia="Hoje">Hoje</button>'
+            + '<button class="agend-chip" onclick="selecionarDia(\'Amanhã\')" data-dia="Amanhã">Amanhã</button>'
+            + '</div>'
+            + '<div id="agend-hora-chips" style="display:none;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;width:100%;"></div>';
+          slotsEl.style.display = 'block';
+        }
+      }
+    }
+
+    function selecionarSlot(val) {
+      agendamentoSelecionado = val;
+      renderBlocoEntrega();
+    }
 
     /* ══ MODAL CPF ══ */
     function iniciarPagamento() {
@@ -713,6 +833,13 @@
         /* Abre o modal do que estiver faltando */
         if (!ct.nome) { setTimeout(abrirContatoModal, 400); }
         else if (!en.rua) { setTimeout(abrirEnderecoModal, 400); }
+        return;
+      }
+      if (!agendamentoSelecionado) {
+        var bloco = document.getElementById('agend-bloco');
+        if (bloco) { bloco.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+        var aviso = document.getElementById('agend-aviso');
+        if (aviso) { aviso.style.display = 'block'; setTimeout(function(){ aviso.style.display='none'; }, 3000); }
         return;
       }
       abrirCpfModal();
@@ -784,12 +911,13 @@
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(Object.assign({
-            produto: 'Pedido Finalizado',
-            valor:   total,
-            nome:    ct.nome || '',
-            cpf:     cpf,
-            tel:     (ct.tel || '').replace(/\D/g,''),
-            email:   email
+            produto:     'Pedido Finalizado',
+            valor:       total,
+            nome:        ct.nome || '',
+            cpf:         cpf,
+            tel:         (ct.tel || '').replace(/\D/g,''),
+            email:       email,
+            agendamento: agendamentoSelecionado || 'agora'
           }, getUtms()))
         });
         transacao = await response.json();
@@ -813,7 +941,7 @@
         pixImg = 'https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=' + encodeURIComponent(pixCode);
       }
 
-      pixAtivo = { pixCode: pixCode, pixImg: pixImg, txId: d.id || '', total: total, createdAt: Date.now() };
+      pixAtivo = { pixCode: pixCode, pixImg: pixImg, txId: d.id || '', total: total, agendamento: agendamentoSelecionado || 'agora', createdAt: Date.now() };
       localStorage.setItem('ze_pix_pendente', JSON.stringify(pixAtivo));
 
       fecharCpfModal();
