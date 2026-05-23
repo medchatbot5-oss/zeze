@@ -180,6 +180,7 @@
 
     /* ══ Evento Purchase — 1x por txId (deduplicação via localStorage) ══ */
     (function() {
+      console.log('[Purchase] txId:', txId, '| valor:', valor, '| ze_last_purchase:', localStorage.getItem('ze_last_purchase'));
       if (!txId) return; /* Acesso direto sem txId = não veio de pagamento */
 
       var dedupKey = 'ze_purchase_done_' + txId;
@@ -228,15 +229,15 @@
             }, getUtmParams()), { eventID: eventId });
           }
         } catch(ex) {
-          /* Fallback sem advanced matching */
+          console.error('[Purchase] Erro no advanced matching, tentando fallback:', ex);
           if (typeof fbq !== 'undefined') {
-            fbq('track', 'Purchase', Object.assign({
-              value:        valor,
-              currency:     'BRL',
-              content_ids:  contentIds.length ? contentIds : ['pedido'],
+            fbq('track', 'Purchase', {
+              value: valor,
+              currency: 'BRL',
+              content_ids: ['pedido'],
               content_type: 'product',
-              num_items:    numItems || 1
-            }, getUtmParams()), { eventID: eventId });
+              num_items: 1
+            }, { eventID: 'purchase_' + txId });
           }
         }
       })();
