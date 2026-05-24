@@ -11,7 +11,9 @@ exports.handler = async (event) => {
     return { statusCode: 200, headers: CORS_HEADERS, body: '' };
   }
 
-  const id = (event.queryStringParameters || {}).id;
+  const pathParts = (event.path || '').split('/');
+  const idFromPath = pathParts[pathParts.length - 1];
+  const id = (event.queryStringParameters || {}).id || idFromPath;
 
   if (!id) {
     return { statusCode: 400, headers: CORS_HEADERS, body: JSON.stringify({ error: 'ID não fornecido' }) };
