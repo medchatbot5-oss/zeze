@@ -257,7 +257,7 @@
   </div>
 
   <!-- Seção Red Bull — visível só para combos -->
-  <div class="pd-section" id="sec-redbull" style="display:none">
+  <div class="pd-section" id="sec-redbull">
     <div class="sec-header sec-header-flex">
       <div class="sec-header-left">
         <div>
@@ -322,7 +322,7 @@
   </div>
 
   <!-- Seção Gelo de Coco — sempre visível, opcional -->
-  <div class="pd-section" id="sec-gelo" style="display:none">
+  <div class="pd-section" id="sec-gelo">
     <div class="sec-header sec-header-flex">
       <div class="sec-header-left">
         <div>
@@ -460,9 +460,9 @@
       var isGarrafa = produto.categoria === 'garrafa';
       var isFardo   = produto.categoria === 'fardo';
 
-      if (isCombo) {
-        document.getElementById('sec-redbull').style.display = '';
-        document.getElementById('sec-gelo').style.display = '';
+      if (!isCombo) {
+        document.getElementById('sec-redbull').style.display = 'none';
+        document.getElementById('sec-gelo').style.display = 'none';
       }
 
       var rbQty    = produto.rbQty || 6;

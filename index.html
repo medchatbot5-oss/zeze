@@ -146,6 +146,47 @@
       border-radius: 2px;
       flex-shrink: 0;
     }
+    /* ── Barra de categorias sticky ── */
+    #cat-nav {
+      position: sticky;
+      top: 0;
+      z-index: 200;
+      background: #fff;
+      border-bottom: none;
+      padding: 10px 16px;
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+      box-shadow: 0 2px 8px rgba(0,0,0,.08);
+    }
+    #cat-nav::-webkit-scrollbar { display: none; }
+    .cat-tab {
+      display: inline-flex;
+      align-items: center;
+      padding: 8px 18px;
+      border-radius: 20px;
+      border: none;
+      background: transparent;
+      color: #555;
+      font-family: 'Poppins', sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background .15s, color .15s, font-weight .15s;
+      flex-shrink: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .cat-tab.active {
+      background: #ffcc01;
+      color: #1a1a1a;
+      font-weight: 700;
+      border-radius: 20px;
+    }
+
     #cart-bar {
       position: fixed; bottom: 0; left: 0; right: 0; z-index: 999;
       background: #ffcc01; color: #1a1a1a; text-decoration: none;
@@ -184,8 +225,8 @@
   <header class="ze-header">
     <div class="ze-cover">
       <div class="ze-aberto">
-        <i class="fa-solid fa-circle ze-btn-pisca" style="font-size:8px;margin-right:5px"></i>
-        <span id="status-loja">ABERTO</span>
+        <i class="fa-solid fa-circle" style="font-size:8px;margin-right:5px;color:#2ecc71"></i>
+        <span id="status-loja">Aberto 24h</span>
       </div>
       <div class="ze-logo">
         <figure>
@@ -198,7 +239,7 @@
 
       <h1>
         <img alt="Verificado" src="images/verified-badge.webp" style="width:18px;height:18px;object-fit:contain;">
-        Zé Delivery
+        Zé Delivery • 24h
       </h1>
 
       <div class="ze-detail" style="margin:6px 0 4px;gap:8px">
@@ -225,11 +266,18 @@
     </div>
   </header>
 
+  <!-- Barra de categorias -->
+  <nav id="cat-nav">
+    <button class="cat-tab active" data-target="sec-combos">Combos</button>
+    <button class="cat-tab" data-target="sec-whiskys">Whiskys</button>
+    <button class="cat-tab" data-target="sec-cervejas">Cervejas</button>
+  </nav>
+
   <!-- Main Content -->
   <main style="padding-bottom:0">
 
     <!-- Combos em Destaque -->
-    <div class="ze-container" id="produtos">
+    <div class="ze-container" id="sec-combos">
       <div style="margin-bottom:20px;margin-top:22px">
         <h2 class="ze-section-title">COMBOS EM DESTAQUE</h2>
         <p style="font-size:12px;color:#666;margin:3px 0 6px;display:flex;align-items:center;gap:5px">
@@ -324,9 +372,9 @@
     </div>
 
     <!-- Garrafas de Whisky em Promoção -->
-    <div class="ze-container">
+    <div class="ze-container" id="sec-whiskys">
       <div style="margin-bottom:20px;margin-top:18px">
-        <h2 class="ze-section-title">WHISKYS EM PROMOÇÃO</h2>
+        <h2 class="ze-section-title">WHISKYS</h2>
         <p style="font-size:12px;color:#666;margin:3px 0 14px;display:flex;align-items:center;gap:5px">
           <i class="fa fa-hand-point-right" style="color:#ffcc01"></i> Arraste para ver mais opções
         </p>
@@ -430,17 +478,17 @@
     </div>
 
     <!-- Fardos Section -->
-    <div class="ze-container">
+    <div class="ze-container" id="sec-cervejas">
       <div style="margin-bottom:20px">
-        <h2 class="ze-section-title">FARDOS EM PROMOÇÃO</h2>
+        <h2 class="ze-section-title">CERVEJAS</h2>
 
         <div class="ze-products-grid" style="margin-top:14px">
           <a class="ze-card-link" href="produto.html?id=5">
             <div class="ze-card-text">
               <h3 class="ze-card-title">Fardo Budweiser</h3>
               <span class="ze-card-desc">12 latas 473ml</span>
-              <span style="font-size:12px;color:#ff4d4d;text-decoration:line-through;line-height:1.4;display:block">R$ 74,90</span>
-              <span class="ze-card-new-price">R$ 20,90</span>
+              <span style="font-size:12px;color:#ff4d4d;text-decoration:line-through;line-height:1.4;display:block">R$ 79,90</span>
+              <span class="ze-card-new-price">R$ 44,90</span>
             </div>
             <div class="ze-card-img"><figure><img alt="Fardo Budweiser" loading="lazy" decoding="async" src="images/img8.webp" width="110" height="110" onload="this.classList.add('loaded')"></figure></div>
           </a>
@@ -448,8 +496,8 @@
             <div class="ze-card-text">
               <h3 class="ze-card-title">Fardo Heineken</h3>
               <span class="ze-card-desc">12 latas 473ml</span>
-              <span style="font-size:12px;color:#ff4d4d;text-decoration:line-through;line-height:1.4;display:block">R$ 81,90</span>
-              <span class="ze-card-new-price">R$ 28,90</span>
+              <span style="font-size:12px;color:#ff4d4d;text-decoration:line-through;line-height:1.4;display:block">R$ 89,90</span>
+              <span class="ze-card-new-price">R$ 49,90</span>
             </div>
             <div class="ze-card-img"><figure><img alt="Fardo Heineken" loading="lazy" decoding="async" src="images/img10.webp" width="110" height="110" onload="this.classList.add('loaded')"></figure></div>
           </a>
@@ -458,7 +506,7 @@
               <h3 class="ze-card-title">Fardo Corona</h3>
               <span class="ze-card-desc">12 latas 473ml</span>
               <span style="font-size:12px;color:#ff4d4d;text-decoration:line-through;line-height:1.4;display:block">R$ 93,90</span>
-              <span class="ze-card-new-price">R$ 33,90</span>
+              <span class="ze-card-new-price">R$ 52,90</span>
             </div>
             <div class="ze-card-img"><figure><img alt="Fardo Corona" loading="lazy" decoding="async" src="images/img11.webp" width="110" height="110" onload="this.classList.add('loaded')"></figure></div>
           </a>
@@ -467,9 +515,36 @@
               <h3 class="ze-card-title">Fardo Brahma</h3>
               <span class="ze-card-desc">12 latas 473ml</span>
               <span style="font-size:12px;color:#ff4d4d;text-decoration:line-through;line-height:1.4;display:block">R$ 64,90</span>
-              <span class="ze-card-new-price">R$ 19,90</span>
+              <span class="ze-card-new-price">R$ 34,90</span>
             </div>
             <div class="ze-card-img"><figure><img alt="Fardo Brahma" loading="lazy" decoding="async" src="images/img9.webp" width="110" height="110" onload="this.classList.add('loaded')"></figure></div>
+          </a>
+          <a class="ze-card-link" href="produto.html?id=35">
+            <div class="ze-card-text">
+              <h3 class="ze-card-title">Fardo Stella Artois</h3>
+              <span class="ze-card-desc">12 latas 350ml</span>
+              <span style="font-size:12px;color:#ff4d4d;text-decoration:line-through;line-height:1.4;display:block">R$ 84,90</span>
+              <span class="ze-card-new-price">R$ 46,90</span>
+            </div>
+            <div class="ze-card-img"><figure><img alt="Fardo Stella Artois" loading="lazy" decoding="async" src="images/stella-fardo.webp" width="110" height="110" onload="this.classList.add('loaded')"></figure></div>
+          </a>
+          <a class="ze-card-link" href="produto.html?id=36">
+            <div class="ze-card-text">
+              <h3 class="ze-card-title">Fardo Spaten</h3>
+              <span class="ze-card-desc">12 latas 350ml</span>
+              <span style="font-size:12px;color:#ff4d4d;text-decoration:line-through;line-height:1.4;display:block">R$ 74,90</span>
+              <span class="ze-card-new-price">R$ 39,90</span>
+            </div>
+            <div class="ze-card-img"><figure><img alt="Fardo Spaten" loading="lazy" decoding="async" src="images/spaten-fardo.webp" width="110" height="110" onload="this.classList.add('loaded')"></figure></div>
+          </a>
+          <a class="ze-card-link" href="produto.html?id=37">
+            <div class="ze-card-text">
+              <h3 class="ze-card-title">Fardo Skol</h3>
+              <span class="ze-card-desc">24 latas 350ml</span>
+              <span style="font-size:12px;color:#ff4d4d;text-decoration:line-through;line-height:1.4;display:block">R$ 79,90</span>
+              <span class="ze-card-new-price">R$ 39,90</span>
+            </div>
+            <div class="ze-card-img"><figure><img alt="Fardo Skol" loading="lazy" decoding="async" src="images/skol-fardo.webp" width="110" height="110" onload="this.classList.add('loaded')"></figure></div>
           </a>
         </div>
 
@@ -544,6 +619,58 @@
         if (h && h.indexOf('http') !== 0 && h.charAt(0) !== '#') a.href = appendParams(h);
       });
     });
+  })();
+  </script>
+
+  <!-- Navegação por categorias -->
+  <script>
+  (function() {
+    var nav = document.getElementById('cat-nav');
+    var tabs = nav.querySelectorAll('.cat-tab');
+    var sectionIds = ['sec-combos', 'sec-whiskys', 'sec-cervejas'];
+
+    function navHeight() { return nav.offsetHeight; }
+
+    function setActive(id) {
+      tabs.forEach(function(t) {
+        t.classList.toggle('active', t.dataset.target === id);
+      });
+    }
+
+    /* Define scroll-margin-top em cada seção para compensar a barra sticky */
+    function applyScrollMargin() {
+      var h = navHeight();
+      sectionIds.forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el) el.style.scrollMarginTop = h + 'px';
+      });
+    }
+    applyScrollMargin();
+    window.addEventListener('resize', applyScrollMargin, { passive: true });
+
+    /* Clique na aba → scroll suave até a seção */
+    tabs.forEach(function(tab) {
+      tab.addEventListener('click', function() {
+        var sec = document.getElementById(tab.dataset.target);
+        if (!sec) return;
+        sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        setActive(tab.dataset.target);
+      });
+    });
+
+    /* Atualiza aba ativa conforme seção visível no topo */
+    function updateActiveOnScroll() {
+      var offset = navHeight() + 8;
+      var active = sectionIds[0];
+      sectionIds.forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el && el.getBoundingClientRect().top <= offset) {
+          active = id;
+        }
+      });
+      setActive(active);
+    }
+    window.addEventListener('scroll', updateActiveOnScroll, { passive: true });
   })();
   </script>
 

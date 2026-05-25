@@ -27,19 +27,25 @@ var PRODUTOS = [
   { id: 15, categoria:'combo', rbQty:12, nome:"Combo Ballantine's", desc:"1x Ballantine's 1L e 12x Red Bull 250ml",       precoAntigo:179.90, preco:70.90,  img:'images/combo2-balla.webp' },
   { id: 16, categoria:'combo', rbQty:12, nome:"Combo Ballantine's", desc:"2x Ballantine's 1L e 12x Red Bull 250ml",       precoAntigo:264.90, preco:79.90,  img:'images/img5.webp' },
   /* ── Budweiser ── */
-  { id: 5,  categoria:'fardo', nome:'Fardo Budweiser',   desc:'Fardo com 12 latas de Budweiser 473ml',   precoAntigo: 74.90, preco: 20.90, img:'images/img8.webp'  },
+  { id: 5,  categoria:'fardo', nome:'Fardo Budweiser',   desc:'Fardo com 12 latas de Budweiser 473ml',   precoAntigo: 79.90, preco: 44.90, img:'images/img8.webp'  },
   { id: 17, categoria:'fardo', nome:'Duplo Budweiser',   desc:'2 fardos com 24 latas de Budweiser 473ml', precoAntigo:144.90, preco: 38.90, img:'images/img8.webp'  },
   { id: 18, categoria:'fardo', nome:'Triplo Budweiser',  desc:'3 fardos com 36 latas de Budweiser 473ml', precoAntigo:209.90, preco: 54.90, img:'images/img8.webp'  },
   /* ── Heineken ── */
-  { id: 6,  categoria:'fardo', nome:'Fardo Heineken',    desc:'Fardo com 12 latas de Heineken 473ml',    precoAntigo: 81.90, preco: 28.90, img:'images/img10.webp' },
+  { id: 6,  categoria:'fardo', nome:'Fardo Heineken',    desc:'Fardo com 12 latas de Heineken 473ml',    precoAntigo: 89.90, preco: 49.90, img:'images/img10.webp' },
   { id: 19, categoria:'fardo', nome:'Duplo Heineken',    desc:'2 fardos com 24 latas de Heineken 473ml', precoAntigo:159.90, preco: 54.90, img:'images/img10.webp' },
   { id: 20, categoria:'fardo', nome:'Triplo Heineken',   desc:'3 fardos com 36 latas de Heineken 473ml', precoAntigo:234.90, preco: 77.90, img:'images/img10.webp' },
   /* ── Corona ── */
-  { id: 7,  categoria:'fardo', nome:'Fardo Corona',      desc:'Fardo com 12 latas de Corona 473ml',      precoAntigo: 93.90, preco: 33.90, img:'images/img11.webp' },
+  { id: 7,  categoria:'fardo', nome:'Fardo Corona',      desc:'Fardo com 12 latas de Corona 473ml',      precoAntigo: 93.90, preco: 52.90, img:'images/img11.webp' },
   { id: 21, categoria:'fardo', nome:'Duplo Corona',      desc:'2 fardos com 24 latas de Corona 473ml',   precoAntigo:184.90, preco: 64.90, img:'images/img11.webp' },
   { id: 22, categoria:'fardo', nome:'Triplo Corona',     desc:'3 fardos com 36 latas de Corona 473ml',   precoAntigo:274.90, preco: 89.90, img:'images/img11.webp' },
   /* ── Brahma ── */
-  { id: 8,  categoria:'fardo', nome:'Fardo Brahma',      desc:'Fardo com 12 latas de Brahma 473ml',      precoAntigo: 64.90, preco: 19.90, img:'images/img9.webp'  },
+  { id: 8,  categoria:'fardo', nome:'Fardo Brahma',      desc:'Fardo com 12 latas de Brahma 473ml',      precoAntigo: 64.90, preco: 34.90, img:'images/img9.webp'  },
   { id: 23, categoria:'fardo', nome:'Duplo Brahma',      desc:'2 fardos com 24 latas de Brahma 473ml',   precoAntigo:124.90, preco: 36.90, img:'images/img9.webp'  },
-  { id: 24, categoria:'fardo', nome:'Triplo Brahma',     desc:'3 fardos com 36 latas de Brahma 473ml',   precoAntigo:184.90, preco: 51.90, img:'images/img9.webp'  }
+  { id: 24, categoria:'fardo', nome:'Triplo Brahma',     desc:'3 fardos com 36 latas de Brahma 473ml',   precoAntigo:184.90, preco: 51.90, img:'images/img9.webp'  },
+  /* ── Stella Artois ── */
+  { id: 35, categoria:'fardo', nome:'Fardo Stella Artois', desc:'12 latas 350ml', precoAntigo: 84.90, preco: 46.90, img:'images/stella-fardo.webp' },
+  /* ── Spaten ── */
+  { id: 36, categoria:'fardo', nome:'Fardo Spaten',        desc:'12 latas 350ml', precoAntigo: 74.90, preco: 39.90, img:'images/spaten-fardo.webp' },
+  /* ── Skol ── */
+  { id: 37, categoria:'fardo', nome:'Fardo Skol',          desc:'24 latas 350ml', precoAntigo: 79.90, preco: 39.90, img:'images/skol-fardo.webp'   }
 ];

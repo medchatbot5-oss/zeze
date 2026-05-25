@@ -121,9 +121,6 @@
       <i class="fa fa-motorcycle"></i>
       <span id="entrega-info">Entrega em <b>30–40 minutos</b>. Fique atento ao seu WhatsApp ou telefone.</span>
     </div>
-    <a href="https://wa.me/5511917254664?text=Ol%C3%A1%2C+quero+acompanhar+meu+pedido" target="_blank" style="display:flex;align-items:center;justify-content:center;gap:8px;width:100%;background:#25d366;color:#fff;border-radius:24px;padding:15px 20px;font-family:'Poppins',sans-serif;font-weight:700;font-size:15px;text-decoration:none;margin-bottom:12px;box-sizing:border-box;">
-      <i class="fab fa-whatsapp" style="font-size:18px;"></i> Falar no WhatsApp
-    </a>
     <a class="btn-novo" id="btn-novo" href="index.html">
       <i class="fa fa-plus" style="font-size:12px"></i> Fazer novo pedido
     </a>
@@ -180,7 +177,6 @@
 
     /* ══ Evento Purchase — 1x por txId (deduplicação via localStorage) ══ */
     (function() {
-      console.log('[Purchase] txId:', txId, '| valor:', valor, '| ze_last_purchase:', localStorage.getItem('ze_last_purchase'));
       if (!txId) return; /* Acesso direto sem txId = não veio de pagamento */
 
       var dedupKey = 'ze_purchase_done_' + txId;
@@ -229,15 +225,15 @@
             }, getUtmParams()), { eventID: eventId });
           }
         } catch(ex) {
-          console.error('[Purchase] Erro no advanced matching, tentando fallback:', ex);
+          /* Fallback sem advanced matching */
           if (typeof fbq !== 'undefined') {
-            fbq('track', 'Purchase', {
-              value: valor,
-              currency: 'BRL',
-              content_ids: ['pedido'],
+            fbq('track', 'Purchase', Object.assign({
+              value:        valor,
+              currency:     'BRL',
+              content_ids:  contentIds.length ? contentIds : ['pedido'],
               content_type: 'product',
-              num_items: 1
-            }, { eventID: 'purchase_' + txId });
+              num_items:    numItems || 1
+            }, getUtmParams()), { eventID: eventId });
           }
         }
       })();

