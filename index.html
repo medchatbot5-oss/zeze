@@ -1,9 +1,22 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Zé Delivery - Link Exclusivo</title>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#f5c800">
+  <link rel="apple-touch-icon" href="/images/iconeAPP.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Zé Paradise">
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js');
+      });
+    }
+  </script>
   <!-- Meta Pixel Code -->
   <script>
   !function(f,b,e,v,n,t,s)
@@ -14,11 +27,11 @@
   t.src=v;s=b.getElementsByTagName(e)[0];
   s.parentNode.insertBefore(t,s)}(window, document,'script',
   'https://connect.facebook.net/en_US/fbevents.js');
-  fbq('init', '1982160662414201');
+  fbq('init', '1510776000355013');
   fbq('track', 'PageView');
   </script>
   <noscript><img height="1" width="1" style="display:none"
-  src="https://www.facebook.com/tr?id=1982160662414201&ev=PageView&noscript=1"
+  src="https://www.facebook.com/tr?id=1510776000355013&ev=PageView&noscript=1"
   /></noscript>
   <!-- End Meta Pixel Code -->
   <!-- Utmify -->
@@ -34,7 +47,6 @@
   </script>
   <!-- Preload primeiras imagens visíveis (acima da dobra) -->
   <link rel="preload" as="image" href="images/img2.webp">
-  <link rel="preload" as="image" href="images/combo2-red.webp">
   <link rel="preload" as="image" href="images/img3.webp">
   <!-- DNS prefetch para recursos externos -->
   <link rel="dns-prefetch" href="https://fonts.googleapis.com">
@@ -77,18 +89,18 @@
     .whisky-scroll-row::-webkit-scrollbar { display: none; }
 
     .whisky-card {
-      min-width: calc(78% - 5px);
+      min-width: calc(68% - 5px);
       flex-shrink: 0;
       flex-grow: 0;
       align-self: stretch;
       height: auto !important;
-      min-height: 132px;
+      min-height: 110px;
       scroll-snap-align: start;
       display: flex !important;
       flex-direction: row !important;
       align-items: center !important;
       justify-content: space-between !important;
-      padding: 12px 14px !important;
+      padding: 10px 12px !important;
       box-sizing: border-box !important;
     }
 
@@ -110,13 +122,13 @@
     }
 
     .whisky-card .ze-card-img {
-      flex: 0 0 100px !important;
-      width: 100px !important;
+      flex: 0 0 84px !important;
+      width: 84px !important;
     }
     .whisky-card .ze-card-img figure {
-      width: 100px !important;
-      height: 100px !important;
-      border-radius: 16px !important;
+      width: 84px !important;
+      height: 84px !important;
+      border-radius: 14px !important;
       overflow: hidden !important;
     }
     .whisky-card .ze-card-img img {
@@ -153,27 +165,28 @@
       z-index: 200;
       background: #fff;
       border-bottom: none;
-      padding: 10px 16px;
+      padding: 8px 10px;
       display: flex;
-      justify-content: center;
-      gap: 8px;
+      justify-content: flex-start;
+      gap: 4px;
       overflow-x: auto;
       scrollbar-width: none;
       -webkit-overflow-scrolling: touch;
-      box-shadow: 0 2px 8px rgba(0,0,0,.08);
+      box-shadow: none;
     }
     #cat-nav::-webkit-scrollbar { display: none; }
     .cat-tab {
       display: inline-flex;
       align-items: center;
-      padding: 8px 18px;
+      padding: 7px 11px;
       border-radius: 20px;
       border: none;
       background: transparent;
       color: #555;
       font-family: 'Poppins', sans-serif;
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 500;
+      text-transform: uppercase;
       cursor: pointer;
       white-space: nowrap;
       transition: background .15s, color .15s, font-weight .15s;
@@ -185,6 +198,98 @@
       color: #1a1a1a;
       font-weight: 700;
       border-radius: 20px;
+    }
+
+    /* ── Grid Mais Vendidos ── */
+    .mv-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 6px;
+      margin-top: 10px;
+      margin-bottom: 4px;
+    }
+    .mv-card {
+      display: flex !important;
+      flex-direction: column !important;
+      border: 1.5px solid #ebebeb;
+      border-radius: 12px;
+      overflow: hidden;
+      background: #fff;
+      text-decoration: none;
+      color: inherit;
+      -webkit-tap-highlight-color: transparent;
+      transition: border-color .15s;
+    }
+    .mv-card:active { border-color: #cecece; background: #fafafa; }
+    .mv-card-img {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      padding: 5px;
+      box-sizing: border-box;
+      background: #f2f2f2;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .mv-card-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+      border-radius: 8px;
+    }
+    .mv-card-body {
+      padding: 4px 5px 6px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+    .mv-card-body .ze-card-desc {
+      font-size: 10px;
+      color: #333;
+      line-height: 1.35;
+      display: block;
+      overflow: visible;
+      text-overflow: clip;
+      margin-bottom: auto;
+      white-space: normal;
+      word-break: break-word;
+    }
+    .mv-card-body [style*="line-through"] {
+      font-size: 12px !important;
+      padding-top: 2px;
+    }
+    .mv-card-body .ze-card-new-price { font-size: 15px; }
+
+    /* ── Botão + (adicionar) no card ── */
+    .mv-card { position: relative; }
+    .mv-add-btn {
+      position: absolute;
+      top: 6px; right: 6px;
+      width: 26px; height: 26px;
+      border: none; padding: 0;
+      background: url('images/btn-add.webp') center / contain no-repeat;
+      font-size: 0;
+      cursor: pointer; z-index: 4;
+      -webkit-tap-highlight-color: transparent;
+      transition: transform .15s ease;
+    }
+    .mv-add-btn:active { transform: scale(.85); }
+    .mv-add-btn.added { transform: scale(1.25); }
+
+    /* ── Onboarding overlay ── */
+    @keyframes ze-swing {
+      0%, 100% { transform: rotate(-7deg); }
+      50%       { transform: rotate(7deg); }
+    }
+    @keyframes ze-sonar {
+      0%   { transform: scale(1);   opacity: 0.45; }
+      100% { transform: scale(3.2); opacity: 0; }
+    }
+    @keyframes ze-ob-in {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
     }
 
     #cart-bar {
@@ -218,6 +323,7 @@
       color: #1a1a1a; white-space: nowrap; line-height: 1;
     }
   </style>
+  <script src="js/protecao.js"></script>
 </head>
 <body>
 
@@ -243,7 +349,7 @@
       </h1>
 
       <div class="ze-detail" style="margin:6px 0 4px;gap:8px">
-        <span><i class="fa-solid fa-motorcycle" style="color:red"></i> <b>30-40</b> min</span>
+        <span><i class="fa-solid fa-motorcycle" style="color:red"></i> <b>30 min</b></span>
         <span style="color:#555;font-size:13px">•</span>
         <span style="display:inline-flex;align-items:center;gap:5px;background:#e8f5e9;color:#077c22;font-size:12px;font-weight:700;padding:4px 10px;border-radius:20px;line-height:1">
           <i class="fa fa-truck" style="font-size:11px"></i> Entrega Grátis
@@ -251,7 +357,7 @@
       </div>
 
       <div class="ze-detail">
-        <span><i class="fa fa-shopping-basket" style="color:red"></i> Pedido Mínimo: <b>R$ 30</b></span>
+        <span><i class="fa fa-shopping-basket" style="color:red"></i> Pedido Mínimo: <b>R$ 15</b></span>
       </div>
 
       <div class="ze-detail" style="gap:3px">
@@ -268,286 +374,369 @@
 
   <!-- Barra de categorias -->
   <nav id="cat-nav">
-    <button class="cat-tab active" data-target="sec-combos">Combos</button>
-    <button class="cat-tab" data-target="sec-whiskys">Whiskys</button>
+    <button class="cat-tab active" data-target="sec-mais-vendidos">Mais Vendidos</button>
     <button class="cat-tab" data-target="sec-cervejas">Cervejas</button>
+    <button class="cat-tab" data-target="sec-combos">Combos</button>
+    <button class="cat-tab" data-target="sec-whiskys">Whiskys</button>
+    <button class="cat-tab" data-target="sec-resenha">Para a Resenha</button>
   </nav>
 
   <!-- Main Content -->
   <main style="padding-bottom:0">
 
-    <!-- Combos em Destaque -->
-    <div class="ze-container" id="sec-combos">
-      <div style="margin-bottom:20px;margin-top:22px">
-        <h2 class="ze-section-title">COMBOS EM DESTAQUE</h2>
-        <p style="font-size:12px;color:#666;margin:3px 0 6px;display:flex;align-items:center;gap:5px">
-          <i class="fa fa-hand-point-right" style="color:#ffcc01"></i> Arraste para ver mais opções
-        </p>
+    <!-- Mais Vendidos -->
+    <div class="ze-container" id="sec-mais-vendidos" style="margin-top:6px;margin-bottom:0">
+      <h2 class="ze-section-title">MAIS VENDIDOS</h2>
+      <div class="mv-grid">
 
-        <!-- Red Label -->
-        <p class="combo-sub-title">Red Label</p>
-        <div class="whisky-scroll-row">
-          <a class="ze-card-link whisky-card" href="produto.html?id=1">
-            <div class="ze-card-text">
-              <span class="ze-card-desc">1x Red Label 1L<br>6x Red Bull 250ml</span>
-              <span style="font-size:12px;color:#ff4d4d;text-decoration:line-through;line-height:1.4;display:block">R$ 139,90</span>
-              <span class="ze-card-new-price">R$ 60,90</span>
-            </div>
-            <div class="ze-card-img"><figure><img alt="Combo Red Label" fetchpriority="high" decoding="async" src="images/img2.webp" width="110" height="110" onload="this.classList.add('loaded')"></figure></div>
-          </a>
-          <a class="ze-card-link whisky-card" href="produto.html?id=9">
-            <div class="ze-card-text">
-              <span class="ze-card-desc">1x Red Label 1L<br>12x Red Bull 250ml</span>
-              <span style="font-size:12px;color:#ff4d4d;text-decoration:line-through;line-height:1.4;display:block">R$ 199,90</span>
-              <span class="ze-card-new-price">R$ 80,90</span>
-            </div>
-            <div class="ze-card-img"><figure><img alt="Red Label Plus" fetchpriority="high" decoding="async" src="images/combo2-red.webp" width="110" height="110" onerror="this.src='images/img2.webp'" onload="this.classList.add('loaded')"></figure></div>
-          </a>
-        </div>
+        <a class="mv-card" href="produto.html?id=6">
+          <div class="mv-card-img"><img alt="Fardo Heineken" fetchpriority="high" decoding="async" src="images/img10.webp" width="200" height="200" onload="this.classList.add('loaded')"></div>
+          <div class="mv-card-body">
+            <span class="ze-card-desc">Fardo Heineken<br>12 Unidades de 473ml</span>
+            <span style="font-size:10px;color:#ff4d4d;text-decoration:line-through;line-height:1.4;display:block">R$ 74,00</span>
+            <span class="ze-card-new-price">R$ 34,16</span>
+          </div>
+        </a>
 
-        <!-- Jack Daniel's -->
-        <p class="combo-sub-title">Jack Daniel's</p>
-        <div class="whisky-scroll-row">
-          <a class="ze-card-link whisky-card" href="produto.html?id=2&whisky=jack">
-            <div class="ze-card-text">
-              <span class="ze-card-desc">1x Jack Daniel's Nº7 1L<br>6x Red Bull 250ml</span>
-              <span style="font-size:12px;color:#ff4d4d;text-decoration:line-through;line-height:1.4;display:block">R$ 189,90</span>
-              <span class="ze-card-new-price">R$ 80,90</span>
-            </div>
-            <div class="ze-card-img"><figure><img alt="Combo Jack Daniel's" loading="lazy" decoding="async" src="images/img3.webp" width="110" height="110" onload="this.classList.add('loaded')"></figure></div>
-          </a>
-          <a class="ze-card-link whisky-card" href="produto.html?id=11&whisky=jack">
-            <div class="ze-card-text">
-              <span class="ze-card-desc">1x Jack Daniel's Nº7 1L<br>12x Red Bull 250ml</span>
-              <span style="font-size:12px;color:#ff4d4d;text-decoration:line-through;line-height:1.4;display:block">R$ 239,90</span>
-              <span class="ze-card-new-price">R$ 100,90</span>
-            </div>
-            <div class="ze-card-img"><figure><img alt="Jack Daniel's Plus" loading="lazy" decoding="async" src="images/combo2-jack.webp" width="110" height="110" onerror="this.src='images/img3.webp'" onload="this.classList.add('loaded')"></figure></div>
-          </a>
-        </div>
+        <a class="mv-card" href="produto.html?id=36">
+          <div class="mv-card-img"><img alt="Fardo Spaten" fetchpriority="high" decoding="async" src="images/spaten-fardo.webp" width="200" height="200" onload="this.classList.add('loaded')"></div>
+          <div class="mv-card-body">
+            <span class="ze-card-desc">Fardo Spaten<br>12 Unidades de 473ml</span>
+            <span style="font-size:10px;color:#ff4d4d;text-decoration:line-through;line-height:1.4;display:block">R$ 59,90</span>
+            <span class="ze-card-new-price">R$ 25,94</span>
+          </div>
+        </a>
 
-        <!-- Buchanan's -->
-        <p class="combo-sub-title">Buchanan's</p>
-        <div class="whisky-scroll-row">
-          <a class="ze-card-link whisky-card" href="produto.html?id=3">
-            <div class="ze-card-text">
-              <span class="ze-card-desc">1x Buchanan's 12 Anos 1L<br>6x Red Bull 250ml</span>
-              <span style="font-size:12px;color:#ff4d4d;text-decoration:line-through;line-height:1.4;display:block">R$ 229,90</span>
-              <span class="ze-card-new-price">R$ 100,90</span>
-            </div>
-            <div class="ze-card-img"><figure><img alt="Combo Buchanan's" loading="lazy" decoding="async" src="images/img4.webp" width="110" height="110" onload="this.classList.add('loaded')"></figure></div>
-          </a>
-          <a class="ze-card-link whisky-card" href="produto.html?id=13">
-            <div class="ze-card-text">
-              <span class="ze-card-desc">1x Buchanan's 12 Anos 1L<br>12x Red Bull 250ml</span>
-              <span style="font-size:12px;color:#ff4d4d;text-decoration:line-through;line-height:1.4;display:block">R$ 289,90</span>
-              <span class="ze-card-new-price">R$ 120,90</span>
-            </div>
-            <div class="ze-card-img"><figure><img alt="Buchanan's Plus" loading="lazy" decoding="async" src="images/combo2-buc.webp" width="110" height="110" onerror="this.src='images/img4.webp'" onload="this.classList.add('loaded')"></figure></div>
-          </a>
-        </div>
+        <a class="mv-card" href="produto.html?id=1">
+          <div class="mv-card-img"><img alt="Combo Red Label" fetchpriority="high" decoding="async" src="images/img2.webp" width="200" height="200" onload="this.classList.add('loaded')"></div>
+          <div class="mv-card-body">
+            <span class="ze-card-desc">Red Label 1L<br>6x Red Bull 250ml</span>
+            <span style="font-size:10px;color:#ff4d4d;text-decoration:line-through;line-height:1.4;display:block">R$ 119,90</span>
+            <span class="ze-card-new-price">R$ 49,87</span>
+          </div>
+        </a>
 
-        <!-- Ballantine's -->
-        <p class="combo-sub-title">Ballantine's</p>
-        <div class="whisky-scroll-row">
-          <a class="ze-card-link whisky-card" href="produto.html?id=4">
-            <div class="ze-card-text">
-              <span class="ze-card-desc">1x Ballantine's 1L<br>6x Red Bull 250ml</span>
-              <span style="font-size:12px;color:#ff4d4d;text-decoration:line-through;line-height:1.4;display:block">R$ 129,90</span>
-              <span class="ze-card-new-price">R$ 50,90</span>
+        <a class="mv-card" href="produto.html?id=44&whisky=jack">
+          <div class="mv-card-img"><img alt="Combo Jack Daniel's Apple" loading="lazy" decoding="async" src="images/jack-apple.webp" width="200" height="200" onload="this.classList.add('loaded')"></div>
+          <div class="mv-card-body">
+            <span class="ze-card-desc">Jack Daniel's Apple 1L<br>6x Red Bull 250ml</span>
+            <span style="font-size:10px;color:#ff4d4d;text-decoration:line-through;line-height:1.4;display:block">R$ 149,90</span>
+            <span class="ze-card-new-price">R$ 51,98</span>
+          </div>
+        </a>
+
+        <a class="mv-card" href="produto.html?id=3">
+          <div class="mv-card-img"><img alt="Combo Buchanan's" loading="lazy" decoding="async" src="images/img4.webp" width="200" height="200" onload="this.classList.add('loaded')"></div>
+          <div class="mv-card-body">
+            <span class="ze-card-desc">Buchanan's 12 Anos 1L<br>6x Red Bull 250ml</span>
+            <span style="font-size:10px;color:#ff4d4d;text-decoration:line-through;line-height:1.4;display:block">R$ 229,90</span>
+            <span class="ze-card-new-price">R$ 80,95</span>
+          </div>
+        </a>
+
+        <a class="mv-card" href="produto.html?id=50">
+          <div class="mv-card-img"><img alt="Carvão Vegetal 5kg" loading="lazy" decoding="async" src="images/carvao.webp" width="200" height="200" onload="this.classList.add('loaded')"></div>
+          <div class="mv-card-body">
+            <span class="ze-card-desc">Carvão Vegetal<br>5kg</span>
+            <span style="font-size:10px;color:#ff4d4d;text-decoration:line-through;line-height:1.4;display:block">R$ 36,90</span>
+            <span class="ze-card-new-price">R$ 15,98</span>
+          </div>
+        </a>
+
+      </div>
+    </div>
+
+    <!-- Fardos Section -->
+    <div class="ze-container" id="sec-cervejas">
+      <div style="margin-bottom:4px;margin-top:6px">
+        <h2 class="ze-section-title">CERVEJAS</h2>
+
+        <div class="mv-grid" style="margin-top:10px">
+
+          <a class="mv-card" href="produto.html?id=8">
+            <div class="mv-card-img"><img alt="Fardo Brahma" loading="lazy" decoding="async" src="images/img9.webp" width="200" height="200" onload="this.classList.add('loaded')"></div>
+            <div class="mv-card-body">
+              <span class="ze-card-desc">Fardo Brahma<br>12 Unidades de 473ml</span>
+              <span style="font-size:9px;color:#ff4d4d;text-decoration:line-through;line-height:1.4;display:block">R$ 45,00</span>
+              <span class="ze-card-new-price">R$ 17,93</span>
             </div>
-            <div class="ze-card-img"><figure><img alt="Combo Ballantine's" loading="lazy" decoding="async" src="images/img5.webp" width="110" height="110" onload="this.classList.add('loaded')"></figure></div>
           </a>
-          <a class="ze-card-link whisky-card" href="produto.html?id=15">
-            <div class="ze-card-text">
-              <span class="ze-card-desc">1x Ballantine's 1L<br>12x Red Bull 250ml</span>
-              <span style="font-size:12px;color:#ff4d4d;text-decoration:line-through;line-height:1.4;display:block">R$ 179,90</span>
-              <span class="ze-card-new-price">R$ 70,90</span>
+
+          <a class="mv-card" href="produto.html?id=5">
+            <div class="mv-card-img"><img alt="Fardo Budweiser" loading="lazy" decoding="async" src="images/img8.webp" width="200" height="200" onload="this.classList.add('loaded')"></div>
+            <div class="mv-card-body">
+              <span class="ze-card-desc">Fardo Budweiser<br>12 Unidades de 473ml</span>
+              <span style="font-size:9px;color:#ff4d4d;text-decoration:line-through;line-height:1.4;display:block">R$ 55,90</span>
+              <span class="ze-card-new-price">R$ 23,01</span>
             </div>
-            <div class="ze-card-img"><figure><img alt="Ballantine's Plus" loading="lazy" decoding="async" src="images/combo2-balla.webp" width="110" height="110" onerror="this.src='images/img5.webp'" onload="this.classList.add('loaded')"></figure></div>
           </a>
+
+          <a class="mv-card" href="produto.html?id=40">
+            <div class="mv-card-img"><img alt="Fardo Amstel" loading="lazy" decoding="async" src="images/amstel-fardo.webp" width="200" height="200" onload="this.classList.add('loaded')"></div>
+            <div class="mv-card-body">
+              <span class="ze-card-desc">Fardo Amstel<br>12 Unidades de 473ml</span>
+              <span style="font-size:9px;color:#ff4d4d;text-decoration:line-through;line-height:1.4;display:block">R$ 50,90</span>
+              <span class="ze-card-new-price">R$ 19,87</span>
+            </div>
+          </a>
+
+          <a class="mv-card" href="produto.html?id=36">
+            <div class="mv-card-img"><img alt="Fardo Spaten" loading="lazy" decoding="async" src="images/spaten-fardo.webp" width="200" height="200" onload="this.classList.add('loaded')"></div>
+            <div class="mv-card-body">
+              <span class="ze-card-desc">Fardo Spaten<br>12 Unidades de 473ml</span>
+              <span style="font-size:9px;color:#ff4d4d;text-decoration:line-through;line-height:1.4;display:block">R$ 59,90</span>
+              <span class="ze-card-new-price">R$ 25,94</span>
+            </div>
+          </a>
+
+          <a class="mv-card" href="produto.html?id=6">
+            <div class="mv-card-img"><img alt="Fardo Heineken" loading="lazy" decoding="async" src="images/img10.webp" width="200" height="200" onload="this.classList.add('loaded')"></div>
+            <div class="mv-card-body">
+              <span class="ze-card-desc">Fardo Heineken<br>12 Unidades de 473ml</span>
+              <span style="font-size:9px;color:#ff4d4d;text-decoration:line-through;line-height:1.4;display:block">R$ 74,00</span>
+              <span class="ze-card-new-price">R$ 34,16</span>
+            </div>
+          </a>
+
+          <a class="mv-card" href="produto.html?id=7">
+            <div class="mv-card-img"><img alt="Fardo Corona" loading="lazy" decoding="async" src="images/img11.webp" width="200" height="200" onload="this.classList.add('loaded')"></div>
+            <div class="mv-card-body">
+              <span class="ze-card-desc">Fardo Corona<br>12 Unidades de 473ml</span>
+              <span style="font-size:9px;color:#ff4d4d;text-decoration:line-through;line-height:1.4;display:block">R$ 80,00</span>
+              <span class="ze-card-new-price">R$ 30,27</span>
+            </div>
+          </a>
+
+          <a class="mv-card" href="produto.html?id=41">
+            <div class="mv-card-img"><img alt="Pack Skol Beats Senses" loading="lazy" decoding="async" src="images/skol-beats-senses.webp" width="200" height="200" onload="this.classList.add('loaded')"></div>
+            <div class="mv-card-body">
+              <span class="ze-card-desc">Pack Skol Beats Senses<br>8 Unidades de 269ml</span>
+              <span style="font-size:9px;color:#ff4d4d;text-decoration:line-through;line-height:1.4;display:block">R$ 51,90</span>
+              <span class="ze-card-new-price">R$ 24,98</span>
+            </div>
+          </a>
+
+          <a class="mv-card" href="produto.html?id=42">
+            <div class="mv-card-img"><img alt="Pack Skol Beats Tropical" loading="lazy" decoding="async" src="images/skol-beats-tropical.webp" width="200" height="200" onload="this.classList.add('loaded')"></div>
+            <div class="mv-card-body">
+              <span class="ze-card-desc">Pack Skol Beats Tropical<br>8 Unidades de 269ml</span>
+              <span style="font-size:9px;color:#ff4d4d;text-decoration:line-through;line-height:1.4;display:block">R$ 51,90</span>
+              <span class="ze-card-new-price">R$ 24,98</span>
+            </div>
+          </a>
+
+          <a class="mv-card" href="produto.html?id=43">
+            <div class="mv-card-img"><img alt="Pack Skol Beats GT" loading="lazy" decoding="async" src="images/skol-beats-gt.webp" width="200" height="200" onload="this.classList.add('loaded')"></div>
+            <div class="mv-card-body">
+              <span class="ze-card-desc">Pack Skol Beats GT<br>8 Unidades de 269ml</span>
+              <span style="font-size:9px;color:#ff4d4d;text-decoration:line-through;line-height:1.4;display:block">R$ 51,90</span>
+              <span class="ze-card-new-price">R$ 24,98</span>
+            </div>
+          </a>
+
         </div>
 
       </div>
     </div>
 
     <!-- Garrafas de Whisky em Promoção -->
-    <div class="ze-container" id="sec-whiskys">
-      <div style="margin-bottom:20px;margin-top:18px">
-        <h2 class="ze-section-title">WHISKYS</h2>
-        <p style="font-size:12px;color:#666;margin:3px 0 14px;display:flex;align-items:center;gap:5px">
-          <i class="fa fa-hand-point-right" style="color:#ffcc01"></i> Arraste para ver mais opções
-        </p>
-        <!-- Linha 1: marcas principais -->
-        <div class="whisky-scroll-row">
-          <a class="ze-card-link whisky-card" href="produto.html?id=25">
-            <div class="ze-card-text">
-              <h3 class="ze-card-title">Red Label 1L</h3>
-              <span class="ze-card-desc">Johnnie Walker Red Label Scotch Whisky</span>
-              <span style="font-size:12px;color:#ff4d4d;text-decoration:line-through;line-height:1.4;display:block">R$ 89,90</span>
-              <span class="ze-card-new-price">R$ 40,90</span>
+    <!-- Combos em Destaque -->
+    <div class="ze-container" id="sec-combos">
+      <div style="margin-bottom:4px;margin-top:6px">
+        <h2 class="ze-section-title">COMBOS</h2>
+        <div class="mv-grid">
+
+          <a class="mv-card" href="produto.html?id=1">
+            <div class="mv-card-img"><img alt="Combo Red Label" loading="lazy" decoding="async" src="images/img2.webp" width="200" height="200" onload="this.classList.add('loaded')"></div>
+            <div class="mv-card-body">
+              <span class="ze-card-desc">Red Label 1L<br>6x Red Bull 250ml</span>
+              <span style="font-size:9px;color:#ff4d4d;text-decoration:line-through;line-height:1.4;display:block">R$ 119,90</span>
+              <span class="ze-card-new-price">R$ 49,87</span>
             </div>
-            <div class="ze-card-img"><figure><img alt="Red Label 1L" loading="lazy" decoding="async" src="images/garrafa-red-label.webp" width="110" height="110" onerror="this.src='images/img2.webp'" onload="this.classList.add('loaded')"></figure></div>
           </a>
-          <a class="ze-card-link whisky-card" href="produto.html?id=26">
-            <div class="ze-card-text">
-              <h3 class="ze-card-title">Black Label 1L</h3>
-              <span class="ze-card-desc">Johnnie Walker Black Label 12 Anos</span>
-              <span style="font-size:12px;color:#ff4d4d;text-decoration:line-through;line-height:1.4;display:block">R$ 139,90</span>
-              <span class="ze-card-new-price">R$ 84,90</span>
+
+          <a class="mv-card" href="produto.html?id=2&whisky=jack">
+            <div class="mv-card-img"><img alt="Combo Jack Daniel's" loading="lazy" decoding="async" src="images/img3.webp" width="200" height="200" onload="this.classList.add('loaded')"></div>
+            <div class="mv-card-body">
+              <span class="ze-card-desc">Jack Daniel's 1L<br>6x Red Bull 250ml</span>
+              <span style="font-size:9px;color:#ff4d4d;text-decoration:line-through;line-height:1.4;display:block">R$ 169,90</span>
+              <span class="ze-card-new-price">R$ 58,93</span>
             </div>
-            <div class="ze-card-img"><figure><img alt="Black Label 1L" loading="lazy" decoding="async" src="images/garrafa-black-label.webp" width="110" height="110" onerror="this.src='images/img2.webp'" onload="this.classList.add('loaded')"></figure></div>
           </a>
-          <a class="ze-card-link whisky-card" href="produto.html?id=27&whisky=jack">
-            <div class="ze-card-text">
-              <h3 class="ze-card-title">Jack Daniel's 1L</h3>
-              <span class="ze-card-desc">Jack Daniel's Old No.7 Tennessee Whiskey</span>
-              <span style="font-size:12px;color:#ff4d4d;text-decoration:line-through;line-height:1.4;display:block">R$ 134,90</span>
-              <span class="ze-card-new-price">R$ 60,90</span>
+
+          <a class="mv-card" href="produto.html?id=44&whisky=jack">
+            <div class="mv-card-img"><img alt="Combo Jack Daniel's Apple" loading="lazy" decoding="async" src="images/jack-apple.webp" width="200" height="200" onload="this.classList.add('loaded')"></div>
+            <div class="mv-card-body">
+              <span class="ze-card-desc">Jack Daniel's Apple 1L<br>6x Red Bull 250ml</span>
+              <span style="font-size:9px;color:#ff4d4d;text-decoration:line-through;line-height:1.4;display:block">R$ 149,90</span>
+              <span class="ze-card-new-price">R$ 51,98</span>
             </div>
-            <div class="ze-card-img"><figure><img alt="Jack Daniel's 1L" loading="lazy" decoding="async" src="images/garrafa-jack.webp" width="110" height="110" onerror="this.src='images/img3.webp'" onload="this.classList.add('loaded')"></figure></div>
           </a>
-          <a class="ze-card-link whisky-card" href="produto.html?id=28">
-            <div class="ze-card-text">
-              <h3 class="ze-card-title">Buchanan's 12 Anos 1L</h3>
-              <span class="ze-card-desc">Buchanan's DeLuxe Aged 12 Years</span>
-              <span style="font-size:12px;color:#ff4d4d;text-decoration:line-through;line-height:1.4;display:block">R$ 169,90</span>
-              <span class="ze-card-new-price">R$ 70,90</span>
+
+          <a class="mv-card" href="produto.html?id=3">
+            <div class="mv-card-img"><img alt="Combo Buchanan's" loading="lazy" decoding="async" src="images/img4.webp" width="200" height="200" onload="this.classList.add('loaded')"></div>
+            <div class="mv-card-body">
+              <span class="ze-card-desc">Buchanan's 12 Anos 1L<br>6x Red Bull 250ml</span>
+              <span style="font-size:9px;color:#ff4d4d;text-decoration:line-through;line-height:1.4;display:block">R$ 229,90</span>
+              <span class="ze-card-new-price">R$ 80,95</span>
             </div>
-            <div class="ze-card-img"><figure><img alt="Buchanan's 12 Anos 1L" loading="lazy" decoding="async" src="images/garrafa-buchanans.webp" width="110" height="110" onerror="this.src='images/img4.webp'" onload="this.classList.add('loaded')"></figure></div>
           </a>
-          <a class="ze-card-link whisky-card" href="produto.html?id=29">
-            <div class="ze-card-text">
-              <h3 class="ze-card-title">Ballantine's 1L</h3>
-              <span class="ze-card-desc">Ballantine's Finest Blended Scotch Whisky</span>
-              <span style="font-size:12px;color:#ff4d4d;text-decoration:line-through;line-height:1.4;display:block">R$ 79,90</span>
-              <span class="ze-card-new-price">R$ 30,90</span>
+
+          <a class="mv-card" href="produto.html?id=45&whisky=jack">
+            <div class="mv-card-img"><img alt="Combo Jack Daniel's Honey" loading="lazy" decoding="async" src="images/jack-honey.webp" width="200" height="200" onload="this.classList.add('loaded')"></div>
+            <div class="mv-card-body">
+              <span class="ze-card-desc">Jack Daniel's Honey 1L<br>6x Red Bull 250ml</span>
+              <span style="font-size:9px;color:#ff4d4d;text-decoration:line-through;line-height:1.4;display:block">R$ 159,90</span>
+              <span class="ze-card-new-price">R$ 54,91</span>
             </div>
-            <div class="ze-card-img"><figure><img alt="Ballantine's 1L" loading="lazy" decoding="async" src="images/garrafa-ballantines.webp" width="110" height="110" onerror="this.src='images/img5.webp'" onload="this.classList.add('loaded')"></figure></div>
           </a>
-        </div>
-        <!-- Linha 2: mais opções -->
-        <div class="whisky-scroll-row">
-          <a class="ze-card-link whisky-card" href="produto.html?id=30">
-            <div class="ze-card-text">
-              <h3 class="ze-card-title">Chivas Regal 12 Anos 1L</h3>
-              <span class="ze-card-desc">Chivas Regal 12 Years Blended Scotch Whisky</span>
-              <span style="font-size:12px;color:#ff4d4d;text-decoration:line-through;line-height:1.4;display:block">R$ 149,90</span>
-              <span class="ze-card-new-price">R$ 87,90</span>
+
+          <a class="mv-card" href="produto.html?id=4">
+            <div class="mv-card-img"><img alt="Combo Ballantine's" loading="lazy" decoding="async" src="images/img5.webp" width="200" height="200" onload="this.classList.add('loaded')"></div>
+            <div class="mv-card-body">
+              <span class="ze-card-desc">Ballantine's 1L<br>6x Red Bull 250ml</span>
+              <span style="font-size:9px;color:#ff4d4d;text-decoration:line-through;line-height:1.4;display:block">R$ 109,90</span>
+              <span class="ze-card-new-price">R$ 40,96</span>
             </div>
-            <div class="ze-card-img"><figure><img alt="Chivas Regal 12 Anos 1L" loading="lazy" decoding="async" src="images/garrafa-chivas.webp" width="110" height="110" onerror="this.src='images/img2.webp'" onload="this.classList.add('loaded')"></figure></div>
           </a>
-          <a class="ze-card-link whisky-card" href="produto.html?id=31">
-            <div class="ze-card-text">
-              <h3 class="ze-card-title">Old Parr 1L</h3>
-              <span class="ze-card-desc">Old Parr Blended Scotch Whisky</span>
-              <span style="font-size:12px;color:#ff4d4d;text-decoration:line-through;line-height:1.4;display:block">R$ 124,90</span>
-              <span class="ze-card-new-price">R$ 72,90</span>
-            </div>
-            <div class="ze-card-img"><figure><img alt="Old Parr 1L" loading="lazy" decoding="async" src="images/garrafa-old-parr.webp" width="110" height="110" onerror="this.src='images/img2.webp'" onload="this.classList.add('loaded')"></figure></div>
-          </a>
-          <a class="ze-card-link whisky-card" href="produto.html?id=32">
-            <div class="ze-card-text">
-              <h3 class="ze-card-title">J&amp;B Rare 1L</h3>
-              <span class="ze-card-desc">J&amp;B Rare Blended Scotch Whisky</span>
-              <span style="font-size:12px;color:#ff4d4d;text-decoration:line-through;line-height:1.4;display:block">R$ 79,90</span>
-              <span class="ze-card-new-price">R$ 44,90</span>
-            </div>
-            <div class="ze-card-img"><figure><img alt="J&amp;B Rare 1L" loading="lazy" decoding="async" src="images/garrafa-jb.webp" width="110" height="110" onerror="this.src='images/img2.webp'" onload="this.classList.add('loaded')"></figure></div>
-          </a>
-          <a class="ze-card-link whisky-card" href="produto.html?id=33">
-            <div class="ze-card-text">
-              <h3 class="ze-card-title">Jameson 1L</h3>
-              <span class="ze-card-desc">Jameson Triple Distilled Irish Whiskey</span>
-              <span style="font-size:12px;color:#ff4d4d;text-decoration:line-through;line-height:1.4;display:block">R$ 119,90</span>
-              <span class="ze-card-new-price">R$ 69,90</span>
-            </div>
-            <div class="ze-card-img"><figure><img alt="Jameson 1L" loading="lazy" decoding="async" src="images/garrafa-jameson.webp" width="110" height="110" onerror="this.src='images/img2.webp'" onload="this.classList.add('loaded')"></figure></div>
-          </a>
-          <a class="ze-card-link whisky-card" href="produto.html?id=34">
-            <div class="ze-card-text">
-              <h3 class="ze-card-title">White Horse 1L</h3>
-              <span class="ze-card-desc">White Horse Blended Scotch Whisky</span>
-              <span style="font-size:12px;color:#ff4d4d;text-decoration:line-through;line-height:1.4;display:block">R$ 64,90</span>
-              <span class="ze-card-new-price">R$ 36,90</span>
-            </div>
-            <div class="ze-card-img"><figure><img alt="White Horse 1L" loading="lazy" decoding="async" src="images/garrafa-white-horse.webp" width="110" height="110" onerror="this.src='images/img2.webp'" onload="this.classList.add('loaded')"></figure></div>
-          </a>
+
         </div>
       </div>
     </div>
 
-    <!-- Fardos Section -->
-    <div class="ze-container" id="sec-cervejas">
-      <div style="margin-bottom:20px">
-        <h2 class="ze-section-title">CERVEJAS</h2>
+    <div class="ze-container" id="sec-whiskys">
+      <div style="margin-bottom:4px;margin-top:6px">
+        <h2 class="ze-section-title">WHISKYS</h2>
+        <div class="mv-grid">
 
-        <div class="ze-products-grid" style="margin-top:14px">
-          <a class="ze-card-link" href="produto.html?id=5">
-            <div class="ze-card-text">
-              <h3 class="ze-card-title">Fardo Budweiser</h3>
-              <span class="ze-card-desc">12 latas 473ml</span>
-              <span style="font-size:12px;color:#ff4d4d;text-decoration:line-through;line-height:1.4;display:block">R$ 79,90</span>
-              <span class="ze-card-new-price">R$ 44,90</span>
+          <a class="mv-card" href="produto.html?id=25">
+            <div class="mv-card-img"><img alt="Red Label 1L" loading="lazy" decoding="async" src="images/garrafa-red-label.webp" width="200" height="200" onload="this.classList.add('loaded')"></div>
+            <div class="mv-card-body">
+              <span class="ze-card-desc">Red Label 1L<br>Blended Scotch Whisky</span>
+              <span style="font-size:9px;color:#ff4d4d;text-decoration:line-through;line-height:1.4;display:block">R$ 89,90</span>
+              <span class="ze-card-new-price">R$ 40,87</span>
             </div>
-            <div class="ze-card-img"><figure><img alt="Fardo Budweiser" loading="lazy" decoding="async" src="images/img8.webp" width="110" height="110" onload="this.classList.add('loaded')"></figure></div>
           </a>
-          <a class="ze-card-link" href="produto.html?id=6">
-            <div class="ze-card-text">
-              <h3 class="ze-card-title">Fardo Heineken</h3>
-              <span class="ze-card-desc">12 latas 473ml</span>
-              <span style="font-size:12px;color:#ff4d4d;text-decoration:line-through;line-height:1.4;display:block">R$ 89,90</span>
-              <span class="ze-card-new-price">R$ 49,90</span>
+
+          <a class="mv-card" href="produto.html?id=27">
+            <div class="mv-card-img"><img alt="Jack Daniel's 1L" loading="lazy" decoding="async" src="images/garrafa-jack.webp" width="200" height="200" onload="this.classList.add('loaded')"></div>
+            <div class="mv-card-body">
+              <span class="ze-card-desc">Jack Daniel's 1L<br>Tennessee Whiskey</span>
+              <span style="font-size:9px;color:#ff4d4d;text-decoration:line-through;line-height:1.4;display:block">R$ 139,90</span>
+              <span class="ze-card-new-price">R$ 48,93</span>
             </div>
-            <div class="ze-card-img"><figure><img alt="Fardo Heineken" loading="lazy" decoding="async" src="images/img10.webp" width="110" height="110" onload="this.classList.add('loaded')"></figure></div>
           </a>
-          <a class="ze-card-link" href="produto.html?id=7">
-            <div class="ze-card-text">
-              <h3 class="ze-card-title">Fardo Corona</h3>
-              <span class="ze-card-desc">12 latas 473ml</span>
-              <span style="font-size:12px;color:#ff4d4d;text-decoration:line-through;line-height:1.4;display:block">R$ 93,90</span>
-              <span class="ze-card-new-price">R$ 52,90</span>
+
+          <a class="mv-card" href="produto.html?id=46">
+            <div class="mv-card-img"><img alt="Jack Daniel's Apple 1L" loading="lazy" decoding="async" src="images/garrafa-jack-apple.webp" width="200" height="200" onload="this.classList.add('loaded')"></div>
+            <div class="mv-card-body">
+              <span class="ze-card-desc">Jack Daniel's Apple 1L<br>Tennessee Apple</span>
+              <span style="font-size:9px;color:#ff4d4d;text-decoration:line-through;line-height:1.4;display:block">R$ 119,90</span>
+              <span class="ze-card-new-price">R$ 41,98</span>
             </div>
-            <div class="ze-card-img"><figure><img alt="Fardo Corona" loading="lazy" decoding="async" src="images/img11.webp" width="110" height="110" onload="this.classList.add('loaded')"></figure></div>
           </a>
-          <a class="ze-card-link" href="produto.html?id=8">
-            <div class="ze-card-text">
-              <h3 class="ze-card-title">Fardo Brahma</h3>
-              <span class="ze-card-desc">12 latas 473ml</span>
-              <span style="font-size:12px;color:#ff4d4d;text-decoration:line-through;line-height:1.4;display:block">R$ 64,90</span>
-              <span class="ze-card-new-price">R$ 34,90</span>
+
+          <a class="mv-card" href="produto.html?id=28">
+            <div class="mv-card-img"><img alt="Buchanan's 12 Anos 1L" loading="lazy" decoding="async" src="images/garrafa-buchanans.webp" width="200" height="200" onload="this.classList.add('loaded')"></div>
+            <div class="mv-card-body">
+              <span class="ze-card-desc">Buchanan's 1L<br>12 Anos Blended Scotch</span>
+              <span style="font-size:9px;color:#ff4d4d;text-decoration:line-through;line-height:1.4;display:block">R$ 199,90</span>
+              <span class="ze-card-new-price">R$ 70,95</span>
             </div>
-            <div class="ze-card-img"><figure><img alt="Fardo Brahma" loading="lazy" decoding="async" src="images/img9.webp" width="110" height="110" onload="this.classList.add('loaded')"></figure></div>
           </a>
-          <a class="ze-card-link" href="produto.html?id=35">
-            <div class="ze-card-text">
-              <h3 class="ze-card-title">Fardo Stella Artois</h3>
-              <span class="ze-card-desc">12 latas 350ml</span>
-              <span style="font-size:12px;color:#ff4d4d;text-decoration:line-through;line-height:1.4;display:block">R$ 84,90</span>
-              <span class="ze-card-new-price">R$ 46,90</span>
+
+          <a class="mv-card" href="produto.html?id=47">
+            <div class="mv-card-img"><img alt="Jack Daniel's Honey 1L" loading="lazy" decoding="async" src="images/garrafa-jack-honey.webp" width="200" height="200" onload="this.classList.add('loaded')"></div>
+            <div class="mv-card-body">
+              <span class="ze-card-desc">Jack Daniel's Honey 1L<br>Tennessee Honey</span>
+              <span style="font-size:9px;color:#ff4d4d;text-decoration:line-through;line-height:1.4;display:block">R$ 129,90</span>
+              <span class="ze-card-new-price">R$ 44,91</span>
             </div>
-            <div class="ze-card-img"><figure><img alt="Fardo Stella Artois" loading="lazy" decoding="async" src="images/stella-fardo.webp" width="110" height="110" onload="this.classList.add('loaded')"></figure></div>
           </a>
-          <a class="ze-card-link" href="produto.html?id=36">
-            <div class="ze-card-text">
-              <h3 class="ze-card-title">Fardo Spaten</h3>
-              <span class="ze-card-desc">12 latas 350ml</span>
-              <span style="font-size:12px;color:#ff4d4d;text-decoration:line-through;line-height:1.4;display:block">R$ 74,90</span>
-              <span class="ze-card-new-price">R$ 39,90</span>
+
+          <a class="mv-card" href="produto.html?id=29">
+            <div class="mv-card-img"><img alt="Ballantine's 1L" loading="lazy" decoding="async" src="images/garrafa-ballantines.webp" width="200" height="200" onload="this.classList.add('loaded')"></div>
+            <div class="mv-card-body">
+              <span class="ze-card-desc">Ballantine's 1L<br>Blended Scotch Whisky</span>
+              <span style="font-size:9px;color:#ff4d4d;text-decoration:line-through;line-height:1.4;display:block">R$ 79,90</span>
+              <span class="ze-card-new-price">R$ 30,96</span>
             </div>
-            <div class="ze-card-img"><figure><img alt="Fardo Spaten" loading="lazy" decoding="async" src="images/spaten-fardo.webp" width="110" height="110" onload="this.classList.add('loaded')"></figure></div>
           </a>
-          <a class="ze-card-link" href="produto.html?id=37">
-            <div class="ze-card-text">
-              <h3 class="ze-card-title">Fardo Skol</h3>
-              <span class="ze-card-desc">24 latas 350ml</span>
-              <span style="font-size:12px;color:#ff4d4d;text-decoration:line-through;line-height:1.4;display:block">R$ 79,90</span>
-              <span class="ze-card-new-price">R$ 39,90</span>
-            </div>
-            <div class="ze-card-img"><figure><img alt="Fardo Skol" loading="lazy" decoding="async" src="images/skol-fardo.webp" width="110" height="110" onload="this.classList.add('loaded')"></figure></div>
-          </a>
+
         </div>
+      </div>
+    </div>
 
+    <!-- Para a Resenha -->
+    <div class="ze-container" id="sec-resenha">
+      <div style="margin-bottom:4px;margin-top:6px">
+        <h2 class="ze-section-title">PARA A RESENHA</h2>
+        <div class="mv-grid">
+
+          <a class="mv-card" href="produto.html?id=50">
+            <div class="mv-card-img"><img alt="Carvão Vegetal 5kg" loading="lazy" decoding="async" src="images/carvao.webp" width="200" height="200" onload="this.classList.add('loaded')"></div>
+            <div class="mv-card-body">
+              <span class="ze-card-desc">Carvão Vegetal<br>5kg</span>
+              <span style="font-size:9px;color:#ff4d4d;text-decoration:line-through;line-height:1.4;display:block">R$ 36,90</span>
+              <span class="ze-card-new-price">R$ 15,98</span>
+            </div>
+          </a>
+
+          <a class="mv-card" href="produto.html?id=51">
+            <div class="mv-card-img"><img alt="Saco de Gelo em Cubos 5kg" loading="lazy" decoding="async" src="images/gelo-saco.webp" width="200" height="200" onload="this.classList.add('loaded')"></div>
+            <div class="mv-card-body">
+              <span class="ze-card-desc">Saco de Gelo<br>em Cubos 5kg</span>
+              <span style="font-size:9px;color:#ff4d4d;text-decoration:line-through;line-height:1.4;display:block">R$ 20,00</span>
+              <span class="ze-card-new-price">R$ 9,87</span>
+            </div>
+          </a>
+
+          <a class="mv-card" href="produto.html?id=52">
+            <div class="mv-card-img"><img alt="Acendedor Álcool em Gel 500g" loading="lazy" decoding="async" src="images/acendedor.webp" width="200" height="200" onload="this.classList.add('loaded')"></div>
+            <div class="mv-card-body">
+              <span class="ze-card-desc">Acendedor Álcool<br>em Gel 500g</span>
+              <span style="font-size:9px;color:#ff4d4d;text-decoration:line-through;line-height:1.4;display:block">R$ 13,00</span>
+              <span class="ze-card-new-price">R$ 6,94</span>
+            </div>
+          </a>
+
+          <a class="mv-card" href="produto.html?id=53">
+            <div class="mv-card-img"><img alt="Guaraná Antarctica 2L" loading="lazy" decoding="async" src="images/guarana.webp" width="200" height="200" onload="this.classList.add('loaded')"></div>
+            <div class="mv-card-body">
+              <span class="ze-card-desc">Guaraná Antarctica<br>2L</span>
+              <span style="font-size:9px;color:#ff4d4d;text-decoration:line-through;line-height:1.4;display:block">R$ 9,89</span>
+              <span class="ze-card-new-price">R$ 5,38</span>
+            </div>
+          </a>
+
+          <a class="mv-card" href="produto.html?id=54">
+            <div class="mv-card-img"><img alt="Guaraná Antarctica Zero 2L" loading="lazy" decoding="async" src="images/guarana-zero.webp" width="200" height="200" onload="this.classList.add('loaded')"></div>
+            <div class="mv-card-body">
+              <span class="ze-card-desc">Guaraná Antarctica<br>Zero 2L</span>
+              <span style="font-size:9px;color:#ff4d4d;text-decoration:line-through;line-height:1.4;display:block">R$ 9,89</span>
+              <span class="ze-card-new-price">R$ 5,38</span>
+            </div>
+          </a>
+
+          <a class="mv-card" href="produto.html?id=55">
+            <div class="mv-card-img"><img alt="Pepsi 2L" loading="lazy" decoding="async" src="images/pepsi.webp" width="200" height="200" onload="this.classList.add('loaded')"></div>
+            <div class="mv-card-body">
+              <span class="ze-card-desc">Pepsi<br>2L</span>
+              <span style="font-size:9px;color:#ff4d4d;text-decoration:line-through;line-height:1.4;display:block">R$ 9,29</span>
+              <span class="ze-card-new-price">R$ 5,16</span>
+            </div>
+          </a>
+
+          <a class="mv-card" href="produto.html?id=56">
+            <div class="mv-card-img"><img alt="Pepsi Zero 2L" loading="lazy" decoding="async" src="images/pepsi-black.webp" width="200" height="200" onload="this.classList.add('loaded')"></div>
+            <div class="mv-card-body">
+              <span class="ze-card-desc">Pepsi Zero<br>2L</span>
+              <span style="font-size:9px;color:#ff4d4d;text-decoration:line-through;line-height:1.4;display:block">R$ 9,29</span>
+              <span class="ze-card-new-price">R$ 5,16</span>
+            </div>
+          </a>
+
+        </div>
       </div>
     </div>
 
@@ -585,7 +774,7 @@
   <script src="js/produtos.js"></script>
   <script src="js/cidades_data.js"></script>
   <script src="js/carrinho-data.js"></script>
-  <script src="js/script.js"></script>
+  <script src="js/script.js?v=6"></script>
   <!-- Propaga UTMs e fbclid nos links internos -->
   <script>
   (function() {
@@ -627,7 +816,7 @@
   (function() {
     var nav = document.getElementById('cat-nav');
     var tabs = nav.querySelectorAll('.cat-tab');
-    var sectionIds = ['sec-combos', 'sec-whiskys', 'sec-cervejas'];
+    var sectionIds = ['sec-mais-vendidos', 'sec-cervejas', 'sec-combos', 'sec-whiskys', 'sec-resenha'];
 
     function navHeight() { return nav.offsetHeight; }
 
@@ -714,6 +903,39 @@
     }
     updateCartBar();
     window.addEventListener('pageshow', updateCartBar);
+  </script>
+
+  <!-- Botão "+" em todos os cards (add direto ao carrinho nas abas Cervejas e Para a Resenha) -->
+  <script>
+    (function() {
+      function pid(card) {
+        var m = (card.getAttribute('href') || '').match(/id=(\d+)/);
+        return m ? parseInt(m[1]) : null;
+      }
+      document.querySelectorAll('.mv-card').forEach(function(card) {
+        if (card.querySelector('.mv-add-btn')) return;
+        var btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'mv-add-btn';
+        btn.setAttribute('aria-label', 'Adicionar ao carrinho');
+        btn.addEventListener('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          var id = pid(card);
+          var p = (typeof PRODUTOS !== 'undefined') ? PRODUTOS.find(function(x) { return x.id == id; }) : null;
+          /* fardos e produtos "para a resenha" vão direto pro carrinho; o resto abre a página */
+          if (p && (p.categoria === 'fardo' || p.categoria === 'resenha')) {
+            CarrinhoData.adicionar({ id: p.id, nome: p.nome, preco: p.preco, img: p.img }, 1, '');
+            if (typeof updateCartBar === 'function') updateCartBar();
+            btn.classList.add('added');
+            setTimeout(function() { btn.classList.remove('added'); }, 300);
+          } else {
+            window.location.href = card.getAttribute('href');
+          }
+        });
+        card.appendChild(btn);
+      });
+    })();
   </script>
 </body>
 </html>

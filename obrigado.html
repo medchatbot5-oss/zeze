@@ -14,11 +14,11 @@
   t.src=v;s=b.getElementsByTagName(e)[0];
   s.parentNode.insertBefore(t,s)}(window, document,'script',
   'https://connect.facebook.net/en_US/fbevents.js');
-  fbq('init', '1982160662414201');
+  fbq('init', '1510776000355013');
   fbq('track', 'PageView');
   </script>
   <noscript><img height="1" width="1" style="display:none"
-  src="https://www.facebook.com/tr?id=1982160662414201&ev=PageView&noscript=1"
+  src="https://www.facebook.com/tr?id=1510776000355013&ev=PageView&noscript=1"
   /></noscript>
   <!-- End Meta Pixel Code -->
   <!-- UTMify UTMs -->
@@ -93,6 +93,18 @@
     }
     .info-row i { font-size: 17px; color: #f9a825; flex-shrink: 0; }
     .info-row span { font-size: 13px; color: #6d4c00; font-weight: 600; line-height: 1.4; }
+    .btn-rastreio {
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      background: #1a1a1a; color: #ffcc01;
+      border: none; border-radius: 24px;
+      padding: 15px 20px; width: 100%;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700; font-size: 15px;
+      cursor: pointer; text-decoration: none;
+      transition: background .2s;
+      margin-bottom: 10px;
+    }
+    .btn-rastreio:hover { background: #333; }
     .btn-novo {
       display: flex; align-items: center; justify-content: center; gap: 8px;
       background: #ffcc01; color: #1a1a1a;
@@ -106,6 +118,7 @@
     .btn-novo:hover { background: #f0c000; }
     .footer-note { font-size: 11px; color: #ccc; margin-top: 18px; }
   </style>
+  <script src="js/protecao.js"></script>
 </head>
 <body>
   <div class="card">
@@ -119,10 +132,10 @@
     </div>
     <div class="info-row">
       <i class="fa fa-motorcycle"></i>
-      <span id="entrega-info">Entrega em <b>30–40 minutos</b>. Fique atento ao seu WhatsApp ou telefone.</span>
+      <span id="entrega-info">Tempo estimado de <b>30 min</b>. Fique atento ao seu WhatsApp.</span>
     </div>
-    <a class="btn-novo" id="btn-novo" href="index.html">
-      <i class="fa fa-plus" style="font-size:12px"></i> Fazer novo pedido
+    <a class="btn-rastreio" id="btn-rastreio" href="rastreio.html">
+      <i class="fa fa-motorcycle"></i> BUSCAR ENTREGADOR
     </a>
     <p class="footer-note">Zé Delivery — Obrigado pela preferência! 🍺</p>
   </div>
@@ -175,6 +188,14 @@
       if (q) document.getElementById('btn-novo').href = 'index.html' + q;
     })();
 
+    /* ══ Botão "acompanhar entrega" passa valor para rastreio.html ══ */
+    (function() {
+      var btnRastreio = document.getElementById('btn-rastreio');
+      if (!btnRastreio) return;
+      var q = valor > 0 ? '?valor=' + valor.toFixed(2) : '';
+      btnRastreio.href = 'rastreio.html' + q;
+    })();
+
     /* ══ Evento Purchase — 1x por txId (deduplicação via localStorage) ══ */
     (function() {
       if (!txId) return; /* Acesso direto sem txId = não veio de pagamento */
@@ -193,6 +214,22 @@
 
       /* Advanced Matching + disparo do Purchase */
       (async function() {
+        /* fbclid: tenta localStorage primeiro (mais persistente), depois sessionStorage */
+        var fbclid = localStorage.getItem('ze_fbclid') || '';
+        if (!fbclid) {
+          try { fbclid = JSON.parse(sessionStorage.getItem('ze_utms') || '{}').fbclid || ''; } catch(e) {}
+        }
+
+        var eventData = Object.assign({
+          value:        valor,
+          currency:     'BRL',
+          content_ids:  contentIds.length ? contentIds : ['pedido'],
+          content_type: 'product',
+          num_items:    numItems || 1
+        }, getUtmParams());
+
+        var pixelOpts = { eventID: eventId };
+
         try {
           var ct = purchase.ct || {};
 
@@ -213,27 +250,20 @@
             if (parts[0])         userData.fn = await sha256(parts[0]);
             if (parts.length > 1) userData.ln = await sha256(parts[parts.length - 1]);
           }
+          /* extern_id: passa fbclid para ajudar atribuição mesmo sem cookie _fbc */
+          if (fbclid) userData.extern_id = fbclid;
 
           if (typeof fbq !== 'undefined') {
-            if (Object.keys(userData).length) fbq('init', '1982160662414201', userData);
-            fbq('track', 'Purchase', Object.assign({
-              value:        valor,
-              currency:     'BRL',
-              content_ids:  contentIds.length ? contentIds : ['pedido'],
-              content_type: 'product',
-              num_items:    numItems || 1
-            }, getUtmParams()), { eventID: eventId });
+            /* Re-init ambos os pixels com advanced matching */
+            if (Object.keys(userData).length) {
+              fbq('init', '1510776000355013', userData);
+            }
+            fbq('track', 'Purchase', eventData, pixelOpts);
           }
         } catch(ex) {
           /* Fallback sem advanced matching */
           if (typeof fbq !== 'undefined') {
-            fbq('track', 'Purchase', Object.assign({
-              value:        valor,
-              currency:     'BRL',
-              content_ids:  contentIds.length ? contentIds : ['pedido'],
-              content_type: 'product',
-              num_items:    numItems || 1
-            }, getUtmParams()), { eventID: eventId });
+            fbq('track', 'Purchase', eventData, pixelOpts);
           }
         }
       })();

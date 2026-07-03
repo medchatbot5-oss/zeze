@@ -51,7 +51,7 @@ img {
   box-shadow: 0 0 10px rgba(0,0,0,.16);
   transition: .35s;
   background: #ffcc01;
-  background-image: url('../images/ze-delivery-logo.jpg');
+  background-image: url('../images/ze-delivery-logo.webp');
   background-size: cover;
   background-position: center;
 }

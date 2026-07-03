@@ -15,11 +15,11 @@
   t.src=v;s=b.getElementsByTagName(e)[0];
   s.parentNode.insertBefore(t,s)}(window, document,'script',
   'https://connect.facebook.net/en_US/fbevents.js');
-  fbq('init', '1982160662414201');
+  fbq('init', '1510776000355013');
   fbq('track', 'PageView');
   </script>
   <noscript><img height="1" width="1" style="display:none"
-  src="https://www.facebook.com/tr?id=1982160662414201&ev=PageView&noscript=1"
+  src="https://www.facebook.com/tr?id=1510776000355013&ev=PageView&noscript=1"
   /></noscript>
   <!-- End Meta Pixel Code -->
   <script src="https://cdn.utmify.com.br/scripts/utms/latest.js" data-utmify-prevent-xcod-sck data-utmify-prevent-subids async defer></script>
@@ -149,31 +149,26 @@
     .chip-opt.selecionado .chip-check { background: #ffcc01; border-color: #ffcc01; }
     .chip-opt.selecionado .chip-check i { display: block; }
 
-    /* ── Gelo quantidade ── */
-    .gelo-qty-wrap {
-      background: #f9f9f9;
-      border-radius: 12px;
-      padding: 10px 14px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin: 16px 12px 0;
+    /* ── Gelo: milestones e contadores por sabor ── */
+    .gelo-milestone {
+      flex: 1; background: #f5f5f5; border: 1.5px solid #ddd;
+      border-radius: 10px; padding: 8px 4px; text-align: center;
+      font-family: 'Poppins', sans-serif;
+      transition: border-color .15s, background .15s;
     }
-    .gelo-qty-btn {
-      width: 32px; height: 32px; border-radius: 50%;
+    .gelo-milestone.active { border-color: #ffcc01; background: #fffbe6; }
+    .gelo-cnt-btn {
+      width: 30px; height: 30px; border-radius: 50%;
       background: #ffcc01; border: none;
-      font-size: 20px; font-weight: 700; line-height: 1;
-      cursor: pointer;
+      font-size: 18px; font-weight: 700; line-height: 1;
+      cursor: pointer; flex-shrink: 0;
       display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0;
+      font-family: 'Poppins', sans-serif;
     }
-    .gelo-qty-center { flex: 1; text-align: center; }
-    .gelo-qty-num { font-size: 18px; font-weight: 700; }
-    .gelo-qty-preco { font-size: 12px; color: #888; }
+    .gelo-cnt-btn:disabled { opacity: .4; cursor: default; }
 
-    /* ── Gelo badges de quantidade ── */
-    .gelo-badges { display: flex; gap: 8px; margin: 12px 12px 14px; }
-    .gelo-badge-btn {
+    /* ── Order Bump badge buttons ── */
+    .ob-badge-btn {
       flex: 1;
       background: #f5f5f5;
       border: 1.5px solid #ddd;
@@ -184,9 +179,100 @@
       text-align: center;
       cursor: pointer;
       transition: border-color .15s, background .15s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      line-height: 1.3;
     }
-    .gelo-badge-btn.active { border-color: #ffcc01; background: #fffbe6; }
-    .gelo-badge-price { color: #077c22; font-size: 11px; font-weight: 600; display: block; }
+    .ob-badge-btn.active { border-color: #ffcc01; background: #fffbe6; }
+    .ob-badge-price { color: #077c22; font-size: 11px; font-weight: 600; }
+
+    /* ── Chip com preço (segunda garrafa) ── */
+    .chip-text-wrap { flex: 1; display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+    .chip-price-tag { font-size: 12px; color: #077c22; font-weight: 700; }
+
+    /* ── Upgrade bump card ── */
+    .upgrade-bump-card {
+      margin: 8px 12px 0;
+      border: 1.5px solid #e0e0e0;
+      border-radius: 14px;
+      background: #fff;
+      overflow: hidden;
+    }
+    .upgrade-bump-header {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 12px 10px;
+    }
+    .upgrade-bump-img {
+      width: 52px; height: 52px; border-radius: 8px;
+      object-fit: cover; flex-shrink: 0; background: #f2f2f2;
+    }
+    .upgrade-bump-info { flex: 1; min-width: 0; }
+    .upgrade-bump-title { font-size: 13px; font-weight: 700; color: #1a1a1a; line-height: 1.3; }
+    .upgrade-bump-sub   { font-size: 12px; color: #666; margin-top: 2px; line-height: 1.3; }
+    .upgrade-bump-price { text-align: right; flex-shrink: 0; }
+    .upgrade-bump-price-old { font-size: 11px; color: #aaa; text-decoration: line-through; }
+    .upgrade-bump-price-new { font-size: 15px; font-weight: 700; color: #077c22; }
+    .upgrade-bump-btn {
+      width: 100%; background: #ffcc01; color: #1a1a1a;
+      border: none; border-top: 1.5px solid rgba(0,0,0,.07);
+      padding: 10px; font-family: 'Poppins', sans-serif;
+      font-size: 13px; font-weight: 700; cursor: pointer; letter-spacing: -.2px;
+      transition: background .15s;
+    }
+    .upgrade-bump-btn:active { background: #f5c200; }
+
+    /* ── Popup combo upgrade ── */
+    @keyframes slideUp {
+      from { transform: translateY(100%); }
+      to   { transform: translateY(0); }
+    }
+    .combo-popup-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,.55);
+      z-index: 999;
+      display: none;
+      align-items: flex-end;
+      justify-content: center;
+    }
+    .combo-popup-sheet {
+      background: #fff;
+      border-radius: 24px 24px 0 0;
+      padding: 24px 16px 36px;
+      width: 100%; max-width: 390px;
+      animation: slideUp .3s ease;
+      position: relative;
+    }
+    .combo-popup-close {
+      position: absolute; top: 14px; right: 16px;
+      width: 30px; height: 30px; border: none;
+      background: rgba(0,0,0,.07); border-radius: 50%;
+      font-size: 18px; line-height: 1; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; color: #333;
+    }
+    .combo-popup-btn-yes {
+      width: 100%; background: #ffcc01; color: #1a1a1a;
+      border: none; border-radius: 24px; padding: 13px;
+      font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 14px;
+      cursor: pointer; margin-bottom: 10px; transition: background .15s;
+    }
+    .combo-popup-btn-no {
+      width: 100%; background: none; border: none; color: #888;
+      font-family: 'Poppins', sans-serif; font-size: 14px; cursor: pointer; padding: 4px;
+    }
+
+    /* ── Compact flavor chips (Jack / sabores) ── */
+    .chips-wrap-row { display: flex; gap: 8px; padding: 12px; }
+    .chip-opt-flavor {
+      display: flex; flex: 1; flex-direction: column; align-items: center;
+      justify-content: center; text-align: center; gap: 4px;
+      padding: 10px 6px; min-width: 0; margin-bottom: 0;
+    }
+    .chip-opt-flavor .chip-img { width: 52px; height: 52px; }
+    .chip-opt-flavor .chip-label { font-size: 11px; line-height: 1.2; }
+    .chip-opt-flavor .chip-check { margin-top: 2px; width: 18px; height: 18px; }
+    .chip-opt-flavor .chip-check i { font-size: 9px !important; }
 
     /* ── Spacer e footer ── */
     .pd-spacer { height: 155px; }
@@ -235,6 +321,7 @@
     }
     .pd-add-btn:disabled { opacity: .5; cursor: default; }
   </style>
+  <script src="js/protecao.js"></script>
 </head>
 <body>
 
@@ -256,38 +343,23 @@
     </div>
   </div>
 
-  <!-- Seção Red Bull — visível só para combos -->
-  <div class="pd-section" id="sec-redbull" style="display:none">
-    <div class="sec-header sec-header-flex">
-      <div class="sec-header-left">
+  <!-- Popup Combo Upgrade — aparece ao carregar garrafas com combo disponível -->
+  <div id="combo-upgrade-overlay" class="combo-popup-overlay">
+    <div class="combo-popup-sheet">
+      <button class="combo-popup-close" onclick="fecharPopupCombo()">×</button>
+      <div style="display:flex;align-items:center;gap:14px;margin-bottom:18px">
+        <img id="popup-combo-img" src="" alt="Combo" style="width:72px;height:72px;border-radius:12px;object-fit:cover;background:#f2f2f2;flex-shrink:0">
         <div>
-          <div class="sec-title">Escolha seu Red Bull</div>
-          <div class="sec-sub">Escolha 1 sabor para as 6 latas, ou 2 sabores (3 de cada)</div>
+          <div style="font-size:15px;font-weight:700;color:#1a1a1a;margin-bottom:4px">Transforme em Combo!</div>
+          <div id="popup-bump-sub" style="font-size:13px;color:#555;line-height:1.4"></div>
+          <div style="margin-top:8px;display:flex;align-items:baseline;gap:8px">
+            <span id="popup-preco-antigo" style="font-size:13px;color:#aaa;text-decoration:line-through"></span>
+            <span id="popup-preco-novo" style="font-size:20px;font-weight:700;color:#077c22"></span>
+          </div>
         </div>
       </div>
-      <span class="sec-badge-req">obrigatório</span>
-    </div>
-    <div class="chips-wrap">
-      <div class="chip-opt" data-group="redbull" data-value="Tradicional" onclick="selecionarChip(this)">
-        <img class="chip-img" src="images/rb-tradicional.webp" alt="Tradicional">
-        <span class="chip-label">Tradicional</span>
-        <div class="chip-check"><i class="fa fa-check" style="font-size:11px;color:#1a1a1a"></i></div>
-      </div>
-      <div class="chip-opt" data-group="redbull" data-value="Zero" onclick="selecionarChip(this)">
-        <img class="chip-img" src="images/rb-zero.webp" alt="Zero">
-        <span class="chip-label">Zero</span>
-        <div class="chip-check"><i class="fa fa-check" style="font-size:11px;color:#1a1a1a"></i></div>
-      </div>
-      <div class="chip-opt" data-group="redbull" data-value="Tropical" onclick="selecionarChip(this)">
-        <img class="chip-img" src="images/rb-tropical.webp" alt="Tropical">
-        <span class="chip-label">Tropical</span>
-        <div class="chip-check"><i class="fa fa-check" style="font-size:11px;color:#1a1a1a"></i></div>
-      </div>
-      <div class="chip-opt" data-group="redbull" data-value="Melancia" onclick="selecionarChip(this)">
-        <img class="chip-img" src="images/rb-melancia.webp" alt="Melancia">
-        <span class="chip-label">Melancia</span>
-        <div class="chip-check"><i class="fa fa-check" style="font-size:11px;color:#1a1a1a"></i></div>
-      </div>
+      <button class="combo-popup-btn-yes" onclick="upgradeParaCombo()">🔥 Sim, quero o Combo!</button>
+      <button class="combo-popup-btn-no" onclick="fecharPopupCombo()">Não, obrigado</button>
     </div>
   </div>
 
@@ -321,58 +393,196 @@
     </div>
   </div>
 
-  <!-- Seção Gelo de Coco — sempre visível, opcional -->
+  <!-- Segunda garrafa com desconto — visível só para combos -->
+  <div class="pd-section" id="sec-segunda" style="display:none">
+    <div class="sec-header sec-header-flex">
+      <div class="sec-header-left">
+        <div>
+          <div class="sec-title">Segunda garrafa com desconto</div>
+          <div class="sec-sub">Preço exclusivo · adicione ao mesmo pedido</div>
+        </div>
+      </div>
+      <span class="sec-badge-opt">opcional</span>
+    </div>
+    <div class="chips-wrap" id="segunda-chips"></div>
+    <!-- Sabor da 2ª garrafa Jack — só aparece quando Jack é selecionado -->
+    <div id="segunda-jack-sabor" style="display:none;border-top:0.5px solid #eee">
+      <div style="padding:12px 12px 4px">
+        <div style="font-size:11px;color:#888;font-weight:600;text-transform:uppercase;letter-spacing:.3px">Sabor da 2ª garrafa</div>
+      </div>
+      <div class="chips-wrap" style="padding-top:4px">
+        <div class="chip-opt" data-group="segunda-jack" data-value="Original Nº7" onclick="selecionarChip(this)">
+          <img class="chip-img" src="images/jack-original.webp" alt="Original Nº7">
+          <span class="chip-label">Original Nº7</span>
+          <div class="chip-check"><i class="fa fa-check" style="font-size:11px;color:#1a1a1a"></i></div>
+        </div>
+        <div class="chip-opt" data-group="segunda-jack" data-value="Maçã Verde" onclick="selecionarChip(this)">
+          <img class="chip-img" src="images/jack-maca.webp" alt="Maçã Verde">
+          <span class="chip-label">Maçã Verde</span>
+          <div class="chip-check"><i class="fa fa-check" style="font-size:11px;color:#1a1a1a"></i></div>
+        </div>
+        <div class="chip-opt" data-group="segunda-jack" data-value="Mel (Honey)" onclick="selecionarChip(this)">
+          <img class="chip-img" src="images/jack-mel.webp" alt="Mel (Honey)">
+          <span class="chip-label">Mel (Honey)</span>
+          <div class="chip-check"><i class="fa fa-check" style="font-size:11px;color:#1a1a1a"></i></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Seção Red Bull — visível só para combos -->
+  <div class="pd-section" id="sec-redbull" style="display:none">
+    <div class="sec-header sec-header-flex">
+      <div class="sec-header-left">
+        <div>
+          <div class="sec-title">Escolha seu Red Bull</div>
+          <div class="sec-sub">Escolha 1 sabor para as 6 latas, ou 2 sabores (3 latas de cada sabor).</div>
+        </div>
+      </div>
+      <span class="sec-badge-req">obrigatório</span>
+    </div>
+    <!-- Quantidade de Red Bull -->
+    <div style="padding:12px 12px 4px">
+      <div style="font-size:11px;color:#888;font-weight:600;margin-bottom:7px;text-transform:uppercase;letter-spacing:.3px">Quantidade</div>
+      <div style="display:flex;gap:7px">
+        <button class="ob-badge-btn active" data-rb-qty="6" onclick="setRbQty(6)">6x<span style="font-size:10px;font-weight:400;display:block">padrão</span><span class="ob-badge-price">incluso</span></button>
+        <button class="ob-badge-btn" data-rb-qty="12" onclick="setRbQty(12)">12x<span style="font-size:10px;font-weight:400;display:block">+6 un.</span><span class="ob-badge-price">R$ 39,00</span></button>
+        <button class="ob-badge-btn" data-rb-qty="18" onclick="setRbQty(18)">18x<span style="font-size:10px;font-weight:400;display:block">+12 un.</span><span class="ob-badge-price">R$ 66,00</span></button>
+        <button class="ob-badge-btn" data-rb-qty="24" onclick="setRbQty(24)">24x<span style="font-size:10px;font-weight:400;display:block">+18 un.</span><span class="ob-badge-price">R$ 81,00</span></button>
+      </div>
+      <div style="font-size:11px;color:#888;font-weight:600;margin-top:14px;margin-bottom:0;text-transform:uppercase;letter-spacing:.3px">Sabor</div>
+    </div>
+    <div class="chips-wrap">
+      <div class="chip-opt" data-group="redbull" data-value="Tradicional" onclick="selecionarChip(this)">
+        <img class="chip-img" src="images/rb-tradicional.webp" alt="Tradicional">
+        <span class="chip-label">Tradicional</span>
+        <div class="chip-check"><i class="fa fa-check" style="font-size:11px;color:#1a1a1a"></i></div>
+      </div>
+      <div class="chip-opt" data-group="redbull" data-value="Zero" onclick="selecionarChip(this)">
+        <img class="chip-img" src="images/rb-zero.webp" alt="Zero">
+        <span class="chip-label">Zero</span>
+        <div class="chip-check"><i class="fa fa-check" style="font-size:11px;color:#1a1a1a"></i></div>
+      </div>
+      <div class="chip-opt" data-group="redbull" data-value="Tropical" onclick="selecionarChip(this)">
+        <img class="chip-img" src="images/rb-tropical.webp" alt="Tropical">
+        <span class="chip-label">Tropical</span>
+        <div class="chip-check"><i class="fa fa-check" style="font-size:11px;color:#1a1a1a"></i></div>
+      </div>
+      <div class="chip-opt" data-group="redbull" data-value="Melancia" onclick="selecionarChip(this)">
+        <img class="chip-img" src="images/rb-melancia.webp" alt="Melancia">
+        <span class="chip-label">Melancia</span>
+        <div class="chip-check"><i class="fa fa-check" style="font-size:11px;color:#1a1a1a"></i></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2ª Garrafa Upsell — só para garrafas -->
+  <div class="pd-section" id="sec-upsell-garrafa" style="display:none">
+    <div class="sec-header sec-header-flex">
+      <div class="sec-header-left">
+        <div>
+          <div class="sec-title">Leve a 2ª garrafa e ganhe 3x Red Bull grátis!</div>
+        </div>
+      </div>
+      <span class="sec-badge-opt">opcional</span>
+    </div>
+    <div class="chips-wrap" id="upsell-garrafa-chips"></div>
+  </div>
+
+  <!-- Red Bull upsell — seção separada, sempre visível em garrafas -->
+  <div class="pd-section" id="sec-upsell-rb" style="display:none">
+    <div class="sec-header sec-header-flex">
+      <div class="sec-header-left">
+        <div>
+          <div class="sec-title">Adicionar Red Bull</div>
+          <div class="sec-sub">Escolha os sabores</div>
+        </div>
+      </div>
+      <span class="sec-badge-opt">opcional</span>
+    </div>
+    <div style="padding:12px 12px 4px">
+      <div style="display:flex;gap:6px;margin-bottom:8px">
+        <button class="ob-badge-btn" data-rbup-qty="3" onclick="setUpsellRbTarget(3)">3 un.<span style="font-size:10px;font-weight:400;display:block">padrão</span><span class="ob-badge-price">R$ 22,50</span></button>
+        <button class="ob-badge-btn" data-rbup-qty="6" onclick="setUpsellRbTarget(6)">6 un.<span style="font-size:10px;font-weight:400;display:block">+3 un.</span><span class="ob-badge-price">R$ 42,00</span></button>
+        <button class="ob-badge-btn" data-rbup-qty="12" onclick="setUpsellRbTarget(12)">12 un.<span style="font-size:10px;font-weight:400;display:block">+9 un.</span><span class="ob-badge-price">R$ 72,00</span></button>
+      </div>
+      <div id="upsell-rb-rows">
+        <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #f5f5f5">
+          <img class="chip-img" src="images/rb-tradicional.webp" alt="Tradicional">
+          <span style="flex:1;font-size:13px;font-weight:600">Tradicional</span>
+          <div style="display:flex;align-items:center;gap:10px">
+            <button class="gelo-cnt-btn" onclick="changeUpsellRbQty('trad',-1)">−</button>
+            <span id="upsell-rb-cnt-trad" style="min-width:18px;text-align:center;font-size:15px;font-weight:700">0</span>
+            <button class="gelo-cnt-btn" onclick="changeUpsellRbQty('trad',1)">+</button>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #f5f5f5">
+          <img class="chip-img" src="images/rb-zero.webp" alt="Zero">
+          <span style="flex:1;font-size:13px;font-weight:600">Zero</span>
+          <div style="display:flex;align-items:center;gap:10px">
+            <button class="gelo-cnt-btn" onclick="changeUpsellRbQty('zero',-1)">−</button>
+            <span id="upsell-rb-cnt-zero" style="min-width:18px;text-align:center;font-size:15px;font-weight:700">0</span>
+            <button class="gelo-cnt-btn" onclick="changeUpsellRbQty('zero',1)">+</button>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #f5f5f5">
+          <img class="chip-img" src="images/rb-tropical.webp" alt="Tropical">
+          <span style="flex:1;font-size:13px;font-weight:600">Tropical</span>
+          <div style="display:flex;align-items:center;gap:10px">
+            <button class="gelo-cnt-btn" onclick="changeUpsellRbQty('trop',-1)">−</button>
+            <span id="upsell-rb-cnt-trop" style="min-width:18px;text-align:center;font-size:15px;font-weight:700">0</span>
+            <button class="gelo-cnt-btn" onclick="changeUpsellRbQty('trop',1)">+</button>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;padding:8px 0">
+          <img class="chip-img" src="images/rb-melancia.webp" alt="Melancia">
+          <span style="flex:1;font-size:13px;font-weight:600">Melancia</span>
+          <div style="display:flex;align-items:center;gap:10px">
+            <button class="gelo-cnt-btn" onclick="changeUpsellRbQty('mel',-1)">−</button>
+            <span id="upsell-rb-cnt-mel" style="min-width:18px;text-align:center;font-size:15px;font-weight:700">0</span>
+            <button class="gelo-cnt-btn" onclick="changeUpsellRbQty('mel',1)">+</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Totalizador RB -->
+    <div id="upsell-rb-total-row" style="display:none;margin:4px 12px 12px;padding:10px 12px;background:#f9f9f9;border-radius:10px">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <span style="font-size:13px;color:#555;font-family:'Poppins',sans-serif" id="upsell-rb-total-label">0 unidades</span>
+        <div style="text-align:right">
+          <div style="font-size:14px;font-weight:700;color:#077c22;font-family:'Poppins',sans-serif" id="upsell-rb-total-val">R$ 0,00</div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+  <!-- Seção Gelo de Coco — combos sempre, garrafas quando garrafa init -->
   <div class="pd-section" id="sec-gelo" style="display:none">
     <div class="sec-header sec-header-flex">
       <div class="sec-header-left">
         <div>
           <div class="sec-title">Gelo de Coco - Coco Leve</div>
-          <div class="sec-sub">R$ 4,99/un · desconto por quantidade</div>
+          <div class="sec-sub">Selecione a quantidade desejada e depois escolha o(s) sabore(s).</div>
         </div>
       </div>
       <span class="sec-badge-opt">opcional</span>
     </div>
-    <div class="chips-wrap" style="padding-bottom:12px">
-      <div class="chip-opt" data-group="gelo-sabor" data-value="Coco padrão" onclick="selecionarChip(this)">
-        <img class="chip-img" src="images/gelo-coco-padrao.webp" alt="Coco padrão">
-        <span class="chip-label">Sabor Coco</span>
-        <div class="chip-check"><i class="fa fa-check" style="font-size:11px;color:#1a1a1a"></i></div>
-      </div>
-      <div class="chip-opt" data-group="gelo-sabor" data-value="Maçã Verde" onclick="selecionarChip(this)">
-        <img class="chip-img" src="images/gelo-maca.webp" alt="Maçã Verde">
-        <span class="chip-label">Sabor Maçã Verde</span>
-        <div class="chip-check"><i class="fa fa-check" style="font-size:11px;color:#1a1a1a"></i></div>
-      </div>
-      <div class="chip-opt" data-group="gelo-sabor" data-value="Melancia" onclick="selecionarChip(this)">
-        <img class="chip-img" src="images/gelo-melancia.webp" alt="Melancia">
-        <span class="chip-label">Sabor Melancia</span>
-        <div class="chip-check"><i class="fa fa-check" style="font-size:11px;color:#1a1a1a"></i></div>
-      </div>
-      <div class="chip-opt" data-group="gelo-sabor" data-value="Morango" onclick="selecionarChip(this)">
-        <img class="chip-img" src="images/gelo-morango.webp" alt="Morango">
-        <span class="chip-label">Sabor Morango</span>
-        <div class="chip-check"><i class="fa fa-check" style="font-size:11px;color:#1a1a1a"></i></div>
-      </div>
-      <div class="chip-opt" data-group="gelo-sabor" data-value="Maracujá" onclick="selecionarChip(this)">
-        <img class="chip-img" src="images/gelo-maracuja.webp" alt="Maracujá">
-        <span class="chip-label">Sabor Maracujá</span>
-        <div class="chip-check"><i class="fa fa-check" style="font-size:11px;color:#1a1a1a"></i></div>
-      </div>
+    <div style="padding:12px 12px 8px">
+      <div style="font-size:11px;color:#888;font-weight:600;margin-bottom:7px;text-transform:uppercase;letter-spacing:.3px">Quantidade</div>
+      <div id="gelo-badges" style="display:flex;gap:6px"></div>
     </div>
-    <!-- Quantidade — aparece ao selecionar um sabor -->
-    <div id="gelo-qty-section" style="display:none">
-      <div class="gelo-qty-wrap">
-        <button class="gelo-qty-btn" onclick="changeGeloQty(-1)">−</button>
-        <div class="gelo-qty-center">
-          <div class="gelo-qty-num" id="gelo-qty-num">1</div>
-          <div class="gelo-qty-preco" id="gelo-qty-preco">R$ 4,99</div>
-        </div>
-        <button class="gelo-qty-btn" onclick="changeGeloQty(1)">+</button>
-      </div>
-      <div class="gelo-badges">
-        <button class="gelo-badge-btn" data-qty="3" onclick="setGeloQty(3)">3 un.<span class="gelo-badge-price">R$ 12,99</span></button>
-        <button class="gelo-badge-btn" data-qty="5" onclick="setGeloQty(5)">5 un.<span class="gelo-badge-price">R$ 19,99</span></button>
-        <button class="gelo-badge-btn" data-qty="10" onclick="setGeloQty(10)">10 un.<span class="gelo-badge-price">R$ 34,99</span></button>
+    <div style="padding:0 12px 4px">
+      <div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #f0f0f0"><img class="chip-img" src="images/gelo-coco-padrao.webp" alt="Sabor Coco"><span style="flex:1;font-size:13px;font-weight:600">Sabor Coco</span><div style="display:flex;align-items:center;gap:10px"><button class="gelo-cnt-btn" onclick="changeGeloFlavQty('coco',-1)">−</button><span id="gelo-cnt-coco" style="min-width:18px;text-align:center;font-size:15px;font-weight:700">0</span><button class="gelo-cnt-btn" onclick="changeGeloFlavQty('coco',1)">+</button></div></div>
+      <div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #f0f0f0"><img class="chip-img" src="images/gelo-maca.webp" alt="Sabor Maçã Verde"><span style="flex:1;font-size:13px;font-weight:600">Sabor Maçã Verde</span><div style="display:flex;align-items:center;gap:10px"><button class="gelo-cnt-btn" onclick="changeGeloFlavQty('maca',-1)">−</button><span id="gelo-cnt-maca" style="min-width:18px;text-align:center;font-size:15px;font-weight:700">0</span><button class="gelo-cnt-btn" onclick="changeGeloFlavQty('maca',1)">+</button></div></div>
+      <div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #f0f0f0"><img class="chip-img" src="images/gelo-melancia.webp" alt="Sabor Melancia"><span style="flex:1;font-size:13px;font-weight:600">Sabor Melancia</span><div style="display:flex;align-items:center;gap:10px"><button class="gelo-cnt-btn" onclick="changeGeloFlavQty('melancia',-1)">−</button><span id="gelo-cnt-melancia" style="min-width:18px;text-align:center;font-size:15px;font-weight:700">0</span><button class="gelo-cnt-btn" onclick="changeGeloFlavQty('melancia',1)">+</button></div></div>
+      <div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #f0f0f0"><img class="chip-img" src="images/gelo-morango.webp" alt="Sabor Morango"><span style="flex:1;font-size:13px;font-weight:600">Sabor Morango</span><div style="display:flex;align-items:center;gap:10px"><button class="gelo-cnt-btn" onclick="changeGeloFlavQty('morango',-1)">−</button><span id="gelo-cnt-morango" style="min-width:18px;text-align:center;font-size:15px;font-weight:700">0</span><button class="gelo-cnt-btn" onclick="changeGeloFlavQty('morango',1)">+</button></div></div>
+      <div style="display:flex;align-items:center;gap:10px;padding:10px 0"><img class="chip-img" src="images/gelo-maracuja.webp" alt="Sabor Maracujá"><span style="flex:1;font-size:13px;font-weight:600">Sabor Maracujá</span><div style="display:flex;align-items:center;gap:10px"><button class="gelo-cnt-btn" onclick="changeGeloFlavQty('maracuja',-1)">−</button><span id="gelo-cnt-maracuja" style="min-width:18px;text-align:center;font-size:15px;font-weight:700">0</span><button class="gelo-cnt-btn" onclick="changeGeloFlavQty('maracuja',1)">+</button></div></div>
+    </div>
+    <div id="gelo-total-row" style="display:none;margin:4px 12px 12px;padding:10px 12px;background:#f9f9f9;border-radius:10px">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <span style="font-size:13px;color:#555;font-family:'Poppins',sans-serif" id="gelo-total-label">0 unidades</span>
+        <div style="font-size:14px;font-weight:700;color:#077c22;font-family:'Poppins',sans-serif" id="gelo-total-val">R$ 0,00</div>
       </div>
     </div>
   </div>
@@ -389,7 +599,7 @@
       <span class="sec-badge-opt">opcional</span>
     </div>
     <div style="padding: 12px;">
-      <textarea id="pd-obs" placeholder="Ex: deixar na portaria, sem gelo, tocar a campainha..."
+      <textarea id="pd-obs" placeholder="Exemplo: O interfone está quebrado, favor ligar quando chegar"
         style="width:100%;box-sizing:border-box;padding:12px 14px;font-family:'Poppins',sans-serif;
         font-size:14px;border:1.5px solid #eee;border-radius:12px;background:#fff;color:#1a1a1a;
         outline:none;resize:vertical;min-height:80px;max-height:160px;"
@@ -432,7 +642,7 @@
 
     var urlParams = new URLSearchParams(location.search);
     var produtoId = parseInt(urlParams.get('id'));
-    var isJack    = urlParams.get('whisky') === 'jack';
+    var isJack    = false; /* seletor de sabor Jack removido */
     var produto   = (typeof PRODUTOS !== 'undefined')
       ? PRODUTOS.find(function(p) { return p.id === produtoId; })
       : null;
@@ -465,60 +675,381 @@
         document.getElementById('sec-gelo').style.display = '';
       }
 
-      var rbQty    = produto.rbQty || 6;
-      var rbMetade = rbQty / 2;
+      var rbQtyBase  = produto.rbQty || 6;
+      var rbQtyTotal = rbQtyBase;
+      var rbMetade   = rbQtyBase / 2;
+
+      var rbExtraMap = { 6: 0, 12: 39.00, 18: 66.00, 24: 81.00 };
+
+      /* ── Mapa garrafa → combo de 6 RB (precisa estar antes do if isGarrafa) ── */
+      var garrafaToComboMap = {
+        25: { id:1,  img:'images/img2.webp',  diff: 9.00 },
+        27: { id:2,  img:'images/img3.webp',  diff: 10.00 },
+        28: { id:3,  img:'images/img4.webp',  diff: 10.00 },
+        29: { id:4,  img:'images/img5.webp',  diff: 10.00 },
+        31: { id:38, img:'images/img6.webp',  diff: 10.00 },
+        46: { id:44, img:'images/jack-apple.webp', diff: 10.00 },
+        47: { id:45, img:'images/jack-honey.webp', diff: 10.00 }
+      };
+
+      var comboGarrafaMap = {
+        1:  { nome: 'Red Label 1L',           preco: 40.90, img: 'images/garrafa-red-label.webp'   },
+        9:  { nome: 'Red Label 1L',           preco: 40.90, img: 'images/garrafa-red-label.webp'   },
+        10: { nome: 'Red Label 1L',           preco: 40.90, img: 'images/garrafa-red-label.webp'   },
+        2:  { nome: "Jack Daniel's 1L",       preco: 60.90, img: 'images/garrafa-jack.webp'         },
+        11: { nome: "Jack Daniel's 1L",       preco: 60.90, img: 'images/garrafa-jack.webp'         },
+        12: { nome: "Jack Daniel's 1L",       preco: 60.90, img: 'images/garrafa-jack.webp'         },
+        3:  { nome: "Buchanan's 12 Anos 1L",  preco: 70.90, img: 'images/garrafa-buchanans.webp'   },
+        13: { nome: "Buchanan's 12 Anos 1L",  preco: 70.90, img: 'images/garrafa-buchanans.webp'   },
+        14: { nome: "Buchanan's 12 Anos 1L",  preco: 70.90, img: 'images/garrafa-buchanans.webp'   },
+        4:  { nome: "Ballantine's 1L",        preco: 30.90, img: 'images/garrafa-ballantines.webp' },
+        15: { nome: "Ballantine's 1L",        preco: 30.90, img: 'images/garrafa-ballantines.webp' },
+        16: { nome: "Ballantine's 1L",        preco: 30.90, img: 'images/garrafa-ballantines.webp' },
+        38: { nome: 'Old Parr 1L',            preco: 72.90, img: 'images/garrafa-old-parr.webp'    }
+      };
 
       if (isCombo) {
         var secSub = document.querySelector('#sec-redbull .sec-sub');
         if (secSub) secSub.textContent =
-          'Escolha 1 sabor para as ' + rbQty + ' latas, ou 2 sabores (' + rbMetade + ' de cada)';
+          'Escolha 1 sabor para as ' + rbQtyBase + ' latas, ou 2 sabores (' + rbMetade + ' de cada)';
+
+        /* Popula chips da segunda garrafa dinamicamente */
+        var garrafaInfo = comboGarrafaMap[produto.id];
+        if (garrafaInfo) {
+          var segChips = document.getElementById('segunda-chips');
+          if (segChips) {
+            segChips.innerHTML =
+              '<div class="chip-opt" data-group="segunda"' +
+              ' data-value="' + garrafaInfo.nome + '"' +
+              ' data-preco="' + garrafaInfo.preco + '"' +
+              ' data-img="' + garrafaInfo.img + '"' +
+              ' onclick="selecionarChip(this)">' +
+              '<img class="chip-img" src="' + garrafaInfo.img + '" alt="' + garrafaInfo.nome + '">' +
+              '<div class="chip-text-wrap">' +
+              '<span class="chip-label">' + garrafaInfo.nome + '</span>' +
+              '<span class="chip-price-tag">+R$ ' + garrafaInfo.preco.toFixed(2).replace('.', ',') + '</span>' +
+              '</div>' +
+              '<div class="chip-check"><i class="fa fa-check" style="font-size:11px;color:#1a1a1a"></i></div>' +
+              '</div>';
+          }
+        } else {
+          document.getElementById('sec-segunda').style.display = 'none';
+        }
+      } else {
+        document.getElementById('sec-segunda').style.display = 'none';
+      }
+
+      /* ── Init garrafas: popup de combo + chips da 2ª garrafa ── */
+      if (isGarrafa) {
+        /* Popup combo upgrade */
+        var _comboUpgrEntry = garrafaToComboMap[produto.id];
+        if (_comboUpgrEntry) {
+          var _comboPr = PRODUTOS.find(function(p) { return p.id === _comboUpgrEntry.id; });
+          if (_comboPr) {
+            var _upgrDiff = (typeof _comboUpgrEntry.diff === 'number') ? _comboUpgrEntry.diff : 10.00;
+            document.getElementById('popup-combo-img').src = _comboUpgrEntry.img;
+            document.getElementById('popup-bump-sub').innerHTML =
+              'Adicione 6x Red Bull<br>por apenas <strong>+R$ ' + _upgrDiff.toFixed(2).replace('.', ',') + '</strong>';
+            document.getElementById('popup-preco-antigo').textContent =
+              'R$ ' + _comboPr.precoAntigo.toFixed(2).replace('.', ',');
+            document.getElementById('popup-preco-novo').textContent =
+              'R$ ' + _comboPr.preco.toFixed(2).replace('.', ',');
+            /* Abre popup com pequeno delay */
+            setTimeout(function() {
+              var overlay = document.getElementById('combo-upgrade-overlay');
+              overlay.style.display = 'flex';
+            }, 700);
+          }
+        }
+
+        /* Família de chips (prioridade de exibição) */
+        var _allGarrafas = PRODUTOS.filter(function(p) { return p.categoria === 'garrafa'; });
+        var _priorityChips;
+
+        if (produto.id === 27) {
+          /* Jack Daniel's: mostrar 3 sabores como chips separados */
+          _priorityChips = [
+            { id:27, nome:"Jack Daniel's Original Nº7", preco:60.90, img:'images/jack-original.webp', sabor:'Original Nº7'  },
+            { id:27, nome:"Jack Daniel's Maçã Verde",    preco:60.90, img:'images/jack-maca.webp',    sabor:'Maçã Verde'    },
+            { id:27, nome:"Jack Daniel's Mel (Honey)",   preco:60.90, img:'images/jack-mel.webp',     sabor:'Mel (Honey)'   }
+          ];
+        } else if (produto.id === 25 || produto.id === 26) {
+          /* Família Johnnie Walker: Red Label + Black Label */
+          var _jwIds = produto.id === 25 ? [25, 26] : [26, 25];
+          _priorityChips = _jwIds.map(function(id) {
+            return _allGarrafas.find(function(p) { return p.id === id; });
+          }).filter(Boolean);
+        } else {
+          /* Demais: apenas o produto atual primeiro */
+          _priorityChips = [produto];
+        }
+
+        /* Remaining: todas exceto as já nos chips de prioridade */
+        var _priorityIds = _priorityChips.map(function(c) { return c.id; });
+        var _garrafasRest = _allGarrafas.filter(function(g) {
+          return _priorityIds.indexOf(g.id) === -1;
+        });
+        var _restPage = (_priorityChips.length === 1) ? 2 : 0;
+
+        function _chipHtml(g) {
+          return '<div class="chip-opt" data-group="upsell-garrafa"' +
+            ' data-id="' + g.id + '"' +
+            (g.sabor ? ' data-sabor="' + g.sabor.replace(/"/g, '&quot;') + '"' : '') +
+            ' data-value="' + g.nome.replace(/"/g, '&quot;') + '"' +
+            ' data-preco="' + g.preco + '"' +
+            ' data-img="' + g.img + '"' +
+            ' onclick="selecionarChip(this)">' +
+            '<img class="chip-img" src="' + g.img + '" alt="' + g.nome + '">' +
+            '<div class="chip-text-wrap">' +
+            '<span class="chip-label">' + g.nome + '</span>' +
+            '<span class="chip-price-tag">R$ ' + g.preco.toFixed(2).replace('.', ',') + '</span>' +
+            '</div>' +
+            '<div class="chip-check"><i class="fa fa-check" style="font-size:11px;color:#1a1a1a"></i></div>' +
+            '</div>';
+        }
+
+        function _flavorChipHtml(g) {
+          var display = g.sabor || g.nome.replace("Jack Daniel's ", '');
+          return '<div class="chip-opt chip-opt-flavor" data-group="upsell-garrafa"' +
+            ' data-id="' + g.id + '"' +
+            ' data-sabor="' + (g.sabor || '').replace(/"/g, '&quot;') + '"' +
+            ' data-value="' + g.nome.replace(/"/g, '&quot;') + '"' +
+            ' data-preco="' + g.preco + '"' +
+            ' data-img="' + g.img + '"' +
+            ' onclick="selecionarChip(this)">' +
+            '<img class="chip-img" src="' + g.img + '" alt="' + display + '">' +
+            '<span class="chip-label">' + display + '</span>' +
+            '<div class="chip-check"><i class="fa fa-check" style="font-size:9px;color:#1a1a1a"></i></div>' +
+            '</div>';
+        }
+
+        var _mostrarMaisLink = '<div onclick="mostrarMaisUpsell()" style="' +
+          'padding:10px 12px;color:#ffcc01;font-weight:700;font-size:13px;cursor:pointer">' +
+          'Mostrar mais opções</div>';
+
+        function renderUpsellChips() {
+          var html = '';
+          var visible = _priorityChips.concat(_garrafasRest.slice(0, _restPage));
+          html = visible.map(_chipHtml).join('');
+
+          var remaining = _garrafasRest.length - _restPage;
+          if (remaining > 0) html += _mostrarMaisLink;
+
+          document.getElementById('upsell-garrafa-chips').innerHTML = html;
+
+          /* Re-marcar selecionado */
+          if (upsellGarrafa) {
+            var sel = upsellGarrafa.sabor
+              ? document.querySelector('.chip-opt[data-group="upsell-garrafa"][data-id="' +
+                  upsellGarrafa.id + '"][data-sabor="' +
+                  upsellGarrafa.sabor.replace(/"/g, '&quot;') + '"]')
+              : document.querySelector('.chip-opt[data-group="upsell-garrafa"][data-id="' +
+                  upsellGarrafa.id + '"]:not([data-sabor=""])');
+            if (sel) sel.classList.add('selecionado');
+          }
+        }
+
+        window.mostrarMaisUpsell = function() {
+          _restPage = Math.min(_restPage + 3, _garrafasRest.length);
+          renderUpsellChips();
+        };
+
+        /* 2ª garrafa removida — não exibe sec-upsell-garrafa */
+        document.getElementById('sec-upsell-rb').style.display = '';
+        document.getElementById('sec-gelo').style.display = '';
       }
 
       /* ── Estado das seleções ── */
       var rbSabores   = [];
       var whiskySabor = null;
-      var geloSabor   = 'none';
-      var geloQty     = 1;
+      var geloQtys    = { coco: 0, maca: 0, melancia: 0, morango: 0, maracuja: 0 };
+      /* Gelo: combos mantêm 4 opções (preços antigos); garrafas usam 3 opções (preços novos) */
+      var geloConfig = isCombo
+        ? { qtys:[3,6,9,12], prices:{ 3:13.50, 6:24.00, 9:31.50, 12:36.00 } }
+        : { qtys:[3,6,9],    prices:{ 3:15.00, 6:27.00, 9:36.00 } };
+      var geloPrices  = geloConfig.prices;
+      var geloTarget  = 3; /* 3x (padrão) pré-selecionado em ambos */
+      (function renderGeloBadges() {
+        var cont = document.getElementById('gelo-badges');
+        if (!cont) return;
+        var subs = { 3:'padrão', 6:'+3 un.', 9:'+6 un.', 12:'+9 un.' };
+        cont.innerHTML = geloConfig.qtys.map(function(q) {
+          return '<button class="ob-badge-btn' + (q === 3 ? ' active' : '') + '" data-gelo-qty="' + q +
+                 '" onclick="setGeloTarget(' + q + ')">' + q + 'x' +
+                 '<span style="font-size:10px;font-weight:400;display:block">' + subs[q] + '</span>' +
+                 '<span class="ob-badge-price">' + fmt(geloPrices[q]) + '</span></button>';
+        }).join('');
+      })();
+
+      /* ── Order bumps ── */
+      var segundaGarrafaSelecionada = null;
+      var segundaJackSabor = null;
+      var upsellGarrafa = null;
+      var upsellRbQtys  = { trad:0, zero:0, trop:0, mel:0 };
+      var upsellRbTarget = 0; /* 0 = nenhuma */
+      var upsellRbPrices = { 3: 22.50, 6: 42.00, 12: 72.00 };
+      /* garrafas: pré-seleciona o "3 un." (padrão) */
+      if (isGarrafa) {
+        upsellRbTarget = 3;
+        document.querySelectorAll('#sec-upsell-rb .ob-badge-btn[data-rbup-qty]').forEach(function(b) { b.classList.toggle('active', parseInt(b.dataset.rbupQty) === 3); });
+      }
+
+      function upsellRbTotal() {
+        return upsellRbQtys.trad + upsellRbQtys.zero + upsellRbQtys.trop + upsellRbQtys.mel;
+      }
+
+      /* Preço fixo do pacote escolhido */
+      function getUpsellRbCost() {
+        return upsellRbPrices[upsellRbTarget] || 0;
+      }
+
+      function setUpsellRbTarget(n) {
+        upsellRbTarget = (upsellRbTarget === n) ? 0 : n;
+        /* se já tinha mais sabores que o novo alvo, zera */
+        if (upsellRbTotal() > upsellRbTarget) {
+          upsellRbQtys = { trad:0, zero:0, trop:0, mel:0 };
+          ['trad','zero','trop','mel'].forEach(function(k) {
+            var e = document.getElementById('upsell-rb-cnt-' + k); if (e) e.textContent = '0';
+          });
+        }
+        document.querySelectorAll('#sec-upsell-rb .ob-badge-btn[data-rbup-qty]').forEach(function(b) {
+          b.classList.toggle('active', parseInt(b.dataset.rbupQty) === upsellRbTarget);
+        });
+        updateUpsellRbDisplay(); updateTotal(); updateBtn();
+      }
+
+      function changeUpsellRbQty(key, delta) {
+        if (delta > 0) {
+          if (upsellRbTarget === 0) return;             /* escolha a quantidade antes */
+          if (upsellRbTotal() >= upsellRbTarget) return; /* atingiu o limite: mude de caixinha */
+        }
+        var novo = (upsellRbQtys[key] || 0) + delta;
+        if (novo < 0) return;
+        upsellRbQtys[key] = novo;
+        document.getElementById('upsell-rb-cnt-' + key).textContent = novo;
+        updateUpsellRbDisplay();
+        updateTotal();
+        updateBtn();
+      }
+
+      /* Tabela de textos dos milestones em cada estado (COM / SEM garrafa) */
+      function updateUpsellRbDisplay() {
+        var total = upsellRbTotal();
+        var noLimite = (upsellRbTarget === 0) || (total >= upsellRbTarget);
+        /* desabilita os "+" quando não há alvo ou o alvo foi atingido */
+        document.querySelectorAll('#sec-upsell-rb .gelo-cnt-btn').forEach(function(btn) {
+          if (btn.textContent.trim() === '+') btn.disabled = noLimite;
+        });
+        /* Totalizador */
+        var row = document.getElementById('upsell-rb-total-row');
+        if (row) {
+          if (upsellRbTarget > 0) {
+            document.getElementById('upsell-rb-total-label').textContent =
+              total + ' de ' + upsellRbTarget + ' selecionado' + (total !== 1 ? 's' : '');
+            document.getElementById('upsell-rb-total-val').textContent = fmt(getUpsellRbCost());
+            row.style.display = '';
+          } else {
+            row.style.display = 'none';
+          }
+        }
+      }
+
+      function resetUpsellRb() {
+        upsellRbQtys = { trad:0, zero:0, trop:0, mel:0 };
+        upsellRbTarget = 0;
+        ['trad','zero','trop','mel'].forEach(function(k) {
+          var el = document.getElementById('upsell-rb-cnt-' + k);
+          if (el) el.textContent = '0';
+        });
+        document.querySelectorAll('#sec-upsell-rb .ob-badge-btn[data-rbup-qty]').forEach(function(b) { b.classList.remove('active'); });
+        updateUpsellRbDisplay();
+      }
+
+      /* Fecha popup combo */
+      window.fecharPopupCombo = function() {
+        var overlay = document.getElementById('combo-upgrade-overlay');
+        if (overlay) overlay.style.display = 'none';
+      };
 
       /* ── Init: exibe total e habilita botão para não-combo ── */
+      updateUpsellRbDisplay();
+      updateGeloDisplay();
       updateTotal();
       updateBtn();
 
       function fmt(v) { return 'R$ ' + v.toFixed(2).replace('.', ','); }
 
-      function getGeloTotal(qty) {
-        if (qty >= 10) return 34.99 + (qty - 10) * 3.50;
-        if (qty >= 5)  return 19.99 + (qty - 5)  * 4.00;
-        if (qty >= 3)  return 12.99 + (qty - 3)  * 4.33;
-        return qty * 4.99;
+      function getGeloTotal() {
+        return geloPrices[geloTarget] || 0;
+      }
+
+      function setGeloTarget(n) {
+        geloTarget = (geloTarget === n) ? 0 : n;
+        /* se já tinha selecionado mais sabores que o novo alvo, zera */
+        if (geloTotalQty() > geloTarget) {
+          geloQtys = { coco: 0, maca: 0, melancia: 0, morango: 0, maracuja: 0 };
+          ['coco','maca','melancia','morango','maracuja'].forEach(function(k) {
+            document.getElementById('gelo-cnt-' + k).textContent = 0;
+          });
+        }
+        document.querySelectorAll('#sec-gelo .ob-badge-btn[data-gelo-qty]').forEach(function(b) {
+          b.classList.toggle('active', parseInt(b.dataset.geloQty) === geloTarget);
+        });
+        updateGeloDisplay(); updateTotal(); updateBtn();
       }
 
       function calcTotal() {
         var total = produto.preco;
-        if (geloSabor && geloSabor !== 'none') total += getGeloTotal(geloQty);
+        if (geloTarget > 0 && geloTotalQty() > 0) total += getGeloTotal();
+        total += (rbExtraMap[rbQtyTotal] || 0);
+        if (segundaGarrafaSelecionada) total += segundaGarrafaSelecionada.preco;
+        if (upsellGarrafa) total += upsellGarrafa.preco;
+        if (upsellRbTarget > 0 && upsellRbTotal() > 0) total += getUpsellRbCost();
         return total;
       }
 
-      function updateGeloQtyDisplay() {
-        document.getElementById('gelo-qty-num').textContent = geloQty;
-        document.getElementById('gelo-qty-preco').textContent = fmt(getGeloTotal(geloQty));
-        document.querySelectorAll('.gelo-badge-btn').forEach(function(btn) {
-          btn.classList.toggle('active', parseInt(btn.dataset.qty) === geloQty);
+      function geloTotalQty() {
+        var total = 0;
+        Object.keys(geloQtys).forEach(function(k) { total += geloQtys[k]; });
+        return total;
+      }
+
+      function changeGeloFlavQty(key, delta) {
+        if (delta > 0) {
+          if (geloTarget === 0) return;              /* precisa escolher a quantidade antes */
+          if (geloTotalQty() >= geloTarget) return;  /* atingiu o limite: só pode remover */
+        }
+        geloQtys[key] = Math.max(0, (geloQtys[key] || 0) + delta);
+        document.getElementById('gelo-cnt-' + key).textContent = geloQtys[key];
+        updateGeloDisplay();
+        updateTotal();
+        updateBtn();
+      }
+
+      function updateGeloDisplay() {
+        var total = geloTotalQty();
+        var noLimite = (geloTarget === 0) || (total >= geloTarget);
+        /* desabilita os botões "+" quando não há alvo ou o alvo foi atingido */
+        document.querySelectorAll('#sec-gelo .gelo-cnt-btn').forEach(function(btn) {
+          if (btn.textContent.trim() === '+') btn.disabled = noLimite;
         });
+        /* Totalizador */
+        var row = document.getElementById('gelo-total-row');
+        if (geloTarget > 0) {
+          document.getElementById('gelo-total-label').textContent =
+            total + ' de ' + geloTarget + ' selecionado' + (total !== 1 ? 's' : '');
+          document.getElementById('gelo-total-val').textContent = fmt(getGeloTotal());
+          row.style.display = '';
+        } else {
+          row.style.display = 'none';
+        }
       }
 
       function atualizarDetalheAddon() {
         var el = document.getElementById('addon-detail');
-        if (!geloSabor || geloSabor === 'none') {
-          el.style.display = 'none';
-          return;
-        }
-        var chipSelecionado = document.querySelector('.chip-opt[data-group="gelo-sabor"].selecionado');
-        var labelTexto = chipSelecionado ? chipSelecionado.querySelector('.chip-label').textContent : geloSabor;
-        document.getElementById('addon-detail-label').textContent =
-          'Gelo de Coco Leve - ' + labelTexto + ' x' + geloQty;
-        document.getElementById('addon-detail-val').textContent =
-          '+' + fmt(getGeloTotal(geloQty));
+        if (geloTarget === 0 || geloTotalQty() === 0) { el.style.display = 'none'; return; }
+        document.getElementById('addon-detail-label').textContent = 'Gelo de Coco Leve × ' + geloTarget;
+        document.getElementById('addon-detail-val').textContent = '+' + fmt(getGeloTotal());
         el.style.display = 'flex';
       }
 
@@ -529,9 +1060,25 @@
 
       function updateBtn() {
         var btn = document.getElementById('btn-adicionar');
+        /* ── Validações que valem para garrafa E combo ── */
+        if (upsellRbTarget > 0 && upsellRbTotal() > 0 && upsellRbTotal() !== upsellRbTarget) {
+          btn.disabled = true;
+          btn.textContent = 'Selecione os sabores do Red Bull';
+          return;
+        }
+        if (geloTarget > 0 && geloTotalQty() > 0 && geloTotalQty() !== geloTarget) {
+          btn.disabled = true;
+          btn.textContent = 'Selecione o sabor do Gelo de Coco';
+          return;
+        }
         if (!isCombo) {
           btn.disabled = false;
           btn.textContent = 'Adicionar ao carrinho — ' + fmt(calcTotal());
+          return;
+        }
+        if (isJack && !whiskySabor) {
+          btn.disabled = true;
+          btn.textContent = "Escolha seu Jack Daniel's";
           return;
         }
         if (rbSabores.length === 0) {
@@ -539,9 +1086,9 @@
           btn.textContent = 'Selecione o sabor do Red Bull';
           return;
         }
-        if (isJack && !whiskySabor) {
+        if (isJack && segundaGarrafaSelecionada && !segundaJackSabor) {
           btn.disabled = true;
-          btn.textContent = "Escolha seu Jack Daniel's";
+          btn.textContent = 'Escolha o sabor da 2ª garrafa';
           return;
         }
         btn.disabled = false;
@@ -557,14 +1104,15 @@
       }
 
       function atualizarLabelsRedBull() {
+        var metade = rbQtyTotal / 2;
         document.querySelectorAll('.chip-opt[data-group="redbull"]').forEach(function(c) {
           var label = c.querySelector('.chip-label');
           if (!label) return;
           var original = c.dataset.value;
           if (rbSabores.length === 1 && c.classList.contains('selecionado')) {
-            label.textContent = rbQty + 'x ' + original;
+            label.textContent = rbQtyTotal + 'x ' + original;
           } else if (rbSabores.length === 2 && c.classList.contains('selecionado')) {
-            label.textContent = rbMetade + 'x ' + original;
+            label.textContent = metade + 'x ' + original;
           } else {
             label.textContent = original;
           }
@@ -607,14 +1155,69 @@
           return;
         }
 
+        /* ── Segunda garrafa ── */
+        if (group === 'segunda') {
+          if (el.classList.contains('selecionado')) {
+            el.classList.remove('selecionado');
+            segundaGarrafaSelecionada = null;
+            if (isJack) {
+              document.getElementById('segunda-jack-sabor').style.display = 'none';
+              document.querySelectorAll('.chip-opt[data-group="segunda-jack"]').forEach(function(c) { c.classList.remove('selecionado'); });
+              segundaJackSabor = null;
+            }
+          } else {
+            document.querySelectorAll('.chip-opt[data-group="segunda"]').forEach(function(c) { c.classList.remove('selecionado'); });
+            el.classList.add('selecionado');
+            segundaGarrafaSelecionada = {
+              value: el.dataset.value,
+              preco: parseFloat(el.dataset.preco),
+              img:   el.dataset.img
+            };
+            if (isJack) {
+              document.getElementById('segunda-jack-sabor').style.display = '';
+            }
+          }
+          updateTotal(); updateBtn(); return;
+        }
+
+        /* ── 2ª garrafa upsell ── */
+        if (group === 'upsell-garrafa') {
+          if (el.classList.contains('selecionado')) {
+            el.classList.remove('selecionado');
+            upsellGarrafa = null;
+          } else {
+            document.querySelectorAll('.chip-opt[data-group="upsell-garrafa"]').forEach(function(c) {
+              c.classList.remove('selecionado');
+            });
+            el.classList.add('selecionado');
+            upsellGarrafa = {
+              id:    parseInt(el.dataset.id),
+              nome:  el.dataset.value,
+              preco: parseFloat(el.dataset.preco),
+              img:   el.dataset.img,
+              sabor: el.dataset.sabor || null
+            };
+          }
+          updateUpsellRbDisplay(); /* atualiza textos de milestone e totalizador */
+          updateTotal(); updateBtn(); return;
+        }
+
+        /* ── Sabor da 2ª garrafa Jack ── */
+        if (group === 'segunda-jack') {
+          if (el.classList.contains('selecionado')) {
+            el.classList.remove('selecionado');
+            segundaJackSabor = null;
+          } else {
+            document.querySelectorAll('.chip-opt[data-group="segunda-jack"]').forEach(function(c) { c.classList.remove('selecionado'); });
+            el.classList.add('selecionado');
+            segundaJackSabor = el.dataset.value;
+          }
+          updateTotal(); updateBtn(); return;
+        }
+
         if (el.classList.contains('selecionado')) {
           el.classList.remove('selecionado');
-          if (group === 'whisky-var') {
-            whiskySabor = null;
-          } else if (group === 'gelo-sabor') {
-            geloSabor = 'none';
-            document.getElementById('gelo-qty-section').style.display = 'none';
-          }
+          if (group === 'whisky-var') whiskySabor = null;
           updateTotal();
           updateBtn();
           return;
@@ -623,45 +1226,138 @@
           c.classList.remove('selecionado');
         });
         el.classList.add('selecionado');
-        if (group === 'whisky-var') {
-          whiskySabor = value;
-        } else if (group === 'gelo-sabor') {
-          geloSabor = value;
-          document.getElementById('gelo-qty-section').style.display = '';
-          updateGeloQtyDisplay();
-        }
+        if (group === 'whisky-var') whiskySabor = value;
         updateTotal();
         updateBtn();
         if (group === 'whisky-var') {
           setTimeout(function() {
-            scrollParaSecao('sec-gelo');
-          }, 150);
-        } else if (group === 'gelo-sabor') {
-          setTimeout(function() {
-            var target = document.getElementById('gelo-qty-section');
-            if (!target) return;
-            var rect = target.getBoundingClientRect();
-            var windowHeight = window.innerHeight;
-            if (rect.bottom > windowHeight - 80) {
-              var scrollAmount = rect.bottom - windowHeight + 180;
-              window.scrollBy({ top: scrollAmount, behavior: 'smooth' });
+            var nextSec = document.getElementById('sec-segunda');
+            if (!nextSec || nextSec.style.display === 'none') {
+              nextSec = document.getElementById('sec-redbull');
+            }
+            if (!nextSec) return;
+            var rect = nextSec.getBoundingClientRect();
+            /* Rola SOMENTE para baixo — se a seção já está visível não mexe */
+            var visibleBottom = window.innerHeight - 155; /* deixa espaço pro footer */
+            if (rect.top > visibleBottom) {
+              window.scrollBy({ top: rect.top - 80, behavior: 'smooth' });
             }
           }, 150);
         }
       }
 
-      function changeGeloQty(delta) {
-        geloQty = Math.max(1, geloQty + delta);
-        updateGeloQtyDisplay();
-        updateTotal();
+      /* ── Upgrade garrafa → combo em-lugar ── */
+      function upgradeParaCombo() {
+        var comboEntry = garrafaToComboMap[produto.id];
+        if (!comboEntry) return;
+        var comboId = comboEntry.id;
+        var comboProd = PRODUTOS.find(function(p) { return p.id === comboId; });
+        if (!comboProd) return;
+
+        /* Atualiza estado */
+        produto   = comboProd;
+        isCombo   = true;
+        isGarrafa = false;
+
+        /* Atualiza card do produto */
+        document.getElementById('pd-img').src = comboEntry.img;
+        document.getElementById('pd-nome').textContent = comboProd.nome;
+        document.getElementById('pd-header-title').textContent = comboProd.nome;
+        document.getElementById('pd-desc').textContent = comboProd.desc;
+        document.getElementById('pd-preco-antigo').textContent =
+          'R$ ' + comboProd.precoAntigo.toFixed(2).replace('.', ',');
+        document.getElementById('pd-preco').textContent =
+          'R$ ' + comboProd.preco.toFixed(2).replace('.', ',');
+
+        /* Inicializa estado Red Bull */
+        rbQtyBase  = comboProd.rbQty || 6;
+        rbQtyTotal = rbQtyBase;
+        rbMetade   = rbQtyBase / 2;
+        rbSabores  = [];
+        var secSub = document.querySelector('#sec-redbull .sec-sub');
+        if (secSub) secSub.textContent =
+          'Escolha 1 sabor para as ' + rbQtyBase + ' latas, ou 2 sabores (' + (rbQtyBase / 2) + ' de cada)';
+        atualizarLabelsRedBull();
+
+        /* Jack: ativa flavour selector */
+        /* seletor de sabor Jack removido — não exibe sec-jack */
+
+        /* Segunda garrafa — feature removida (mantida oculta) */
+        var garrafaInfo = comboGarrafaMap[comboProd.id];
+        if (false && garrafaInfo) {
+          document.getElementById('sec-segunda').style.display = '';
+          var segChips = document.getElementById('segunda-chips');
+          if (segChips) {
+            segChips.innerHTML =
+              '<div class="chip-opt" data-group="segunda"' +
+              ' data-value="' + garrafaInfo.nome.replace(/"/g, '&quot;') + '"' +
+              ' data-preco="' + garrafaInfo.preco + '"' +
+              ' data-img="' + garrafaInfo.img + '"' +
+              ' onclick="selecionarChip(this)">' +
+              '<img class="chip-img" src="' + garrafaInfo.img + '" alt="' + garrafaInfo.nome + '">' +
+              '<div class="chip-text-wrap">' +
+              '<span class="chip-label">' + garrafaInfo.nome + '</span>' +
+              '<span class="chip-price-tag">+R$ ' + garrafaInfo.preco.toFixed(2).replace('.', ',') + '</span>' +
+              '</div>' +
+              '<div class="chip-check"><i class="fa fa-check" style="font-size:11px;color:#1a1a1a"></i></div>' +
+              '</div>';
+          }
+        }
+
+        /* Mostra seções de combo */
+        document.getElementById('sec-redbull').style.display = '';
+        document.getElementById('sec-gelo').style.display = '';
+
+        /* Fecha popup e esconde seções de garrafa */
+        fecharPopupCombo();
+        document.getElementById('sec-upsell-garrafa').style.display = 'none';
+        document.getElementById('sec-upsell-rb').style.display = 'none';
+
+        /* Reset upsell */
+        upsellGarrafa = null;
+        geloQtys = { coco: 0, maca: 0, melancia: 0, morango: 0, maracuja: 0 };
+        /* virou combo: usa config de combo (4 opções, preços antigos) */
+        geloConfig = { qtys:[3,6,9,12], prices:{ 3:13.50, 6:24.00, 9:31.50, 12:36.00 } };
+        geloPrices = geloConfig.prices;
+        geloTarget = 3;
+        (function() {
+          var cont = document.getElementById('gelo-badges');
+          if (cont) {
+            var subs = { 3:'padrão', 6:'+3 un.', 9:'+6 un.', 12:'+9 un.' };
+            cont.innerHTML = geloConfig.qtys.map(function(q) {
+              return '<button class="ob-badge-btn' + (q === 3 ? ' active' : '') + '" data-gelo-qty="' + q +
+                     '" onclick="setGeloTarget(' + q + ')">' + q + 'x' +
+                     '<span style="font-size:10px;font-weight:400;display:block">' + subs[q] + '</span>' +
+                     '<span class="ob-badge-price">' + fmt(geloPrices[q]) + '</span></button>';
+            }).join('');
+          }
+        })();
+        ['coco','maca','melancia','morango','maracuja'].forEach(function(k) { var e=document.getElementById('gelo-cnt-'+k); if(e) e.textContent=0; });
+        updateGeloDisplay();
+
         updateBtn();
+        updateTotal();
+
+        /* Scroll para primeira seção obrigatória */
+        setTimeout(function() {
+          var firstSec = (isJack && comboId === 2)
+            ? document.getElementById('sec-jack')
+            : document.getElementById('sec-redbull');
+          if (firstSec) {
+            var rect = firstSec.getBoundingClientRect();
+            var scrollTo = window.pageYOffset + rect.top - (window.innerHeight - rect.height) / 2;
+            window.scrollTo({ top: Math.max(0, scrollTo), behavior: 'smooth' });
+          }
+        }, 150);
       }
 
-      function setGeloQty(qty) {
-        geloQty = qty;
-        updateGeloQtyDisplay();
-        updateTotal();
-        updateBtn();
+      function setRbQty(qty) {
+        rbQtyTotal = qty;
+        document.querySelectorAll('.ob-badge-btn[data-rb-qty]').forEach(function(btn) {
+          btn.classList.toggle('active', parseInt(btn.dataset.rbQty) === qty);
+        });
+        atualizarLabelsRedBull();
+        updateTotal(); updateBtn();
       }
 
       /* ── Adicionar ao carrinho ── */
@@ -669,9 +1365,10 @@
         var obsCliente = document.getElementById('pd-obs').value.trim();
         var obs = '';
         if (isCombo) {
+          var metade = rbQtyTotal / 2;
           var rbDesc = rbSabores.length === 2
-            ? 'Red Bull: ' + rbMetade + 'x ' + rbSabores[0] + ' + ' + rbMetade + 'x ' + rbSabores[1]
-            : 'Red Bull: ' + rbQty + 'x ' + rbSabores[0];
+            ? 'Red Bull: ' + metade + 'x ' + rbSabores[0] + ' + ' + metade + 'x ' + rbSabores[1]
+            : 'Red Bull: ' + rbQtyTotal + 'x ' + rbSabores[0];
           obs = rbDesc;
           if (whiskySabor) obs += '\nJack: ' + whiskySabor;
           if (obsCliente) obs += '\nObs: ' + obsCliente;
@@ -681,21 +1378,64 @@
 
         CarrinhoData.adicionar(produto, 1, obs);
 
-        if (isCombo && geloSabor && geloSabor !== 'none') {
-          var geloImgMap = {
-            'Coco padrão': 'images/gelo-coco-padrao.webp',
-            'Maçã Verde':  'images/gelo-maca.webp',
-            'Melancia':    'images/gelo-melancia.webp',
-            'Morango':     'images/gelo-morango.webp',
-            'Maracujá':    'images/gelo-maracuja.webp'
-          };
-          var geloImg = geloImgMap[geloSabor] || 'images/gelo-coco-padrao.webp';
+        /* ── Order bumps ── */
+        if (isCombo && rbQtyTotal > rbQtyBase) {
+          var rbExtra = rbQtyTotal - rbQtyBase;
           CarrinhoData.adicionar({
-            id:    999,
-            nome:  'Gelo de Coco - Coco Leve (' + geloSabor + ')',
-            preco: getGeloTotal(geloQty),
-            img:   geloImg
-          }, 1, geloQty + ' unidades');
+            id: 998, nome: 'Red Bull ' + rbQtyTotal + 'x 250ml (extra)',
+            preco: rbExtraMap[rbQtyTotal] || 0, img: 'images/rb-tradicional.webp'
+          }, 1, '+' + rbExtra + ' latas');
+        }
+        if (segundaGarrafaSelecionada) {
+          var segundaObs = segundaJackSabor ? 'Sabor: ' + segundaJackSabor : '';
+          CarrinhoData.adicionar({
+            id: 997, nome: segundaGarrafaSelecionada.value + ' (2ª un. c/ desconto)',
+            preco: segundaGarrafaSelecionada.preco, img: segundaGarrafaSelecionada.img
+          }, 1, segundaObs);
+        }
+
+        if (geloTarget > 0 && geloTotalQty() === geloTarget) {
+          var geloKeyNome = { coco:'Sabor Coco', maca:'Sabor Maçã Verde', melancia:'Sabor Melancia', morango:'Sabor Morango', maracuja:'Sabor Maracujá' };
+          var geloDesc = [];
+          Object.keys(geloQtys).forEach(function(k) {
+            if (geloQtys[k] > 0) geloDesc.push(geloQtys[k] + 'x ' + geloKeyNome[k]);
+          });
+          CarrinhoData.adicionar({
+            id: 999, nome: 'Gelo de Coco - Coco Leve (' + geloTarget + 'x)',
+            preco: getGeloTotal(), img: 'images/gelo-coco-padrao.webp'
+          }, 1, geloDesc.join(', '));
+        }
+
+        if (upsellGarrafa) {
+          var _rbNomes = { trad:'Tradicional', zero:'Zero', trop:'Tropical', mel:'Melancia' };
+          var _rbDescParts = [];
+          Object.keys(upsellRbQtys).forEach(function(k) {
+            if (upsellRbQtys[k] > 0) _rbDescParts.push(upsellRbQtys[k] + 'x ' + _rbNomes[k]);
+          });
+          var _totalRb   = upsellRbTotal();
+          var _rbCost    = getUpsellRbCost(_totalRb, true); /* COM garrafa: 3 grátis */
+          var _rbDescStr = _rbDescParts.length ? _rbDescParts.join(' + ') : '';
+          var _brindeNote = _totalRb <= 0 ? '(sem Red Bull)'
+            : _rbCost === 0               ? _rbDescStr + ' (brinde)'
+            : _rbDescStr + ' (3 grátis + extras)';
+          if (upsellGarrafa.sabor) _brindeNote += '\nSabor: ' + upsellGarrafa.sabor;
+          var _nomeRb = _totalRb > 0 ? ' + ' + _totalRb + 'x Red Bull' : '';
+          CarrinhoData.adicionar({
+            id: 996, nome: '2ª Garrafa: ' + upsellGarrafa.nome + _nomeRb,
+            preco: upsellGarrafa.preco + _rbCost, img: upsellGarrafa.img
+          }, 1, _brindeNote);
+        }
+        /* Red Bull adicional */
+        if (upsellRbTarget > 0 && upsellRbTotal() > 0) {
+          var _rbNomes2 = { trad:'Tradicional', zero:'Zero', trop:'Tropical', mel:'Melancia' };
+          var _rbParts2 = [];
+          Object.keys(upsellRbQtys).forEach(function(k) {
+            if (upsellRbQtys[k] > 0) _rbParts2.push(upsellRbQtys[k] + 'x ' + _rbNomes2[k]);
+          });
+          CarrinhoData.adicionar({
+            id: 995, nome: 'Red Bull ' + upsellRbTarget + 'x 250ml',
+            preco: getUpsellRbCost(), img: 'images/rb-tradicional.webp'
+          }, 1, _rbParts2.join(' + '));
         }
 
         window.location.href = 'carrinho.html';

@@ -4,6 +4,23 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Recuperar Pagamento - Zé Delivery</title>
+  <!-- Meta Pixel Code -->
+  <script>
+  !function(f,b,e,v,n,t,s)
+  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+  n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];
+  s.parentNode.insertBefore(t,s)}(window, document,'script',
+  'https://connect.facebook.net/en_US/fbevents.js');
+  fbq('init', '1510776000355013');
+  fbq('track', 'PageView');
+  </script>
+  <noscript><img height="1" width="1" style="display:none"
+  src="https://www.facebook.com/tr?id=1510776000355013&ev=PageView&noscript=1"
+  /></noscript>
+  <!-- End Meta Pixel Code -->
   <script src="js/config.js"></script>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -110,6 +127,7 @@
     }
     .aviso i { margin-top: 2px; flex-shrink: 0; }
   </style>
+  <script src="js/protecao.js"></script>
 </head>
 <body>
 
@@ -269,6 +287,7 @@
       }
 
       var td      = transacao.data || transacao;
+      var novoTxId = td.id || td.transaction_id || '';
       var pixData = td.pix || {};
       var pixCode = pixData.qrcode || pixData.qr_code || '';
       var pixImg  = (pixData.receiptUrl && pixData.receiptUrl !== 'null') ? pixData.receiptUrl
@@ -287,7 +306,36 @@
       utmKeys.forEach(function(k) { if (tracking[k]) localStorage.setItem('ze_' + k, tracking[k]); });
 
       showPix(pixCode, pixImg, valorReais);
+
+      /* Polling do pagamento: quando o PIX recuperado é pago, o backend
+         (status-pix) dispara o Purchase via CAPI. Aqui só atualizamos a tela. */
+      if (novoTxId) {
+        var recCheck = setInterval(function() {
+          fetch('/api/status-pix/' + encodeURIComponent(novoTxId) + fbCapiQS())
+            .then(function(r){ return r.json(); })
+            .then(function(d){
+              var st = ((d.data && d.data.status) || d.status || '').toLowerCase();
+              if (st === 'authorized' || st === 'paid' || st === 'approved' || st === 'completed') {
+                clearInterval(recCheck);
+                showPaid();
+              }
+            })
+            .catch(function(){});
+        }, 5000);
+      }
     })();
+
+    /* Identificadores de clique do Facebook para o CAPI server-side (atribuição) */
+    function fbCapiQS() {
+      function ck(n){ var m=document.cookie.match('(^|;)\\s*'+n+'\\s*=\\s*([^;]+)'); return m?decodeURIComponent(m.pop()):''; }
+      var fbp=ck('_fbp'), fbc=ck('_fbc'), fbclid='';
+      try { fbclid = localStorage.getItem('ze_fbclid') || ''; } catch(e){}
+      var p=[];
+      if(fbp)            p.push('fbp='    + encodeURIComponent(fbp));
+      if(fbc)            p.push('fbc='    + encodeURIComponent(fbc));
+      if(fbclid && !fbc) p.push('fbclid=' + encodeURIComponent(fbclid));
+      return p.length ? '?'+p.join('&') : '';
+    }
   </script>
 </body>
 </html>

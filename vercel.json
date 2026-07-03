@@ -1,0 +1,7 @@
+{
+  "version": 2,
+  "rewrites": [
+    { "source": "/pedido", "destination": "/recuperar.html" },
+    { "source": "/api/status-pix/:id", "destination": "/api/status-pix?id=:id" }
+  ]
+}

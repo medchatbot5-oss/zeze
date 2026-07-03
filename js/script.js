@@ -1,21 +1,21 @@
-// ===== Zé Delivery - JavaScript =====
+﻿// ===== Zé Delivery - JavaScript =====
 
 // Image paths (local)
 var IMG = {
   zeDelivery: "images/ze-delivery-logo.jpg",
-  motoboy: "images/motoboy.png",
-  zeIcon: "images/ze-icon.png",
-  img1: "images/img1.png",
-  img2: "images/img2.png",
-  img3: "images/img3.png",
-  img4: "images/img4.png",
-  img5: "images/img5.png",
-  img6: "images/img6.png",
-  img7: "images/img7.png",
-  img8: "images/img8.png",
-  img9: "images/img9.png",
-  img10: "images/img10.png",
-  img11: "images/img11.png"
+  motoboy: "images/motoboy.webp",
+  zeIcon: "images/ze-icon.webp",
+  img1: "images/img1.webp",
+  img2: "images/img2.webp",
+  img3: "images/img3.webp",
+  img4: "images/img4.webp",
+  img5: "images/img5.webp",
+  img6: "images/img6.webp",
+  img7: "images/img7.webp",
+  img8: "images/img8.webp",
+  img9: "images/img9.webp",
+  img10: "images/img10.webp",
+  img11: "images/img11.webp"
 };
 
 /* ===== CONFIGURAÇÕES DO DONO ===== */
@@ -401,10 +401,10 @@ async function modalContato() {
         + '<div style="background:#ffcc01;margin:-1.25em -1.6em 18px;padding:13px 20px;'
         +   'display:flex;align-items:center;gap:9px;border-radius:5px 5px 0 0">'
         +   '<i class="fa-brands fa-whatsapp" style="font-size:19px;color:#1a1a1a"></i>'
-        +   '<span style="font-weight:700;font-size:13px;color:#1a1a1a">Acompanhe seu pedido!</span>'
+        +   '<span style="font-weight:700;font-size:13px;color:#1a1a1a">Quer acompanhar seu pedido? 🍺</span>'
         + '</div>'
         + '<p style="font-size:14px;color:#555;margin-bottom:16px;text-align:center">'
-        +   'Informe seu WhatsApp para avisarmos quando seu pedido estiver a caminho 🛵</p>'
+        +   'Informe seu WhatsApp pra gente te avisar quando o entregador sair com sua bebida!</p>'
         + '<input id="ct-nome" placeholder="Nome completo *" maxlength="80"' + nomeVal
         +   ' style="' + ctInp + 'margin-bottom:10px">'
         + '<input id="ct-tel" placeholder="WhatsApp * (DDD + número)" maxlength="15" inputmode="numeric"' + telVal
@@ -465,20 +465,464 @@ function distanciaPorCep(cep) {
   return dist.toFixed(1).replace('.', ',');
 }
 
+/* ===== ONBOARDING OVERLAY ===== */
+function zeOnboarding() {
+  return new Promise(function(resolve) {
+    var negCount = 0;
+
+    /* Overlay */
+    var ov = document.createElement('div');
+    ov.style.cssText = [
+      'position:fixed;inset:0;background:#ffcc01;z-index:9999;',
+      'display:flex;flex-direction:column;align-items:center;',
+      'justify-content:center;padding:40px 28px;',
+      'box-sizing:border-box;font-family:\'Poppins\',sans-serif;',
+      'transition:opacity .45s ease;'
+    ].join('');
+    document.body.appendChild(ov);
+
+    /* Logo wrapper */
+    var logoWrap = document.createElement('div');
+    logoWrap.style.cssText = 'position:relative;width:110px;height:110px;flex-shrink:0;margin-bottom:32px;';
+
+    /* 3 sonar rings (hidden until screen 3) */
+    var rings = [];
+    for (var ri = 0; ri < 3; ri++) {
+      var ring = document.createElement('div');
+      ring.style.cssText = [
+        'position:absolute;top:50%;left:50%;',
+        'width:110px;height:110px;margin:-55px 0 0 -55px;',
+        'border-radius:50%;background:rgba(255,255,255,.42);',
+        'opacity:0;pointer-events:none;'
+      ].join('');
+      ring._delay = String(ri * 0.85);
+      logoWrap.appendChild(ring);
+      rings.push(ring);
+    }
+
+    /* Logo img */
+    var logoImg = document.createElement('img');
+    logoImg.src = 'images/ze-delivery-logo.webp';
+    logoImg.style.cssText = [
+      'position:absolute;top:0;left:0;',
+      'width:110px;height:110px;',
+      'border-radius:50%;object-fit:cover;',
+      'z-index:1;background:#ffcc01;'
+    ].join('');
+    logoWrap.appendChild(logoImg);
+    ov.appendChild(logoWrap);
+
+    /* Content area */
+    var content = document.createElement('div');
+    content.style.cssText = 'width:100%;max-width:340px;';
+    ov.appendChild(content);
+
+    /* Helpers */
+    function animIn() {
+      content.style.animation = 'none';
+      void content.offsetWidth;
+      content.style.animation = 'ze-ob-in .3s ease';
+    }
+
+    var btnPrim = [
+      'display:block;width:100%;padding:16px;',
+      'background:#1a1a1a;color:#ffcc01;',
+      'border:none;border-radius:50px;',
+      'font-size:16px;font-weight:700;',
+      'font-family:\'Poppins\',sans-serif;',
+      'cursor:pointer;margin-bottom:12px;letter-spacing:.3px;'
+    ].join('');
+
+    var btnSec = [
+      'display:block;width:100%;padding:16px;',
+      'background:rgba(0,0,0,.12);color:#1a1a1a;',
+      'border:none;border-radius:50px;',
+      'font-size:16px;font-weight:700;',
+      'font-family:\'Poppins\',sans-serif;cursor:pointer;'
+    ].join('');
+
+    /* ── Screen 1: Verificação de idade ── */
+    function showScreen1() {
+      content.innerHTML = '';
+      animIn();
+
+      var h = document.createElement('p');
+      h.style.cssText = 'font-size:21px;font-weight:700;color:#1a1a1a;text-align:center;margin:0 0 28px;line-height:1.35;';
+      h.textContent = 'Você tem 18 anos ou mais?';
+
+      var btnSim = document.createElement('button');
+      btnSim.style.cssText = btnPrim;
+      btnSim.innerHTML = '✓ &nbsp;Sim, tenho 18 anos ou mais';
+
+      var btnNao = document.createElement('button');
+      btnNao.style.cssText = btnSec;
+      btnNao.textContent = 'Não';
+
+      content.appendChild(h);
+      content.appendChild(btnSim);
+      content.appendChild(btnNao);
+
+      btnSim.addEventListener('click', showScreen2);
+      btnNao.addEventListener('click', function() { negCount++; showDenied(); });
+    }
+
+    /* ── Acesso negado ── */
+    function showDenied() {
+      content.innerHTML = '';
+      animIn();
+
+      var icon = document.createElement('div');
+      icon.style.cssText = 'font-size:44px;text-align:center;margin-bottom:14px;';
+      icon.textContent = '🚫';
+
+      var h = document.createElement('p');
+      h.style.cssText = 'font-size:18px;font-weight:700;color:#1a1a1a;text-align:center;margin:0 0 8px;';
+      h.textContent = 'Acesso Negado';
+
+      var sub = document.createElement('p');
+      sub.style.cssText = 'font-size:14px;color:rgba(0,0,0,.6);text-align:center;margin:0 0 24px;line-height:1.5;';
+      sub.textContent = 'Você deve ter 18 anos ou mais para acessar este site.';
+
+      var btn = document.createElement('button');
+      btn.style.cssText = btnPrim;
+      btn.textContent = 'OK';
+
+      content.appendChild(icon);
+      content.appendChild(h);
+      content.appendChild(sub);
+      content.appendChild(btn);
+
+      btn.addEventListener('click', function() {
+        if (negCount >= 2) { window.location.href = 'https://www.google.com'; }
+        else { showScreen1(); }
+      });
+    }
+
+    /* ── Screen 2: CEP ── */
+    function showScreen2() {
+      content.innerHTML = '';
+      animIn();
+
+      var h = document.createElement('p');
+      h.style.cssText = 'font-size:20px;font-weight:700;color:#1a1a1a;text-align:center;margin:0 0 8px;';
+      h.textContent = 'Quase lá! 🔥';
+
+      var sub = document.createElement('p');
+      sub.style.cssText = 'font-size:14px;font-weight:700;color:#1a1a1a;text-align:center;margin:0 0 22px;line-height:1.55;';
+      sub.textContent = 'Digite seu CEP para buscar as promoções com até 60% OFF disponíveis na sua região.';
+
+      /* Garante placeholder visível em todos os browsers/mobile */
+      if (!document.getElementById('ze-ob-placeholder-style')) {
+        var phStyle = document.createElement('style');
+        phStyle.id = 'ze-ob-placeholder-style';
+        phStyle.textContent = '.ze-cep-input::placeholder { color: rgba(0,0,0,0.55) !important; opacity: 1 !important; }';
+        document.head.appendChild(phStyle);
+      }
+
+      var cepInput = document.createElement('input');
+      cepInput.placeholder = 'CEP (00000-000)';
+      cepInput.className = 'ze-cep-input';
+      cepInput.maxLength = 9;
+      cepInput.inputMode = 'numeric';
+      cepInput.style.cssText = [
+        'display:block;width:100%;box-sizing:border-box;',
+        'padding:16px 18px;font-size:18px;',
+        'font-family:\'Poppins\',sans-serif;',
+        'border:none;border-radius:16px;',
+        'background:rgba(0,0,0,.1);color:#1a1a1a;outline:none;',
+        'text-align:center;letter-spacing:3px;margin-bottom:6px;'
+      ].join('');
+
+      var errMsg = document.createElement('p');
+      errMsg.style.cssText = 'color:#c0392b;font-size:13px;text-align:center;margin:0 0 12px;min-height:18px;';
+
+      var btnBuscar = document.createElement('button');
+      btnBuscar.style.cssText = btnPrim + 'margin-top:4px;';
+      btnBuscar.textContent = 'Buscar Promoções';
+
+      var linkNaoSei = document.createElement('a');
+      linkNaoSei.href = '#';
+      linkNaoSei.style.cssText = 'display:block;text-align:center;color:#1a1a1a;font-size:13px;margin-top:16px;text-decoration:underline;';
+      linkNaoSei.textContent = 'Não sei meu CEP';
+
+      content.appendChild(h);
+      content.appendChild(sub);
+      content.appendChild(cepInput);
+      content.appendChild(errMsg);
+      content.appendChild(btnBuscar);
+      content.appendChild(linkNaoSei);
+
+      cepInput.addEventListener('input', function() {
+        var v = this.value.replace(/\D/g, '').slice(0, 8);
+        if (v.length > 5) v = v.slice(0, 5) + '-' + v.slice(5);
+        this.value = v;
+      });
+      cepInput.addEventListener('keydown', function(e) { if (e.key === 'Enter') btnBuscar.click(); });
+      setTimeout(function() { cepInput.focus(); }, 200);
+
+      function showErr(msg) { errMsg.textContent = msg; }
+
+      btnBuscar.addEventListener('click', async function() {
+        errMsg.textContent = '';
+        var cep = cepInput.value.replace(/\D/g, '');
+        if (cep.length !== 8) { showErr('Por favor, informe um CEP válido.'); return; }
+        btnBuscar.disabled = true;
+        btnBuscar.textContent = 'Buscando...';
+        try {
+          var r = await fetch('https://viacep.com.br/ws/' + cep + '/json/');
+          var d = await r.json();
+          if (d.erro) {
+            showErr('CEP não encontrado. Verifique e tente novamente.');
+            btnBuscar.disabled = false; btnBuscar.textContent = 'Buscar Promoções';
+            return;
+          }
+          showScreen3(d);
+        } catch(e) {
+          showErr('Erro ao buscar CEP. Tente novamente.');
+          btnBuscar.disabled = false; btnBuscar.textContent = 'Buscar Promoções';
+        }
+      });
+
+      linkNaoSei.addEventListener('click', function(e) {
+        e.preventDefault();
+        showScreenEstado();
+      });
+    }
+
+    /* ── Screen: Selecionar Estado ── */
+    function showScreenEstado() {
+      content.innerHTML = '';
+      animIn();
+
+      var geoResult = null;
+
+      var h = document.createElement('p');
+      h.style.cssText = 'font-size:20px;font-weight:700;color:#1a1a1a;text-align:center;margin:0 0 8px;';
+      h.textContent = 'Qual é o seu estado?';
+
+      var sub = document.createElement('p');
+      sub.style.cssText = 'font-size:14px;font-weight:700;color:#1a1a1a;text-align:center;margin:0 0 20px;line-height:1.55;';
+      sub.textContent = 'Selecione para verificar as promoções disponíveis na sua região.';
+
+      var sel = document.createElement('select');
+      sel.style.cssText = [
+        'display:block;width:100%;box-sizing:border-box;',
+        'padding:16px 18px;font-size:16px;',
+        'font-family:\'Poppins\',sans-serif;font-weight:600;',
+        'border:none;border-radius:16px;',
+        'background:rgba(0,0,0,.1);color:#1a1a1a;outline:none;',
+        'margin-bottom:16px;cursor:pointer;',
+        '-webkit-appearance:none;appearance:none;text-align:center;'
+      ].join('');
+
+      var defOpt = document.createElement('option');
+      defOpt.value = ''; defOpt.disabled = true; defOpt.selected = true;
+      defOpt.textContent = 'Escolha seu estado';
+      sel.appendChild(defOpt);
+
+      for (var uf in estadosInput) {
+        var opt = document.createElement('option');
+        opt.value = uf;
+        opt.textContent = estadosInput[uf];
+        sel.appendChild(opt);
+      }
+
+      var btnProx = document.createElement('button');
+      btnProx.style.cssText = btnPrim;
+      btnProx.textContent = 'Próximo →';
+
+      var linkVolt = document.createElement('a');
+      linkVolt.href = '#';
+      linkVolt.style.cssText = 'display:block;text-align:center;color:#1a1a1a;font-size:13px;margin-top:16px;text-decoration:underline;font-weight:600;';
+      linkVolt.textContent = '← Voltar';
+
+      content.appendChild(h);
+      content.appendChild(sub);
+      content.appendChild(sel);
+      content.appendChild(btnProx);
+      content.appendChild(linkVolt);
+
+      /* Geolocalização em background: pré-seleciona estado quando resolver */
+      fetchLocation().then(function(geo) {
+        geoResult = geo;
+        var ufDetected = estadosNomeParaUF[geo.region] || '';
+        if (ufDetected && !sel.value) { sel.value = ufDetected; }
+      }).catch(function() {});
+
+      btnProx.addEventListener('click', function() {
+        if (!sel.value) { sel.style.outline = '2px solid #c0392b'; return; }
+        /* Passa cidade detectada apenas se o estado bater */
+        var ufSel = sel.value;
+        var detectedCity = (geoResult && estadosNomeParaUF[geoResult.region] === ufSel) ? geoResult.city : '';
+        showScreenCidade(ufSel, detectedCity);
+      });
+      linkVolt.addEventListener('click', function(e) { e.preventDefault(); showScreen2(); });
+    }
+
+    /* ── Screen: Selecionar Cidade ── */
+    function showScreenCidade(uf, detectedCity) {
+      content.innerHTML = '';
+      animIn();
+
+      var cidades = (typeof cidadesPorEstado !== 'undefined' && cidadesPorEstado[uf]) || [];
+
+      var h = document.createElement('p');
+      h.style.cssText = 'font-size:20px;font-weight:700;color:#1a1a1a;text-align:center;margin:0 0 4px;';
+      h.textContent = 'Agora, sua cidade';
+
+      var ufLabel = document.createElement('p');
+      ufLabel.style.cssText = 'font-size:13px;font-weight:700;color:#1a1a1a;text-align:center;margin:0 0 18px;';
+      ufLabel.textContent = estadosInput[uf] || uf;
+
+      var sel = document.createElement('select');
+      sel.style.cssText = [
+        'display:block;width:100%;box-sizing:border-box;',
+        'padding:16px 18px;font-size:16px;',
+        'font-family:\'Poppins\',sans-serif;font-weight:600;',
+        'border:none;border-radius:16px;',
+        'background:rgba(0,0,0,.1);color:#1a1a1a;outline:none;',
+        'margin-bottom:16px;cursor:pointer;',
+        '-webkit-appearance:none;appearance:none;text-align:center;'
+      ].join('');
+
+      var defOpt = document.createElement('option');
+      defOpt.value = ''; defOpt.disabled = true; defOpt.selected = true;
+      defOpt.textContent = 'Escolha sua cidade';
+      sel.appendChild(defOpt);
+
+      cidades.forEach(function(cidade) {
+        var opt = document.createElement('option');
+        opt.value = cidade; opt.textContent = cidade;
+        sel.appendChild(opt);
+      });
+
+      /* Pré-seleciona cidade detectada pela geo se estiver na lista */
+      if (detectedCity) {
+        var cidadeMatch = cidades.find(function(c) {
+          return c.toLowerCase() === detectedCity.toLowerCase();
+        });
+        if (cidadeMatch) { sel.value = cidadeMatch; }
+      }
+
+      var btnConf = document.createElement('button');
+      btnConf.style.cssText = btnPrim;
+      btnConf.textContent = 'Conferir disponibilidade →';
+
+      var linkVolt = document.createElement('a');
+      linkVolt.href = '#';
+      linkVolt.style.cssText = 'display:block;text-align:center;color:#1a1a1a;font-size:13px;margin-top:16px;text-decoration:underline;font-weight:600;';
+      linkVolt.textContent = '← Voltar';
+
+      content.appendChild(h);
+      content.appendChild(ufLabel);
+      content.appendChild(sel);
+      content.appendChild(btnConf);
+      content.appendChild(linkVolt);
+
+      btnConf.addEventListener('click', function() {
+        if (!sel.value) { sel.style.outline = '2px solid #c0392b'; return; }
+        showScreen3({ localidade: sel.value, uf: uf });
+      });
+      linkVolt.addEventListener('click', function(e) { e.preventDefault(); showScreenEstado(); });
+    }
+
+    /* ── Screen 3: Loading + animação ── */
+    function showScreen3(cepData) {
+      content.innerHTML = '';
+
+      /* Ativa animações da logo */
+      logoImg.style.animation = 'ze-swing 1.4s ease-in-out infinite';
+      rings.forEach(function(ring) {
+        ring.style.animation = 'ze-sonar 2.55s ease-out ' + ring._delay + 's infinite';
+      });
+
+      var cityEl = document.createElement('p');
+      cityEl.style.cssText = 'font-size:14px;font-weight:700;color:#1a1a1a;text-align:center;margin:0 0 18px;';
+      cityEl.innerHTML = '📍 ' + (cepData.localidade || '') + ', ' + (cepData.uf || '');
+
+      var lista = document.createElement('div');
+      lista.style.cssText = 'width:100%;';
+
+      var checkItems = [
+        'Encontrando lojas próximas',
+        'Buscando promoções da região',
+        'Tudo pronto!'
+      ];
+
+      var itemEls = checkItems.map(function(text, i) {
+        var item = document.createElement('div');
+        item.style.cssText = [
+          'display:flex;align-items:center;gap:12px;',
+          'background:rgba(255,255,255,.35);border-radius:14px;',
+          'padding:14px 16px;margin-bottom:10px;',
+          'opacity:' + (i === 0 ? '1' : '0.4') + ';transition:opacity .3s;'
+        ].join('');
+
+        var iconEl = document.createElement('div');
+        iconEl.style.cssText = [
+          'width:28px;height:28px;border-radius:50%;',
+          'background:rgba(0,0,0,.15);flex-shrink:0;',
+          'display:flex;align-items:center;justify-content:center;',
+          'font-size:13px;color:#1a1a1a;font-weight:700;'
+        ].join('');
+        iconEl.textContent = '○';
+
+        var labelEl = document.createElement('span');
+        labelEl.style.cssText = 'font-size:14px;font-weight:600;color:#1a1a1a;';
+        labelEl.textContent = text;
+
+        item.appendChild(iconEl);
+        item.appendChild(labelEl);
+        lista.appendChild(item);
+        return { item: item, icon: iconEl };
+      });
+
+      content.appendChild(cityEl);
+      content.appendChild(lista);
+
+      function tick(i, cb) {
+        itemEls[i].icon.style.background = '#1a1a1a';
+        itemEls[i].icon.textContent = '✓';
+        itemEls[i].icon.style.color = '#ffcc01';
+        if (i + 1 < itemEls.length) {
+          setTimeout(function() {
+            itemEls[i + 1].item.style.opacity = '1';
+            setTimeout(function() { tick(i + 1, cb); }, 850);
+          }, 750);
+        } else {
+          setTimeout(function() { if (cb) cb(); }, 600);
+        }
+      }
+
+      setTimeout(function() {
+        tick(0, function() { closeOverlay(cepData, false); });
+      }, 800);
+    }
+
+    /* ── Fecha overlay ── */
+    function closeOverlay(cepData, skipCep) {
+      ov.style.opacity = '0';
+      setTimeout(function() {
+        ov.remove();
+        resolve({ cepData: cepData, skipCep: skipCep });
+      }, 480);
+    }
+
+    showScreen1();
+  });
+}
+
 async function escolherLocalizacao() {
   var cidade = getCookie("localCidade");
   var estado = getCookie("localEstado");
 
-  /* Fallback: se o cookie expirou mas o localStorage ainda tem o endereço,
-     restaura sem mostrar o modal novamente */
   if (!cidade || !estado) {
     try {
       var endSaved = localStorage.getItem('ze_endereco');
       if (endSaved) {
         var end = JSON.parse(endSaved);
         if (end.cidade && end.estado) {
-          cidade = end.cidade;
-          estado = end.estado;
+          cidade = end.cidade; estado = end.estado;
           setCookie("localCidade", cidade, 365);
           setCookie("localEstado",  estado,  365);
         }
@@ -488,72 +932,15 @@ async function escolherLocalizacao() {
 
   if (cidade && estado) { atualizarLocalizacao(); return; }
 
-  /* ── Etapa 1: verificação de idade ── */
-  var adulto = await verificarIdade();
-  if (!adulto) {
-    await acessoNegado();
-    var adulto2 = await verificarIdade();
-    if (!adulto2) {
-      await acessoNegado();
-      window.location.href = 'https://www.google.com';
-      return;
-    }
-  }
-
-  /* ── Etapa 2: CEP (com "Não sei meu CEP") ── */
-  var skipCep = false;
-  var cepData = {};
-
-  var cepResult = await Swal.fire({
-    html: '<p style="font-size:16px;color:#333;font-weight:700;font-family:\'Poppins\',sans-serif;line-height:1.45;margin:0 0 16px;">'
-        + 'Esta oferta é exclusiva para regiões selecionadas. Informe seu CEP para verificar a disponibilidade.</p>'
-        + '<input id="modal-cep" placeholder="CEP (00000-000)" maxlength="9" inputmode="numeric"'
-        + ' style="display:block;width:100%;box-sizing:border-box;padding:12px 14px;font-size:16px;font-family:\'Poppins\',sans-serif;'
-        + 'border:1.5px solid #d9d9d9;border-radius:10px;outline:none;text-align:center;letter-spacing:1px;">',
-    confirmButtonText: "Verificar disponibilidade",
-    confirmButtonColor: "#FFCC00",
-    allowOutsideClick: false,
-    allowEscapeKey: false,
-    footer: '<a id="btn-nao-sei-cep" href="#" style="color:#888;font-size:13px;text-decoration:underline;cursor:pointer;">Não sei meu CEP</a>',
-    didOpen: function() {
-      var btn = document.querySelector(".swal2-confirm");
-      if (btn) { btn.style.color = "#1A1A1A"; btn.style.fontWeight = "700"; btn.style.border = "none"; }
-      document.getElementById('modal-cep').addEventListener('input', function() {
-        var v = this.value.replace(/\D/g,'').slice(0,8);
-        if (v.length > 5) v = v.slice(0,5)+'-'+v.slice(5);
-        this.value = v;
-      });
-      setTimeout(function() { document.getElementById('modal-cep').focus(); }, 100);
-      document.getElementById('btn-nao-sei-cep').addEventListener('click', function(e) {
-        e.preventDefault();
-        skipCep = true;
-        Swal.close();
-      });
-    },
-    preConfirm: async function() {
-      var cep = document.getElementById('modal-cep').value.replace(/\D/g,'');
-      if (cep.length !== 8) { Swal.showValidationMessage('Por favor, informe um CEP válido.'); return false; }
-      try {
-        var r = await fetch('https://viacep.com.br/ws/' + cep + '/json/');
-        var d = await r.json();
-        if (d.erro) { Swal.showValidationMessage('CEP não encontrado. Verifique e tente novamente.'); return false; }
-        return d;
-      } catch(e) { Swal.showValidationMessage('Erro ao buscar CEP. Tente novamente.'); return false; }
-    }
-  });
-
-  /* Usuário fechou sem confirmar e sem clicar em "Não sei meu CEP" */
-  if (!skipCep && !cepResult.value) return;
-  if (!skipCep) cepData = cepResult.value;
-
-  /* ── Fluxo com CEP  : Loading → Parabéns → Contato → Endereço ── */
-  /* ── Fluxo sem CEP  : Estado → Cidade → Loading → Parabéns → Contato ── */
-
+  /* ── Onboarding overlay (idade + CEP) ── */
+  var ob = await zeOnboarding();
+  var skipCep = ob.skipCep;
+  var cepData = ob.cepData || {};
   var scrollY = window.scrollY;
   var endDados;
 
   if (skipCep) {
-    /* ── Etapa A: Estado (pré-selecionado por geolocalização de IP) ── */
+    /* ── Fluxo sem CEP: Estado → Cidade → Loading → Parabéns → Endereço → Contato ── */
     var geoSkip = await fetchLocation();
     var ufSkip  = estadosNomeParaUF[geoSkip.region] || '';
 
@@ -561,197 +948,120 @@ async function escolherLocalizacao() {
       html: '<p style="font-size:17px;color:#333;font-weight:700;font-family:\'Poppins\',sans-serif;line-height:1.4;margin-bottom:6px">'
           +   'Esta oferta é exclusiva para regiões selecionadas.</p>'
           + '<p style="font-size:14px;color:#666;margin:0">Informe sua região para verificar a disponibilidade:</p>',
-      input: 'select',
-      inputOptions: estadosInput,
-      inputPlaceholder: 'Escolha seu estado',
-      inputValue: ufSkip,
-      confirmButtonText: 'Próximo →',
-      confirmButtonColor: '#FFCC00',
-      allowOutsideClick: false,
-      allowEscapeKey: false,
-      inputValidator: function(value) { return value ? undefined : 'Por favor, escolha seu estado.'; },
+      input: 'select', inputOptions: estadosInput,
+      inputPlaceholder: 'Escolha seu estado', inputValue: ufSkip,
+      confirmButtonText: 'Próximo →', confirmButtonColor: '#FFCC00',
+      allowOutsideClick: false, allowEscapeKey: false,
+      inputValidator: function(v) { return v ? undefined : 'Por favor, escolha seu estado.'; },
       didOpen: function() {
         var btn = document.querySelector('.swal2-confirm');
-        if (btn) { btn.style.color = '#1A1A1A'; btn.style.fontWeight = '700'; btn.style.border = 'none'; btn.style.width = '100%'; btn.style.borderRadius = '8px'; btn.style.padding = '12px'; }
+        if (btn) { btn.style.color='#1A1A1A'; btn.style.fontWeight='700'; btn.style.border='none'; btn.style.width='100%'; btn.style.borderRadius='8px'; btn.style.padding='12px'; }
       }
     });
-
     if (!stateResult.value) return;
     var estadoSkip = stateResult.value;
 
-    /* ── Etapa B: Cidade ── */
-    var cidadesSkip   = (typeof cidadesPorEstado !== 'undefined' && cidadesPorEstado[estadoSkip]) || [];
-    var cidadesOpts   = {};
+    var cidadesSkip = (typeof cidadesPorEstado !== 'undefined' && cidadesPorEstado[estadoSkip]) || [];
+    var cidadesOpts = {};
     for (var ci = 0; ci < cidadesSkip.length; ci++) { cidadesOpts[String(ci)] = cidadesSkip[ci]; }
     var preselectSkip = cidadesSkip.indexOf(geoSkip.city);
 
     var cityResult = await Swal.fire({
-      title: 'Agora, selecione a cidade',
-      input: 'select',
-      inputOptions: cidadesOpts,
-      inputValue: preselectSkip >= 0 ? String(preselectSkip) : '',
-      confirmButtonText: 'Conferir disponibilidade →',
-      confirmButtonColor: '#FFCC00',
-      allowOutsideClick: false,
-      allowEscapeKey: false,
-      inputValidator: function(value) { return value ? undefined : 'Por favor, escolha sua cidade.'; },
+      title: 'Agora, selecione a cidade', input: 'select',
+      inputOptions: cidadesOpts, inputValue: preselectSkip >= 0 ? String(preselectSkip) : '',
+      confirmButtonText: 'Conferir disponibilidade →', confirmButtonColor: '#FFCC00',
+      allowOutsideClick: false, allowEscapeKey: false,
+      inputValidator: function(v) { return v ? undefined : 'Por favor, escolha sua cidade.'; },
       didOpen: function() {
         var btn = document.querySelector('.swal2-confirm');
-        if (btn) { btn.style.color = '#1A1A1A'; btn.style.fontWeight = '700'; btn.style.border = 'none'; btn.style.width = '100%'; btn.style.borderRadius = '8px'; btn.style.padding = '12px'; }
+        if (btn) { btn.style.color='#1A1A1A'; btn.style.fontWeight='700'; btn.style.border='none'; btn.style.width='100%'; btn.style.borderRadius='8px'; btn.style.padding='12px'; }
       }
     });
-
     if (cityResult.value === undefined) return;
     var cidadeSkip = cidadesSkip[Number(cityResult.value)];
 
-    /* ── Loading ── */
     await Swal.fire({
-      title: "Verificando disponibilidade na sua região...",
-      html: 'Procurando lojas participantes em <b>' + cidadeSkip + '</b>...',
-      timer: 2200,
-      timerProgressBar: true,
-      allowOutsideClick: false,
-      didOpen: function() { Swal.showLoading(); }
+      title: "Buscando as melhores promoções perto de você...",
+      html: '(Isso é rápido, segura aí!)', timer: 2200, timerProgressBar: true,
+      allowOutsideClick: false, didOpen: function() { Swal.showLoading(); }
     });
 
-    /* ── Parabéns ── */
     await Swal.fire({
       html: '<div style="font-family:\'Poppins\',sans-serif;text-align:left">'
-          + '<p style="font-size:16px;font-weight:700;color:#1a1a1a;line-height:1.5;margin-bottom:16px;text-align:center">'
-          + '🎉 Parabéns! Encontramos uma loja com promoções até <span style="color:#077c22">60% OFF</span> perto de você, aproveite!</p>'
+          + '<p style="font-size:16px;font-weight:700;color:#1a1a1a;line-height:1.5;margin-bottom:16px;text-align:center">✅ Beleza! Encontramos promoções imperdíveis até 60% OFF perto de você!</p>'
           + '<div style="background:#fffbe6;border:1.5px solid #ffcc01;border-radius:12px;padding:14px 16px">'
-          + '<div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:12px">'
-          + '<i class="fa fa-map-marker-alt" style="color:#b8960a;font-size:15px;margin-top:2px;flex-shrink:0"></i>'
-          + '<span style="font-size:14px;color:#1a1a1a;line-height:1.4"><b>Distância:</b> aproximadamente 5,2km</span>'
-          + '</div>'
-          + '<div style="display:flex;align-items:flex-start;gap:10px">'
-          + '<i class="fa fa-clock" style="color:#b8960a;font-size:15px;margin-top:2px;flex-shrink:0"></i>'
-          + '<span style="font-size:14px;color:#1a1a1a;line-height:1.4"><b>Prazo de entrega:</b> 30 a 40 minutos após a confirmação da compra</span>'
-          + '</div>'
-          + '</div>'
-          + '</div>',
-      icon: "success",
-      confirmButtonText: "Ver ofertas →",
-      confirmButtonColor: "#FFCC00",
-      allowOutsideClick: false,
-      allowEscapeKey: false,
+          + '<div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:12px"><i class="fa fa-map-marker-alt" style="color:#b8960a;font-size:15px;margin-top:2px;flex-shrink:0"></i><span style="font-size:14px;color:#1a1a1a;line-height:1.4"><b>Distância:</b> aproximadamente 5,2km</span></div>'
+          + '<div style="display:flex;align-items:flex-start;gap:10px"><i class="fa fa-clock" style="color:#b8960a;font-size:15px;margin-top:2px;flex-shrink:0"></i><span style="font-size:14px;color:#1a1a1a;line-height:1.4"><b>Prazo de entrega:</b> 30 a 40 minutos após a confirmação da compra</span></div>'
+          + '</div></div>',
+      icon: "success", confirmButtonText: "Ver ofertas →", confirmButtonColor: "#FFCC00",
+      allowOutsideClick: false, allowEscapeKey: false,
       didOpen: function() {
         var btn = document.querySelector(".swal2-confirm");
-        if (btn) {
-          btn.style.color = "#1A1A1A"; btn.style.fontWeight = "700";
-          btn.style.border = "none"; btn.style.width = "100%";
-          btn.style.borderRadius = "12px"; btn.style.fontSize = "15px";
-          btn.style.padding = "14px";
-        }
+        if (btn) { btn.style.color="#1A1A1A"; btn.style.fontWeight="700"; btn.style.border="none"; btn.style.width="100%"; btn.style.borderRadius="12px"; btn.style.fontSize="15px"; btn.style.padding="14px"; }
       }
     });
 
-    /* ── Endereço completo (cidade/estado já pré-preenchidos, sem CEP) ── */
     document.body.style.position = 'fixed';
     document.body.style.top = '-' + scrollY + 'px';
     document.body.style.width = '100%';
-
     var endResultSkip = await modalEndereco({ localidade: cidadeSkip, uf: estadoSkip }, { cepOpcional: true });
-
     document.body.style.position = '';
     document.body.style.top = '';
     document.body.style.width = '';
-
     (function() {
       var vp = document.querySelector('meta[name="viewport"]');
       if (!vp) return;
-      var original = vp.getAttribute('content');
-      vp.setAttribute('content', original + ', maximum-scale=1');
-      setTimeout(function() { vp.setAttribute('content', original); }, 300);
+      var orig = vp.getAttribute('content');
+      vp.setAttribute('content', orig + ', maximum-scale=1');
+      setTimeout(function() { vp.setAttribute('content', orig); }, 300);
     })();
-
     if (!endResultSkip.value) return;
     endDados = endResultSkip.value;
-
-    /* ── Contato (opcional) ── */
     await modalContato();
 
   } else {
-    /* ── Etapa 3: loading ── */
-    await Swal.fire({
-      title: "Verificando disponibilidade na sua região...",
-      html: 'Procurando lojas participantes' + (cepData.localidade ? ' em <b>' + cepData.localidade + '</b>' : '') + '...',
-      timer: 2200,
-      timerProgressBar: true,
-      allowOutsideClick: false,
-      didOpen: function() { Swal.showLoading(); }
-    });
-
-    /* ── Etapa 4: parabéns ── */
+    /* ── Fluxo com CEP — loading já foi feito na tela 3 do overlay ── */
     var distancia = distanciaPorCep(cepData.cep || '');
     await Swal.fire({
       html: '<div style="font-family:\'Poppins\',sans-serif;text-align:left">'
-          + '<p style="font-size:16px;font-weight:700;color:#1a1a1a;line-height:1.5;margin-bottom:16px;text-align:center">'
-          + '🎉 Parabéns! Encontramos uma loja com promoções até <span style="color:#077c22">60% OFF</span> perto de você, aproveite!</p>'
+          + '<p style="font-size:16px;font-weight:700;color:#1a1a1a;line-height:1.5;margin-bottom:16px;text-align:center">✅ Beleza! Encontramos promoções imperdíveis até 60% OFF perto de você!</p>'
           + '<div style="background:#fffbe6;border:1.5px solid #ffcc01;border-radius:12px;padding:14px 16px">'
-          + '<div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:12px">'
-          + '<i class="fa fa-map-marker-alt" style="color:#b8960a;font-size:15px;margin-top:2px;flex-shrink:0"></i>'
-          + '<span style="font-size:14px;color:#1a1a1a;line-height:1.4"><b>Distância:</b> aproximadamente ' + distancia + 'km</span>'
-          + '</div>'
-          + '<div style="display:flex;align-items:flex-start;gap:10px">'
-          + '<i class="fa fa-clock" style="color:#b8960a;font-size:15px;margin-top:2px;flex-shrink:0"></i>'
-          + '<span style="font-size:14px;color:#1a1a1a;line-height:1.4"><b>Prazo de entrega:</b> 30 a 40 minutos após a confirmação da compra</span>'
-          + '</div>'
-          + '</div>'
-          + '</div>',
-      icon: "success",
-      confirmButtonText: "Confirmar endereço →",
-      confirmButtonColor: "#FFCC00",
-      allowOutsideClick: false,
-      allowEscapeKey: false,
+          + '<div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:12px"><i class="fa fa-map-marker-alt" style="color:#b8960a;font-size:15px;margin-top:2px;flex-shrink:0"></i><span style="font-size:14px;color:#1a1a1a;line-height:1.4"><b>Distância:</b> aproximadamente ' + distancia + 'km</span></div>'
+          + '<div style="display:flex;align-items:flex-start;gap:10px"><i class="fa fa-clock" style="color:#b8960a;font-size:15px;margin-top:2px;flex-shrink:0"></i><span style="font-size:14px;color:#1a1a1a;line-height:1.4"><b>Prazo de entrega:</b> 30 a 40 minutos após a confirmação da compra</span></div>'
+          + '</div></div>',
+      icon: "success", confirmButtonText: "Confirmar endereço →", confirmButtonColor: "#FFCC00",
+      allowOutsideClick: false, allowEscapeKey: false,
       didOpen: function() {
         var btn = document.querySelector(".swal2-confirm");
-        if (btn) {
-          btn.style.color = "#1A1A1A"; btn.style.fontWeight = "700";
-          btn.style.border = "none"; btn.style.width = "100%";
-          btn.style.borderRadius = "12px"; btn.style.fontSize = "15px";
-          btn.style.padding = "14px";
-        }
+        if (btn) { btn.style.color="#1A1A1A"; btn.style.fontWeight="700"; btn.style.border="none"; btn.style.width="100%"; btn.style.borderRadius="12px"; btn.style.fontSize="15px"; btn.style.padding="14px"; }
       }
     });
 
-    /* ── Etapa 5: formulário de endereço ── */
     document.body.style.position = 'fixed';
     document.body.style.top = '-' + scrollY + 'px';
     document.body.style.width = '100%';
-
     var endResultCep = await modalEndereco(cepData);
-
     document.body.style.position = '';
     document.body.style.top = '';
     document.body.style.width = '';
-
     (function() {
       var vp = document.querySelector('meta[name="viewport"]');
       if (!vp) return;
-      var original = vp.getAttribute('content');
-      vp.setAttribute('content', original + ', maximum-scale=1');
-      setTimeout(function() { vp.setAttribute('content', original); }, 300);
+      var orig = vp.getAttribute('content');
+      vp.setAttribute('content', orig + ', maximum-scale=1');
+      setTimeout(function() { vp.setAttribute('content', orig); }, 300);
     })();
-
     if (!endResultCep.value) { window.scrollTo(0, scrollY); return; }
     endDados = endResultCep.value;
-
-    /* ── Contato (opcional) ── */
     await modalContato();
   }
 
-  /* ── Salva cookies e dados para pré-preencher checkout ── */
   setCookie("localCidade", endDados.cidade, 365);
   setCookie("localEstado",  endDados.estado, 365);
   localStorage.setItem('ze_endereco', JSON.stringify({
-    cep:    endDados.cep,
-    rua:    endDados.rua,
-    bairro: endDados.bairro,
-    cidade: endDados.cidade,
-    estado: endDados.estado,
-    numero: endDados.numero,
-    compl:  endDados.compl
+    cep: endDados.cep, rua: endDados.rua, bairro: endDados.bairro,
+    cidade: endDados.cidade, estado: endDados.estado,
+    numero: endDados.numero, compl: endDados.compl
   }));
 
   atualizarLocalizacao();
@@ -1038,20 +1348,29 @@ async function abrirCheckoutPix(el) {
   }
 
   // ── Etapa 4: extrair dados PIX da resposta ────────────────────────────────
-  // Estrutura Sunize: { id, pix: { payload }, status, hasError }
-  var pixCode = (transacao.pix && transacao.pix.payload) ? transacao.pix.payload : '';
+  // Estrutura Paradise: { id, pix: { qr_code }, _paradise }
+  var pixData = transacao.pix || {};
+  var pixCode = pixData.qr_code || pixData.payload || '';
   var txId    = transacao.id || '';
 
-  // Sunize não retorna imagem — gera QR a partir do payload
   var pixImg = pixCode
     ? 'https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=' + encodeURIComponent(pixCode)
     : '';
 
+  // Salva dados da compra para evento Purchase no obrigado.html
+  try {
+    localStorage.setItem('ze_last_purchase', JSON.stringify({
+      items: [{ id: produto.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, ''), title: produto, quantidade: 1 }],
+      total: valor,
+      ct: { nome: dados.nome, tel: dados.tel }
+    }));
+  } catch(e) {}
+
   pixAtualCodigo = pixCode;
-  mostrarPixModal(produto, valorFormatado, pixCode, pixImg, txId);
+  mostrarPixModal(produto, valorFormatado, pixCode, pixImg, txId, valor);
 }
 
-function mostrarPixModal(produto, valorFormatado, pixCode, pixImg, txId) {
+function mostrarPixModal(produto, valorFormatado, pixCode, pixImg, txId, valorNum) {
   var checkInterval;
 
   // QR Code com fallback de erro de imagem
@@ -1086,7 +1405,7 @@ function mostrarPixModal(produto, valorFormatado, pixCode, pixImg, txId) {
       var btn = document.querySelector('.swal2-confirm');
       if (btn) { btn.style.color = '#1A1A1A'; btn.style.fontWeight = '700'; }
       if (txId) {
-        checkInterval = setInterval(function() { verificarPagamento(txId, checkInterval); }, 5000);
+        checkInterval = setInterval(function() { verificarPagamento(txId, checkInterval, valorNum); }, 5000);
       }
     },
     willClose: function() {
@@ -1095,9 +1414,22 @@ function mostrarPixModal(produto, valorFormatado, pixCode, pixImg, txId) {
   });
 }
 
-async function verificarPagamento(txId, interval) {
+/* Identificadores de clique do Facebook para o CAPI server-side (atribuição) */
+function fbCapiQS() {
+  var fbp = getCookie('_fbp');
+  var fbc = getCookie('_fbc');
+  var fbclid = '';
+  try { fbclid = localStorage.getItem('ze_fbclid') || ''; } catch(e) {}
+  var p = [];
+  if (fbp)            p.push('fbp='    + encodeURIComponent(fbp));
+  if (fbc)            p.push('fbc='    + encodeURIComponent(fbc));
+  if (fbclid && !fbc) p.push('fbclid=' + encodeURIComponent(fbclid));
+  return p.length ? '?' + p.join('&') : '';
+}
+
+async function verificarPagamento(txId, interval, valorNum) {
   try {
-    var response = await fetch('/api/status-pix/' + txId);
+    var response = await fetch('/api/status-pix/' + txId + fbCapiQS());
     var data     = await response.json();
     var status   = (data.status || '').toLowerCase();
     var msgEl    = document.getElementById('pix-status-msg');
@@ -1107,21 +1439,19 @@ async function verificarPagamento(txId, interval) {
       if (msgEl) {
         msgEl.style.background = '#d4edda';
         msgEl.style.color      = '#155724';
-        msgEl.textContent      = '✅ Pagamento confirmado!';
+        msgEl.textContent      = '✅ Pagamento confirmado! Redirecionando...';
       }
       setTimeout(function() {
-        Swal.fire({
-          icon:               'success',
-          title:              '🎉 Pedido Confirmado!',
-          text:               'Seu pagamento foi aprovado! Em breve você receberá uma confirmação.',
-          confirmButtonColor: '#FFCC00',
-          confirmButtonText:  'Ótimo!',
-          didOpen: function() {
-            var btn = document.querySelector('.swal2-confirm');
-            if (btn) btn.style.color = '#1A1A1A';
-          }
+        var utmKeys = ['utm_source','utm_medium','utm_campaign','utm_content','utm_term','fbclid'];
+        var utmStr  = '';
+        utmKeys.forEach(function(k) {
+          var v = localStorage.getItem('ze_' + k);
+          if (v) utmStr += '&' + k + '=' + encodeURIComponent(v);
         });
-      }, 800);
+        var valorOb = valorNum ? parseFloat(valorNum).toFixed(2) : '';
+        window.location.href = 'obrigado.html?txid=' + encodeURIComponent(txId)
+          + (valorOb ? '&valor=' + valorOb : '') + utmStr;
+      }, 1500);
     }
   } catch (e) { /* silencioso */ }
 }
