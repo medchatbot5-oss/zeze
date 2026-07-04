@@ -385,14 +385,11 @@
 
         <div class="pix-card">
 
-          <!-- Box verde: pedido reservado + aviso de segurança -->
+          <!-- Box verde: nº do pedido -->
           <div style="background:#e8f5e9;border:1.5px solid #66bb6a;border-radius:12px;padding:11px 13px;margin-bottom:16px;">
-            <div style="display:flex;align-items:flex-start;gap:9px;">
-              <span style="font-size:15px;flex-shrink:0;margin-top:1px;">✅</span>
-              <div>
-                <div style="font-size:12px;font-weight:700;color:#1b5e20;line-height:1.45;">Pedido reservado — aguardando confirmação do pagamento.</div>
-                <div style="display:flex;gap:5px;font-size:11px;color:#1b5e20;margin-top:5px;line-height:1.5;"><span style="flex-shrink:0;">⚠️</span><span>Alguns bancos exibem alertas de segurança automáticos. Isso é normal e não afeta seu pedido.</span></div>
-              </div>
+            <div style="display:flex;align-items:center;gap:9px;">
+              <span style="font-size:15px;flex-shrink:0;">✅</span>
+              <div style="font-size:12px;font-weight:700;color:#1b5e20;line-height:1.45;">PEDIDO <span id="px-pedido-num">#000000</span> GERADO - AGUARDANDO PAGAMENTO</div>
             </div>
           </div>
 
@@ -407,6 +404,11 @@
           <button class="px-copy-btn" id="px-copy-btn" onclick="copiarCodigo()">
             <i class="fa fa-copy"></i> Copiar código PIX
           </button>
+
+          <!-- Legenda com contagem regressiva -->
+          <div id="px-timer-caption" style="text-align:center;font-size:12.5px;color:#555;line-height:1.5;margin:13px 6px 2px;">
+            Use o Pix Copia e Cola para finalizar seu pagamento.<br>O código expirará em <strong id="px-timer" style="color:#077c22;font-weight:800;">05:00</strong>
+          </div>
 
           <!-- Selos de confiança -->
           <div style="display:flex;justify-content:center;gap:18px;margin:12px 0 4px;">
@@ -935,10 +937,44 @@
         if (sheet) sheet.classList.remove('pix-opening');
       }, 360);
 
+      /* Nº do pedido (aleatório, 6 dígitos) */
+      var pedidoEl = document.getElementById('px-pedido-num');
+      if (pedidoEl) pedidoEl.textContent = '#' + Math.floor(100000 + Math.random() * 900000);
+
       /* Polling */
       clearInterval(checkInterval);
       if (pixAtivo.txId) checkInterval = setInterval(verificarPagamento, 5000);
 
+      /* Contagem regressiva de expiração */
+      startPixCountdown();
+
+    }
+
+    /* Contagem regressiva de 5min — ao zerar, expira o código PIX */
+    function startPixCountdown() {
+      clearInterval(countdownInterval);
+      var restante = 5 * 60; /* 300s */
+      var el  = document.getElementById('px-timer');
+      var cap = document.getElementById('px-timer-caption');
+      function render(s) {
+        var m = Math.floor(s / 60), ss = s % 60;
+        if (el) el.textContent = (m < 10 ? '0' : '') + m + ':' + (ss < 10 ? '0' : '') + ss;
+      }
+      render(restante);
+      if (cap) cap.innerHTML = 'Use o Pix Copia e Cola para finalizar seu pagamento.<br>O código expirará em <strong id="px-timer" style="color:#077c22;font-weight:800;">05:00</strong>';
+      el = document.getElementById('px-timer');
+      countdownInterval = setInterval(function() {
+        restante--;
+        if (restante <= 0) {
+          render(0);
+          clearInterval(countdownInterval);
+          clearInterval(checkInterval); /* para de verificar — código expirou */
+          if (cap) cap.innerHTML = '<strong style="color:#b71c1c;font-weight:800;">Código PIX expirado.</strong><br>Volte ao carrinho e gere um novo código.';
+          setPixStatus('expired');
+          return;
+        }
+        render(restante);
+      }, 1000);
     }
 
     function fecharPixOverlay() {
